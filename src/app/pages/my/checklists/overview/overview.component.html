@@ -1,0 +1,107 @@
+<div class="flex flex-col">
+    <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+            <div class="border border-neutral-700 rounded-xl shadow-sm overflow-hidden">
+                <div class="px-4 pt-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+                    <div>
+                        <h2 class="text-xl font-semibold">Checklists</h2>
+                        <p class="text-sm text-gray-600 dark:text-neutral-400">Create checklists, edit, download and more.</p>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <a
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            routerLink="./new/editor"
+                        >
+                            <svg
+                                class="flex-shrink-0 size-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M5 12h14" />
+                                <path d="M12 5v14" />
+                            </svg>
+                            Create
+                        </a>
+                    </div>
+                </div>
+
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                    <!--                        <caption class="py-2 text-start text-sm text-gray-600 dark:text-neutral-500">-->
+                    <!--                            My Checklists-->
+                    <!--                        </caption>-->
+                    <thead>
+                        <tr>
+                            <th
+                                scope="col"
+                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                            >
+                                Name
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                            >
+                                Created
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                            >
+                                Updated
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                            >
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                <a routerLink="/my/checklists/1337/editor"> B777 </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">Sat Jun 08 2024</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">Sun Jun 09 2024</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                <a
+                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent disabled:opacity-50 disabled:pointer-events-none me-4"
+                                    title="Edit checklist"
+                                    routerLink="/my/checklists/1337/editor"
+                                >
+                                    <i class="pi pi-pencil"></i>
+                                </a>
+                                <a
+                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent disabled:opacity-50 disabled:pointer-events-none me-4"
+                                    title="Copy checklist"
+                                >
+                                    <i class="pi pi-clone"></i>
+                                </a>
+                                <a
+                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent disabled:opacity-50 disabled:pointer-events-none me-4"
+                                    title="Print checklist"
+                                >
+                                    <i class="pi pi-print"></i>
+                                </a>
+                                <a
+                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400"
+                                    title="Delete checklist"
+                                >
+                                    <i class="pi pi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
