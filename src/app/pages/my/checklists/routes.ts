@@ -12,7 +12,11 @@ export const routes: Routes = [
             },
             {
                 path: ':id/editor',
-                loadComponent: () => import('./edit/editor.component').then((m) => m.EditorComponent),
+                loadComponent: () => import('./editor/editor.component').then((m) => m.EditorComponent),
+            },
+            {
+                path: ':id/viewer',
+                loadComponent: () => import('./viewer/viewer.component').then((m) => m.ViewerComponent),
             },
         ],
     },

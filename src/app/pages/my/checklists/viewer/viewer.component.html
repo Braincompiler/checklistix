@@ -1,0 +1,21 @@
+<!--@let checklist = checklist$|async;-->
+
+<select [(ngModel)]="pageSize">
+    <option value="A4">A4</option>
+    <option value="A5">A5</option>
+    <option value="Letter">Letter</option>
+    <option value="HalfLetter">1/2 Letter</option>
+</select>
+
+<select [(ngModel)]="pageOrientation">
+    <option value="Portrait">Portrait</option>
+    <option value="Landscape">Landscape</option>
+</select>
+
+@if (checklist$() | async; as checklist) {
+    <cx-checklist-preview
+        [checklist]="checklist"
+        [pageOrientation]="pageOrientation"
+        [pageSize]="pageSize"
+    />
+}

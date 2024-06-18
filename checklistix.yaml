@@ -1,0 +1,486 @@
+openapi: 3.0.3
+info:
+  title: Checklistix API
+  description: Checklistix API
+  version: 1.0.0
+servers:
+  - url: 'https://localhost:5005'
+    description: Development server
+tags:
+  - name: Checklists
+paths:
+  /checklists/{id}:
+    get:
+      tags:
+        - Checklists
+      summary: Returns a single checklist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checklist'
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - Checklists
+      summary: Updates a checklist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Checklist information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistForm'
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    patch:
+      tags:
+        - Checklists
+      summary: Partially updates a checklist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Checklist information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistForm'
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+        - Checklists
+      summary: Deletes a checklist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ok
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /checklists:
+    get:
+      tags:
+        - Checklists
+      summary: Returns a list of checklists
+      responses:
+        '200':
+          description: An array of checklists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Checklist'
+    post:
+      tags:
+        - Checklists
+      summary: Creates a new checklist
+      requestBody:
+        description: Checklist information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistForm'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ChecklistForm:
+      type: object
+      properties:
+        name:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        created:
+          type: string
+          format: date-time
+          x-go-type-skip-optional-pointer: true
+        updated:
+          type: string
+          format: date-time
+          x-go-type-skip-optional-pointer: true
+        style:
+          $ref: '#/components/schemas/ChecklistStyle'
+        pageSize:
+          $ref: '#/components/schemas/PageSize'
+        pageOrientation:
+          $ref: '#/components/schemas/PageOrientation'
+        columns:
+          type: integer
+          x-go-type-skip-optional-pointer: true
+        fontSize:
+          type: integer
+          x-go-type-skip-optional-pointer: true
+        borderThickness:
+          $ref: '#/components/schemas/BorderThickness'
+        fontFamily:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        checklistItems:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/SubChecklist'
+              - $ref: '#/components/schemas/SectionTitle'
+              - $ref: '#/components/schemas/TextBox'
+
+    Checklist:
+      allOf:
+        - $ref: '#/components/schemas/ChecklistForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    PageSize:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      enum:
+        - A4
+        - A5
+        - Letter
+        - HalfLetter
+
+    PageOrientation:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      enum:
+        - Portrait
+        - Landscape
+
+    ChecklistStyle:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      enum:
+        - Dots
+        - Line
+        - MidDots
+        - Dashed
+        - Table
+
+    BorderThickness:
+      type: number
+      x-go-type-skip-optional-pointer: true
+      enum:
+        - 0
+        - 1
+        - 2
+        - 4
+
+    SubChecklistForm:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        title:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        color:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        items:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/SubChecklistItemCheckItem'
+              - $ref: '#/components/schemas/SubChecklistItemPrecondition'
+              - $ref: '#/components/schemas/SubChecklistItemPostcondition'
+              - $ref: '#/components/schemas/SubChecklistItemSubtitle'
+        type:
+          $ref: '#/components/schemas/ChecklistItemType' # always ChecklistItemType::SubChecklist
+        # @TODO: Other props like to overwrite something like checklistStyle, borderThickness, ...
+
+    SubChecklist:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    SectionTitleForm:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        text:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        color:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/ChecklistItemType' # always ChecklistItemType::SectionTitle
+        # @TODO: Other props like to overwrite something like checklistStyle, borderThickness, ...
+
+    SectionTitle:
+      allOf:
+        - $ref: '#/components/schemas/SectionTitleForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    TextBoxForm:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        text:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        color:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/ChecklistItemType' # always ChecklistItemType::TextBox
+        # @TODO: Other props like to overwrite something like checklistStyle, borderThickness, ...
+
+    TextBox:
+      allOf:
+        - $ref: '#/components/schemas/TextBoxForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    ColumnBreakForm:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/ChecklistItemType' # always ChecklistItemType::ColumnBreak
+
+    ColumnBreak:
+      allOf:
+        - $ref: '#/components/schemas/ColumnBreakForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    PageBreakForm:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          format: uuid
+          nullable: false
+        type:
+          $ref: '#/components/schemas/ChecklistItemType' # always ChecklistItemType::PageBreak
+
+    PageBreak:
+      allOf:
+        - $ref: '#/components/schemas/PageBreakForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    ChecklistItemType:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      enum:
+        - SubChecklist
+        - SectionTitle
+        - TextBox
+        - ColumnBreak
+        - PageBreak
+
+    SubChecklistItemCheckItemForm:
+      type: object
+      properties:
+        subChecklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        item:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        action:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::CheckItem
+        # @TODO: Other props like text decoration (bold, italic, underscore), ... (JSON?)
+
+    SubChecklistItemCheckItem:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistItemCheckItemForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    SubChecklistItemPreconditionForm:
+      type: object
+      properties:
+        subChecklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        text:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Precondition
+
+    SubChecklistItemPrecondition:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistItemPreconditionForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    SubChecklistItemPostconditionForm:
+      type: object
+      properties:
+        subChecklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        text:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Postcondition
+
+    SubChecklistItemPostcondition:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistItemPostconditionForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    SubChecklistItemSubtitleForm:
+      type: object
+      properties:
+        subChecklistId:
+          type: string
+          format: uuid
+          nullable: false
+          x-go-type-skip-optional-pointer: true
+        text:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Subtitle
+
+    SubChecklistItemSubtitle:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistItemSubtitleForm'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+              x-go-type-skip-optional-pointer: true
+
+    SubChecklistItemType:
+      type: string
+      x-go-type-skip-optional-pointer: true
+      enum:
+        - CheckItem
+        - Precondition
+        - Postcondition
+        - Subtitle

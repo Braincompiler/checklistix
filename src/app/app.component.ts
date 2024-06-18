@@ -10,8 +10,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { IStaticMethods } from 'preline/preline';
 
-import { FooterComponent } from './components/footer/footer.component';
-import { TopbarComponent } from './components/topbar/topbar.component';
+import { FooterComponent, TopbarComponent } from '@components';
 
 declare global {
     interface Window {

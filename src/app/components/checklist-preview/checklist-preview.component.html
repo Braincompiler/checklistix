@@ -1,0 +1,548 @@
+<div class="checklist-preview">
+    <!-- @TODO: Need a way to add something like a "page break" which will create a new <page>-Element and continues the checklist -->
+    <page
+        [attr.size]="checklist().pageSize"
+        [attr.orientation]="checklist().pageOrientation"
+        [style.font-size.pt]="checklist().fontSize"
+        [style.font-family]="checklist().fontFamily"
+    >
+        <div [ngClass]="columnCssClass()">
+            @for (checklistItem of checklist().checklistItems; track checklistItem.id) {
+                @switch (checklistItem.type) {
+                    @case (ChecklistItemType.SubChecklist) {
+                        <div [ngClass]="outlineCssClass()">
+                            <h3 [ngClass]="borderBCssClass()">{{ checklistItem.title }}</h3>
+                            <ul
+                                class="checklist"
+                                [ngClass]="checklistStyleCssClass()"
+                            >
+                                @for (subChecklistItem of checklistItem.items; track subChecklistItem.id) {
+                                    @switch (subChecklistItem.type) {
+                                        @case (SubChecklistItemType.CheckItem) {
+                                            <li>
+                                                <span>
+                                                    <span>{{ subChecklistItem.item }}</span>
+                                                </span>
+                                                <span>
+                                                    <span>{{ subChecklistItem.action }}</span>
+                                                </span>
+                                            </li>
+                                        }
+                                        @case (SubChecklistItemType.Precondition) {
+                                            <li class="precondition">{{ subChecklistItem.text }}</li>
+                                        }
+                                        @case (SubChecklistItemType.Postcondition) {
+                                            <li class="postcondition">{{ subChecklistItem.text }}</li>
+                                        }
+                                        @case (SubChecklistItemType.Subtitle) {
+                                            <li class="subtitle">{{ subChecklistItem.text }}</li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                    @case (ChecklistItemType.TextBox) {
+                        <div [ngClass]="outlineCssClass()">
+                            {{ checklistItem.text }}
+                        </div>
+                    }
+                    @case (ChecklistItemType.SectionTitle) {
+                        <div [ngClass]="outlineCssClass()">
+                            <h3>{{ checklistItem.text }}</h3>
+                        </div>
+                    }
+                    <!-- @TODO: To handle page-breaks, we have to group the items before into pages -->
+                    @case (ChecklistItemType.ColumnBreak) {
+                        <div class="break-before-column"></div>
+                    }
+                }
+            }
+
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist line">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dots">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preliminary Preflight Procedure</h3>-->
+            <!--                <ul class="checklist dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>ADIRU Switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>OFF 30 seconds, then ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>Outside Check</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>Done</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>THRUST & REV THRUST Levers</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>DOWN/CLOSED</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash;            in case of "break-before-column" remove the "mt-3" class &ndash;&gt;-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preliminary Preflight Procedure</h3>-->
+            <!--                <ul class="checklist cx-table">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>ADIRU Switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>OFF 30 seconds, then ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>Outside Check</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>Done</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>THRUST & REV THRUST Levers</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>DOWN/CLOSED</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch 2</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+            <!--            <div [class]="'outline-2'">-->
+            <!--                <h3 [class]="'border-b-2'">Preflight Procedure</h3>-->
+            <!--                <ul class="checklist mid-dashed">-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>BATTERY switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>IFE/PASS SEATS power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CABIN/UTILITY power switch</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>ON</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Preflight Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT, POS INIT, RTE, DEP/ARR, PERF INIT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <span>-->
+            <!--                            <span>CDU Procedure</span>-->
+            <!--                        </span>-->
+            <!--                        <span>-->
+            <!--                            <span>IDENT, POS INIT, RTE, DEP/ARR, PERF INIT IDENT</span>-->
+            <!--                        </span>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+        </div>
+    </page>
+</div>
