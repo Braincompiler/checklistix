@@ -19,13 +19,15 @@ export interface IUserState {
 export interface IAppState {
     user: IUserState;
     isLoading: boolean;
-    currentChecklist?: IChecklistVM | null;
-    currentChecklistError?: any;
+    currentChecklist: IChecklistVM | null;
+    currentChecklistError: any | null;
 }
 
 const initialState: IAppState = {
     user: { userId: null },
     isLoading: false,
+    currentChecklist: null,
+    currentChecklistError: null,
 };
 
 export const AppStore = signalStore(
@@ -60,7 +62,7 @@ export const AppStore = signalStore(
                     switchMap((id) =>
                         checklistService.checklistsIdGet(id).pipe(
                             tapResponse({
-                                next: (checklist) => patchState(store, { currentChecklist: checklistMapToVM(checklist) }),
+                                next: (checklist) => patchState(store, { currentChecklist: checklistMapToVM(checklist), currentChecklistError: null }),
                                 error: (err) => {
                                     console.error(err);
                                     patchState(store, { currentChecklist: null, currentChecklistError: err });

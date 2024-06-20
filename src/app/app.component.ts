@@ -1,5 +1,4 @@
 import { DOCUMENT } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -35,15 +34,12 @@ export class AppComponent implements OnInit {
     readonly #router = inject(Router);
     readonly #destroyRef = inject(DestroyRef);
     readonly #doc = inject(DOCUMENT); // https://github.com/angular/universal/blob/main/docs/gotchas.md#strategy-1-injection
-    readonly #httpClient = inject(HttpClient);
 
     public constructor() {
         this.#primeNGConfig.ripple = true;
     }
 
     public ngOnInit(): void {
-        this.#httpClient.get('/api/checklists').subscribe((s) => console.log(s));
-
         // https://preline.co/docs/frameworks-angular.html
         this.#router.events //
             .pipe(

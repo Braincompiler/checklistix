@@ -1,4 +1,16 @@
-[[redirects]]
-    from = "/*"
-    to = "/index.html"
-    status = 200
+[dev]
+command = "npm run start"
+functions = './functions'
+publish = "./src"
+targetPort = 4321
+port = 8888
+
+[build]
+command = "npm run build"
+functions = './functions'
+publish = "./dist/checklistix/browser"
+
+#[[redirects]]
+#from = "/*"
+#to = "/index.html"
+#status = 200

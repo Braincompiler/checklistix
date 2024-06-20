@@ -1,8 +1,6 @@
-@if (checklist$() | async; as checklist) {
-    <cx-checklist-preview
-        [checklist]="checklist"
-        [pageOrientation]="pageOrientation"
-        [pageSize]="pageSize"
-        isEdit
-    />
-}
+<cx-checklist-preview
+    [checklist]="checklist()"
+    [pageOrientation]="pageOrientation"
+    [pageSize]="pageSize"
+    isEdit
+/>

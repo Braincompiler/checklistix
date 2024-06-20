@@ -1,8 +1,0 @@
-# yaml-language-server: ...
-package: main
-output: apigen.go
-generate:
-  embedded-spec: true
-#  strict-server: true
-  std-http-server: true
-  models: true

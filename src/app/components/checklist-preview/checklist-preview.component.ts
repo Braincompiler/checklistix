@@ -1,5 +1,7 @@
-import { NgClass } from '@angular/common';
+import { JsonPipe, NgClass } from '@angular/common';
 import { booleanAttribute, Component, computed, input, NO_ERRORS_SCHEMA } from '@angular/core';
+
+import { clone, isNil } from 'ramda';
 
 import { ChecklistItemType, PageOrientation, PageSize, SubChecklistItemType } from '@api';
 
@@ -36,7 +38,7 @@ const BORDER_B_CSS_CLASSES: Record<number, string> = {
     templateUrl: 'checklist-preview.component.html',
     standalone: true,
     schemas: [NO_ERRORS_SCHEMA],
-    imports: [NgClass],
+    imports: [NgClass, JsonPipe],
 })
 export class ChecklistPreviewComponent {
     public readonly checklist = input.required<IChecklistVM>();
@@ -48,6 +50,35 @@ export class ChecklistPreviewComponent {
     public readonly outlineCssClass = computed(() => OUTLINE_CSS_CLASSES[this.checklist().borderThickness ?? 2]);
     public readonly borderBCssClass = computed(() => BORDER_B_CSS_CLASSES[this.checklist().borderThickness ?? 2]);
     public readonly checklistStyleCssClass = computed(() => this.checklist().style?.toLowerCase());
+    public readonly paginatedChecklist = computed(() => {
+        const checklist = this.checklist();
+        if (isNil(checklist.checklistItems)) {
+            return [checklist];
+        }
+
+        // @TODO: Is there any optimization possible? 🤔
+        const paginatedChecklists = [];
+        const checklistItems = clone(checklist.checklistItems);
+        const checklistClone = clone(checklist);
+
+        delete checklistClone.checklistItems;
+
+        let checklistPage = clone(checklistClone);
+        checklistPage.checklistItems = [];
+
+        paginatedChecklists.push(checklistPage);
+        checklistItems.forEach((checklistItem) => {
+            if (checklistItem.type === ChecklistItemType.PageBreak) {
+                checklistPage = clone(checklistClone);
+                checklistPage.checklistItems = [];
+                paginatedChecklists.push(checklistPage);
+            } else {
+                checklistPage.checklistItems?.push(checklistItem);
+            }
+        });
+
+        return paginatedChecklists;
+    });
 
     protected readonly ChecklistItemType = ChecklistItemType;
     protected readonly SubChecklistItemType = SubChecklistItemType;

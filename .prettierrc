@@ -17,7 +17,8 @@
       "files": [
         "*.json",
         ".prettierrc",
-        "*.yaml"
+        "*.yaml",
+        "*.toml"
       ],
       "options": {
         "tabWidth": 2

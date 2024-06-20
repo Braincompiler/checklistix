@@ -2,9 +2,12 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
+import { map } from 'rxjs';
+
 import { ChecklistsService } from '@api';
 
 import { AppStore } from '../../../../app.store';
+import { checklistMapToVM } from '../../../../mapper';
 
 @Component({
     selector: 'cx-checklists-overview',
@@ -21,7 +24,7 @@ export class OverviewComponent {
     readonly #appStore = inject(AppStore);
     readonly #checklistsService = inject(ChecklistsService);
 
-    public readonly checklists$ = this.#checklistsService.checklistsGet();
+    public readonly checklists$ = this.#checklistsService.checklistsGet().pipe(map((checklists) => checklists.map(checklistMapToVM)));
 
     public async onOpenChecklist(id?: string, component?: string) {
         this.#appStore.loadById(id!);
