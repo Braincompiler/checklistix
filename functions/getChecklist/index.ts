@@ -1,255 +1,41 @@
 import { Config, Context } from '@netlify/functions';
-import { v4 as uuidv4 } from 'uuid';
+import { isNil } from 'ramda';
 
-import type {
-    Checklist,
-    ColumnBreak,
-    PageBreak,
-    SectionTitle,
-    SubChecklist,
-    SubChecklistItemCheckItem,
-    SubChecklistItemPostcondition,
-    SubChecklistItemPrecondition,
-    SubChecklistItemSubtitle,
-    TextBox,
-} from '../api';
+import { Checklist } from '@api';
+
+import { supabase } from '../db';
 
 export default async (req: Request, ctx: Context) => {
     const { id } = ctx.params;
-    const subCheckListId = uuidv4();
+    if (isNil(id)) {
+        return new Response('missing id', { status: 400 });
+    }
 
-    const checklist: Checklist = {
-        id,
-        name: 'Checklist #1',
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        style: 'Dots',
-        pageSize: 'A4',
-        pageOrientation: 'Portrait',
-        columns: 2,
-        fontSize: 10,
-        borderThickness: 2,
-        fontFamily: 'sans-serif',
-        checklistItems: [
-            {
-                id: subCheckListId,
-                checklistId: id,
-                type: 'SubChecklist',
-                title: 'Preliminary Preflight Procedure',
-                color: '#ededed',
-                items: [
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'ADIRU Switch',
-                        action: 'OFF 30 seconds, then ON',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'Outside Check',
-                        action: 'Done',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Subtitle',
-                        text: 'Sub title',
-                    } as SubChecklistItemSubtitle,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'THRUST & REV THRUST Levers',
-                        action: 'Down/Closed',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'SPEEDBRAKE lever',
-                        action: 'DOWN',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'FUEL CONTROL switches',
-                        action: 'CUTOFF',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Precondition',
-                        text: 'Precondition',
-                    } as SubChecklistItemPrecondition,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Postcondition',
-                        text: 'Postcondition',
-                    } as SubChecklistItemPostcondition,
-                ],
-            } as SubChecklist,
-            {
-                id: uuidv4(),
-                checklistId: id,
-                type: 'SubChecklist',
-                title: 'Preflight Procedure',
-                color: '#ededed',
-                items: [
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'ADIRU Switch',
-                        action: 'OFF 30 seconds, then ON',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'Outside Check',
-                        action: 'Done',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Subtitle',
-                        text: 'Sub title',
-                    } as SubChecklistItemSubtitle,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'THRUST & REV THRUST Levers',
-                        action: 'Down/Closed',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'SPEEDBRAKE lever',
-                        action: 'DOWN',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'FUEL CONTROL switches',
-                        action: 'CUTOFF',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Precondition',
-                        text: 'Precondition',
-                    } as SubChecklistItemPrecondition,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Postcondition',
-                        text: 'Postcondition',
-                    } as SubChecklistItemPostcondition,
-                ],
-            } as SubChecklist,
-            {
-                id: uuidv4(),
-                checklistId: id,
-                type: 'TextBox',
-                color: '#ededed',
-                text: 'Nullam vitae nisl nec arcu posuere dapibus. Praesent nec lorem sed sapien accumsan placerat et eu nisl. Phasellus non condimentum velit. Integer sit amet tempor mi. Vestibulum quis turpis ligula. In hac habitasse platea dictumst. Nullam et dolor eget justo elementum fringilla non in tellus.',
-            } as TextBox,
-            {
-                id: uuidv4(),
-                checklistId: id,
-                type: 'ColumnBreak',
-            } as ColumnBreak,
-            {
-                id: uuidv4(),
-                checklistId: id,
-                type: 'SectionTitle',
-                text: 'Section Title',
-                color: '#11CCEE',
-            } as SectionTitle,
-            {
-                id: uuidv4(),
-                checklistId: id,
-                type: 'PageBreak',
-            } as PageBreak,
-            {
-                id: uuidv4(),
-                checklistId: id,
-                type: 'SectionTitle',
-                text: 'Section Title Page 2',
-                color: '#11CCEE',
-            } as SectionTitle,
-            {
-                id: subCheckListId,
-                checklistId: id,
-                type: 'SubChecklist',
-                title: 'Preliminary Preflight Procedure Page 2',
-                color: '#ededed',
-                items: [
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'ADIRU Switch',
-                        action: 'OFF 30 seconds, then ON',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'Outside Check',
-                        action: 'Done',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Subtitle',
-                        text: 'Sub title',
-                    } as SubChecklistItemSubtitle,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'THRUST & REV THRUST Levers',
-                        action: 'Down/Closed',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'SPEEDBRAKE lever',
-                        action: 'DOWN',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'CheckItem',
-                        item: 'FUEL CONTROL switches',
-                        action: 'CUTOFF',
-                    } as SubChecklistItemCheckItem,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Precondition',
-                        text: 'Precondition',
-                    } as SubChecklistItemPrecondition,
-                    {
-                        id: uuidv4(),
-                        subCheckListId,
-                        type: 'Postcondition',
-                        text: 'Postcondition',
-                    } as SubChecklistItemPostcondition,
-                ],
-            } as SubChecklist,
-        ],
-    };
+    const { data: checklist, error } = await supabase //
+        .from('checklists')
+        .select(
+            'pageSize:page_size, pageOrientation:page_orientation, fontSize:font_size, borderThickness:border_thickness, fontFamily:font_family, defaultColor:default_color, *, checklistItems:checklist_items (checklistId:checklist_id, *, subChecklistItems:sub_checklist_items (subChecklistId:sub_checklist_id, *))',
+        )
+        .eq('id', id)
+        .maybeSingle<Checklist>();
+    if (error) {
+        console.error(error);
+
+        return new Response(JSON.stringify(error), { status: 500 });
+    }
+    if (!checklist) {
+        return new Response(JSON.stringify({ message: 'Checklist not found' }), { status: 404 });
+    }
+
+    const color = checklist.defaultColor;
+
+    // @TODO: Find a better way to overwrite these meta settings (color, font-size, font-family, checklist style and/or border thickness)
+    // -> https://supabase.com/docs/guides/database/json?queryGroups=database-method&database-method=js&queryGroups=language&language=js
+    checklist.checklistItems = (checklist.checklistItems ?? []).map((item) => ({
+        ...item,
+        color: item.color ?? color,
+    }));
+
     return ctx.json(checklist);
 };
 

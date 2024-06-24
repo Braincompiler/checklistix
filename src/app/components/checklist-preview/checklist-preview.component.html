@@ -1,62 +1,310 @@
 <div class="checklist-preview">
-    <!-- @TODO: CSS for responsive view for every page. If enough space, show pages horizontal, if not vertical -->
-    @for (checklistPage of paginatedChecklist(); let i = $index; track i) {
+    @for (checklistPage of paginatedChecklist().pagesSortedByPage; track i; let i = $index; let isFirst = $first) {
         <page
-            [attr.size]="checklistPage.pageSize"
-            [attr.orientation]="checklistPage.pageOrientation"
-            [style.font-size.pt]="checklistPage.fontSize"
-            [style.font-family]="checklistPage.fontFamily"
+            [attr.size]="checklistPage.checklist.pageSize"
+            [attr.orientation]="checklistPage.checklist.pageOrientation"
+            [style.font-size.pt]="checklistPage.checklist.fontSize"
+            [style.font-family]="checklistPage.checklist.fontFamily"
         >
-            <div [ngClass]="columnCssClass()">
-                @for (checklistItem of checklistPage.checklistItems; track checklistItem.id) {
-                    @switch (checklistItem.type) {
-                        @case (ChecklistItemType.SubChecklist) {
-                            <div [ngClass]="outlineCssClass()">
-                                <h3 [ngClass]="borderBCssClass()">{{ checklistItem.title }}</h3>
-                                <ul
-                                    class="checklist"
-                                    [ngClass]="checklistStyleCssClass()"
-                                >
-                                    @for (subChecklistItem of checklistItem['items']; track subChecklistItem.id) {
-                                        @switch (subChecklistItem.type) {
-                                            @case (SubChecklistItemType.CheckItem) {
-                                                <li>
-                                                    <span>
-                                                        <span>{{ subChecklistItem.item }}</span>
-                                                    </span>
-                                                    <span>
-                                                        <span>{{ subChecklistItem.action }}</span>
-                                                    </span>
-                                                </li>
+            @if (isEdit()) {
+                <div class="hs-accordion-group min-h-10">
+                    <div
+                        #accordionNode
+                        class="hs-accordion active"
+                        id="hs-basic-with-title-and-arrow-stretched-heading-one"
+                    >
+                        <button
+                            class="hs-accordion-toggle hs-accordion-active:text-primary-600 py-3 inline-flex items-center justify-between gap-x-3 w-full font-semibold text-start text-primary-800 hover:text-primary-900 rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+                            aria-controls="hs-basic-with-title-and-arrow-stretched-collapse-one"
+                        >
+                            Checklist Base Data
+                            <svg
+                                class="hs-accordion-active:hidden block size-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                            <svg
+                                class="hs-accordion-active:block hidden size-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="m18 15-6-6-6 6"></path>
+                            </svg>
+                        </button>
+                        <div
+                            id="hs-basic-with-title-and-arrow-stretched-collapse-one"
+                            class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
+                            aria-labelledby="hs-basic-with-title-and-arrow-stretched-heading-one"
+                        >
+                            <div
+                                class="header"
+                                [formGroup]="metaDataForm"
+                            >
+                                <cx-editor-input
+                                    label="Checklist Title"
+                                    formControlName="title"
+                                />
+                                @if (isFirst) {
+                                    <cx-editor-select
+                                        label="Checklist Style"
+                                        formControlName="style"
+                                        [options]="checklistStyles"
+                                    />
+                                    <cx-editor-select
+                                        label="Page Size"
+                                        formControlName="pageSize"
+                                        [options]="pageSizes"
+                                    />
+                                    <cx-editor-select
+                                        label="Page Orientation"
+                                        formControlName="pageOrientation"
+                                        [options]="pageOrientations"
+                                    />
+                                    <cx-editor-select
+                                        label="Columns"
+                                        formControlName="columns"
+                                        [options]="columns"
+                                    />
+                                    <cx-editor-select
+                                        label="Border Thickness"
+                                        formControlName="borderThickness"
+                                        [options]="borderThicknesses"
+                                    />
+                                    <cx-editor-select
+                                        label="Font Size"
+                                        formControlName="fontSize"
+                                        [options]="fontSizes"
+                                    />
+                                    <cx-editor-select
+                                        label="Font Family"
+                                        formControlName="fontFamily"
+                                        [options]="fontFamilies"
+                                    />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            } @else {
+                @if (checklist().title) {
+                    <!-- @TODO: Any nice styling ideas here? -->
+                    <h3 class="text-center font-semibold text-lg mb-10">{{ checklist().title }}</h3>
+                }
+            }
+            <div
+                class="page"
+                [ngClass]="columnCssClass()"
+                [class.is-edit]="isEdit()"
+                cdkDropListGroup
+            >
+                @for (checklistColumn of checklistPage.columnsSortedByColumn; track i; let isLastColumn = $last; let i = $index) {
+                    <div
+                        cdkDropList
+                        cdkDragBoundary=".page"
+                        [cdkDropListDisabled]="!isEdit()"
+                        [cdkDropListData]="checklistColumn.checklistItemsSortedByPosition"
+                        (cdkDropListDropped)="drop($event, checklistPage.page, checklistColumn.column)"
+                    >
+                        @for (checklistItem of checklistColumn.checklistItemsSortedByPosition; track checklistItem.id) {
+                            <div
+                                cdkDrag
+                                [cdkDragData]="checklistItem"
+                                (cdkDragStarted)="onDragStarted()"
+                            >
+                                <!-- cdkDragPreviewContainer="parent" ??? Don't know if this looks good 🤔 ??? -->
+                                <div
+                                    *cdkDragPlaceholder
+                                    class="cdk-drag-custom-placeholder"
+                                ></div>
+
+                                @switch (checklistItem.type) {
+                                    @case (ChecklistItemType.SubChecklist) {
+                                        <div
+                                            [ngClass]="outlineCssClass()"
+                                            class="subchecklist"
+                                        >
+                                            @if (isEdit() || (!isEdit() && checklistItem.title)) {
+                                                <h3
+                                                    cdkDragHandle
+                                                    [ngClass]="borderBCssClass()"
+                                                    [style.background-color]="checklistItem.color"
+                                                >
+                                                    <cx-single-line-edit
+                                                        placeholder="Enter your title here ..."
+                                                        [disableEditMode]="!isEdit()"
+                                                        [(ngModel)]="checklistItem.title"
+                                                        (exitEditMode)="onExitEditMode(checklistItem, 'title')"
+                                                        noBlock
+                                                    />
+                                                </h3>
                                             }
-                                            @case (SubChecklistItemType.Precondition) {
-                                                <li class="precondition">{{ subChecklistItem.text }}</li>
+                                            <ul
+                                                class="checklist"
+                                                [ngClass]="checklistStyleCssClass()"
+                                            >
+                                                @if (checklistItem['subChecklistItems']?.length === 0) {
+                                                    @if (isEdit()) {
+                                                        <p class="text-center my-2">
+                                                            Use the <i class="pi pi-plus-circle"></i> button to add the ckecklist items
+                                                        </p>
+                                                    } @else {
+                                                        <p>No items yet</p>
+                                                    }
+                                                } @else {
+                                                    @for (subChecklistItem of checklistItem['subChecklistItems']; track subChecklistItem.id; let i = $index) {
+                                                        @switch (subChecklistItem.type) {
+                                                            @case (SubChecklistItemType.CheckItem) {
+                                                                <!-- @TODO: Implement drag & drop; li can be the drag handler, ul is the drop list? -->
+                                                                <li class="checkitem">
+                                                                    <cx-dual-input-edit
+                                                                        leftPropName="item"
+                                                                        rightPropName="action"
+                                                                        leftPlaceholder="Enter your item here ..."
+                                                                        rightPlaceholder="Enter your action here ..."
+                                                                        [disableEditMode]="!isEdit()"
+                                                                        [(ngModel)]="checklistItem['subChecklistItems']![i]"
+                                                                        (exitEditMode)="onExitDualEditMode(subChecklistItem, 'item', 'action')"
+                                                                    />
+                                                                </li>
+                                                            }
+                                                            @case (SubChecklistItemType.Precondition) {
+                                                                <li class="precondition">
+                                                                    <cx-single-line-edit
+                                                                        placeholder="Enter your precondition here ..."
+                                                                        [disableEditMode]="!isEdit()"
+                                                                        [(ngModel)]="subChecklistItem.text"
+                                                                        (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
+                                                                        fullWidth
+                                                                    />
+                                                                </li>
+                                                            }
+                                                            @case (SubChecklistItemType.Postcondition) {
+                                                                <li class="postcondition">
+                                                                    <cx-single-line-edit
+                                                                        placeholder="Enter your postcondition here ..."
+                                                                        [disableEditMode]="!isEdit()"
+                                                                        [(ngModel)]="subChecklistItem.text"
+                                                                        (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
+                                                                        fullWidth
+                                                                        textRight
+                                                                    />
+                                                                </li>
+                                                            }
+                                                            @case (SubChecklistItemType.Subtitle) {
+                                                                <li class="subtitle">
+                                                                    <cx-single-line-edit
+                                                                        placeholder="Enter your subtitle here ..."
+                                                                        [disableEditMode]="!isEdit()"
+                                                                        [(ngModel)]="subChecklistItem.text"
+                                                                        (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
+                                                                        fullWidth
+                                                                    />
+                                                                </li>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            </ul>
+
+                                            @if (isEdit()) {
+                                                <div class="actions mt-0.5 ml-2">
+                                                    <cx-subchecklist-menu-button
+                                                        [menuItems]="
+                                                            subChecklistMenuItems
+                                                                | cxAdd2MenuitemPipe
+                                                                    : {
+                                                                          subChecklistId: checklistItem.id,
+                                                                      }
+                                                        "
+                                                    />
+                                                </div>
                                             }
-                                            @case (SubChecklistItemType.Postcondition) {
-                                                <li class="postcondition">{{ subChecklistItem.text }}</li>
-                                            }
-                                            @case (SubChecklistItemType.Subtitle) {
-                                                <li class="subtitle">{{ subChecklistItem.text }}</li>
-                                            }
-                                        }
+                                        </div>
                                     }
-                                </ul>
+                                    @case (ChecklistItemType.TextBox) {
+                                        <!--                                        @if (checklistItem.title) {-->
+                                        <div
+                                            [ngClass]="outlineCssClass()"
+                                            class="textbox-with-title"
+                                        >
+                                            @if (isEdit() || (!isEdit() && checklistItem.title)) {
+                                                <h3
+                                                    cdkDragHandle
+                                                    [ngClass]="borderBCssClass()"
+                                                    [style.background-color]="checklistItem.color"
+                                                >
+                                                    <cx-single-line-edit
+                                                        placeholder="Enter your text box title here ..."
+                                                        [disableEditMode]="!isEdit()"
+                                                        [(ngModel)]="checklistItem.title"
+                                                        (exitEditMode)="onExitEditMode(checklistItem, 'title')"
+                                                        noBlock
+                                                    />
+                                                </h3>
+                                            }
+                                            <div class="text">
+                                                <cx-multi-line-edit
+                                                    [disableEditMode]="!isEdit()"
+                                                    [(ngModel)]="checklistItem.text"
+                                                    (exitEditMode)="onExitEditMode(checklistItem, 'text')"
+                                                />
+                                            </div>
+                                        </div>
+                                    }
+                                    @case (ChecklistItemType.SectionTitle) {
+                                        <div [ngClass]="outlineCssClass()">
+                                            <h3
+                                                cdkDragHandle
+                                                [style.background-color]="checklistItem.color"
+                                            >
+                                                <cx-single-line-edit
+                                                    placeholder="Enter your section title here ..."
+                                                    [disableEditMode]="!isEdit()"
+                                                    [(ngModel)]="checklistItem.text"
+                                                    (exitEditMode)="onExitEditMode(checklistItem, 'text')"
+                                                    noBlock
+                                                />
+                                            </h3>
+                                        </div>
+                                    }
+                                }
                             </div>
                         }
-                        @case (ChecklistItemType.TextBox) {
-                            <div [ngClass]="outlineCssClass()">
-                                {{ checklistItem.text }}
+
+                        @if (isEdit()) {
+                            <div class="actions">
+                                <cx-subchecklist-menu-button
+                                    wide
+                                    [menuItems]="
+                                        checklistMenuItems
+                                            | cxAdd2MenuitemPipe
+                                                : {
+                                                      column: checklistColumn.column,
+                                                      page: checklistPage.page,
+                                                  }
+                                    "
+                                />
                             </div>
                         }
-                        @case (ChecklistItemType.SectionTitle) {
-                            <div [ngClass]="outlineCssClass()">
-                                <h3>{{ checklistItem.text }}</h3>
-                            </div>
-                        }
-                        <!-- @TODO: To handle page-breaks, we have to group the items before into pages -->
-                        @case (ChecklistItemType.ColumnBreak) {
-                            <div class="break-before-column"></div>
-                        }
+                    </div>
+                    @if (!isLastColumn) {
+                        <div class="column-break"></div>
                     }
                 }
             </div>

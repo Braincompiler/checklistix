@@ -1,0 +1,18 @@
+@if (isEditModeActive() && form) {
+    <ng-container [formGroup]="form">
+        <textarea
+            #multiInput="cdkTextareaAutosize"
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="2"
+            cdkAutosizeMaxRows="7"
+            formControlName="multiLine"
+            (blur)="onExitEditMode()"
+            autofocus
+        ></textarea>
+    </ng-container>
+} @else {
+    <span
+        (dblclick)="onEnterEditMode()"
+        [innerHtml]="formValue | cxNl2Br"
+    ></span>
+}

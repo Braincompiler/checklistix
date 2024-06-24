@@ -27,9 +27,12 @@
       "@api": ["src/api/index.ts"],
       "@mapper": ["src/mapper/index.ts"],
       "@components": ["src/app/components/index.ts"],
+      "@directives": ["src/app/directives/index.ts"],
       "@pages": ["src/app/pages/index.ts"],
       "@pipes": ["src/app/pipes/index.ts"],
-      "@services": ["src/app/services/index.ts"]
+      "@services": ["src/app/services/index.ts"],
+      "@utils": ["src/utils/index.ts"],
+      "@utils/rxjs": ["src/utils/rxjs/index.ts"]
     }
   },
   "angularCompilerOptions": {

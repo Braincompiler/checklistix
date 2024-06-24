@@ -5,20 +5,22 @@
     "ng": "ng",
     "start": "ng serve --port=4321",
     "netlify-dev": "netlify dev",
-    "build": "ng build",
+    "build": "npm run openapi:generate && ng build",
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:checklistix": "node dist/checklistix/server/server.mjs",
     "openapi:generate:client": "openapi-generator-cli generate",
     "openapi:generate:server": "openapi-typescript ./checklistix.yaml -o ./functions/api.d.ts",
-    "openapi:generate": "npm run openapi:generate:client && npm run openapi:generate:server"
+    "openapi:generate": "npm run openapi:generate:client && npm run openapi:generate:server && npm run supabase:types",
+    "supabase:types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > functions/db.types.ts"
   },
   "private": true,
   "type": "module",
   "dependencies": {
     "@angular-architects/ngrx-toolkit": "^0.4.0",
     "@angular/animations": "^18.0.0",
+    "@angular/cdk": "^18.0.4",
     "@angular/common": "^18.0.0",
     "@angular/compiler": "^18.0.0",
     "@angular/core": "^18.0.0",
@@ -32,6 +34,8 @@
     "@netlify/functions": "^2.7.0",
     "@ngrx/operators": "^18.0.0",
     "@ngrx/signals": "^17.2.0",
+    "@preline/tooltip": "^2.3.0",
+    "@supabase/supabase-js": "^2.44.1",
     "date-fns": "^3.6.0",
     "express": "^4.18.2",
     "preline": "^2.3.0",
@@ -55,7 +59,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.14.2",
     "@types/ramda": "^0.30.0",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.19",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -67,8 +71,9 @@
     "openapi-typescript": "^7.0.0",
     "postcss": "^8.4.38",
     "prettier": "^3.3.2",
+    "supabase": "^1.178.2",
     "tailwindcss": "^3.4.4",
-    "typescript": "~5.4.2"
+    "typescript": "^5.4.5"
   },
   "overrides": {
     "@ngrx/signals": {

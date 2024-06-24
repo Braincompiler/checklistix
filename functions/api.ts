@@ -17,11 +17,13 @@ export type SubChecklistItemSubtitleForm = components['schemas']['SubChecklistIt
 export type TextBox = components['schemas']['TextBox'];
 export type TextBoxForm = components['schemas']['TextBoxForm'];
 
-export type ColumnBreak = components['schemas']['ColumnBreak'];
-export type ColumnBreakForm = components['schemas']['ColumnBreakForm'];
-
-export type PageBreak = components['schemas']['PageBreak'];
-export type PageBreakForm = components['schemas']['PageBreakForm'];
+// export type ColumnBreak = components['schemas']['ColumnBreak'];
+// export type ColumnBreakForm = components['schemas']['ColumnBreakForm'];
+//
+// export type PageBreak = components['schemas']['PageBreak'];
+// export type PageBreakForm = components['schemas']['PageBreakForm'];
 
 export type SectionTitle = components['schemas']['SectionTitle'];
 export type SectionTitleForm = components['schemas']['SectionTitleForm'];
+
+export interface ChecklistOverviewItem extends Pick<Checklist, 'id' | 'title' | 'created' | 'updated'> {}

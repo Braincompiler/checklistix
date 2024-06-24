@@ -1,3 +1,5 @@
+import { isNil } from 'ramda';
+
 import { Checklist } from '@api';
 
 import { IMapper } from './mapper.interface';
@@ -6,7 +8,7 @@ export const CHECKLIST_TYPE_ID = 'Checklist';
 
 export interface IChecklistVM extends Omit<Checklist, 'created' | 'updated'> {
     created: Date;
-    updated: Date;
+    updated: Date | null;
 }
 
 export class ChecklistMapper implements IMapper<Checklist, IChecklistVM> {
@@ -17,8 +19,8 @@ export class ChecklistMapper implements IMapper<Checklist, IChecklistVM> {
     public async mapToVM(src: Checklist): Promise<IChecklistVM> {
         return {
             ...src,
-            created: new Date(src.created!),
-            updated: new Date(src.updated!),
+            created: new Date(src.created),
+            updated: src.updated ? new Date(src.updated) : null,
         };
     }
 
@@ -26,7 +28,7 @@ export class ChecklistMapper implements IMapper<Checklist, IChecklistVM> {
         return {
             ...src,
             created: src.created.toISOString(),
-            updated: src.updated.toISOString(),
+            updated: src.updated?.toISOString(),
         };
     }
 }
@@ -34,8 +36,8 @@ export class ChecklistMapper implements IMapper<Checklist, IChecklistVM> {
 export function checklistMapToVM(src: Checklist): IChecklistVM {
     return {
         ...src,
-        created: new Date(src.created!),
-        updated: new Date(src.updated!),
+        created: new Date(src.created),
+        updated: !isNil(src.updated) ? new Date(src.updated) : null,
     };
 }
 
@@ -43,6 +45,6 @@ export function checklistMapToDTO(src: IChecklistVM): Checklist {
     return {
         ...src,
         created: src.created.toISOString(),
-        updated: src.updated.toISOString(),
+        updated: src.updated?.toISOString(),
     };
 }

@@ -2,7 +2,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { ApplicationConfig, makeEnvironmentProviders, provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withRouterConfig } from '@angular/router';
 
 import { MessageService } from 'primeng/api';
 
@@ -43,6 +43,10 @@ export const appConfig: ApplicationConfig = {
         provideAnimationsAsync(),
         provideRouter(
             routes,
+            withRouterConfig({
+                onSameUrlNavigation: 'reload',
+                urlUpdateStrategy: 'eager',
+            }),
             withComponentInputBinding(),
             // withDebugTracing(),
         ),

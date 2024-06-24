@@ -1,53 +1,20 @@
 import { Config, Context } from '@netlify/functions';
-import { v4 as uuidv4 } from 'uuid';
 
-import { Checklist } from '../api';
+import { ChecklistOverviewItem } from '../api';
+import { supabase } from '../db';
 
 export default async (req: Request, ctx: Context) => {
-    const checklists: Checklist[] = [
-        {
-            id: uuidv4(),
-            name: 'Checklist #1',
-            created: new Date().toISOString(),
-            updated: new Date().toISOString(),
-            // style: 'Dots',
-            // pageSize: 'A4',
-            // pageOrientation: 'Portrait',
-            // columns: 2,
-            // fontSize: 10,
-            // borderThickness: 2,
-            // fontFamily: 'sans-serif',
-            // checklistItems: [],
-        },
-        {
-            id: uuidv4(),
-            name: 'Checklist #2',
-            created: new Date().toISOString(),
-            updated: new Date().toISOString(),
-            // style: 'Dots',
-            // pageSize: 'A4',
-            // pageOrientation: 'Portrait',
-            // columns: 2,
-            // fontSize: 10,
-            // borderThickness: 2,
-            // fontFamily: 'sans-serif',
-            // checklistItems: [],
-        },
-        {
-            id: uuidv4(),
-            name: 'Checklist #3',
-            created: new Date().toISOString(),
-            updated: new Date().toISOString(),
-            // style: 'Dots',
-            // pageSize: 'A4',
-            // pageOrientation: 'Portrait',
-            // columns: 2,
-            // fontSize: 10,
-            // borderThickness: 2,
-            // fontFamily: 'sans-serif',
-            // checklistItems: [],
-        },
-    ];
+    const { data: checklists, error } = await supabase
+        .from('checklists') //
+        .select('id, title, created, updated')
+        .returns<ChecklistOverviewItem[]>();
+
+    if (error) {
+        console.error(error);
+
+        return new Response(JSON.stringify(error), { status: 500 });
+    }
+
     return ctx.json(checklists);
 };
 

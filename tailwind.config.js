@@ -19,6 +19,9 @@ module.exports = {
                     DEFAULT: colors.sky['500'],
                 },
             },
+            borderWidth: {
+                1: '1px',
+            },
         },
     },
     plugins: [

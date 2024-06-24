@@ -1,15 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
-//@import 'primeng/resources/themes/tailwind-light/theme.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@import 'primeng/resources/themes/tailwind-light/theme.css';
 @import 'primeng/resources/primeng.min.css';
 @import 'primeicons/primeicons.css';
 
 :root {
     --cx-preview-background: white;
+    --cx-action-background: theme('colors.neutral.300');
+    --cx-action-background-hover: theme('colors.neutral.200');
 }
 
 body {
@@ -94,250 +96,228 @@ a:not([href]) {
             }
         }
 
+        .header {
+            @apply flex;
+            @apply flex-wrap;
+            @apply gap-2;
+            @apply mb-3;
+
+            > * {
+                &:not(:first-child) {
+                    flex: 1 1 20%;
+                }
+
+                &:first-child {
+                    @apply w-full;
+                }
+            }
+        }
+
         .columns-2,
         .columns-3,
         .columns-4 {
             @apply h-full;
-            @apply gap-3;
+            @apply gap-2;
 
             column-fill: auto;
 
-            > div:not(.break-before-column) {
-                @apply break-inside-avoid-column;
-                @apply outline;
-                @apply outline-neutral-900;
-                @apply mb-3;
-                //@apply rounded;
-                // @TODO: Maybe we have to use "border" instead of "outline" to avoid the column break problem in Safari?
+            div:not(.actions) {
+                &.textbox {
+                    @apply p-1;
+                }
 
-                > h3 {
-                    @apply bg-neutral-300;
+                .textbox-with-title {
+                    .text {
+                        @apply p-1;
+                    }
+                }
+
+                &.column-break {
+                    @apply break-before-column;
+                }
+
+                &:not(.column-break) {
+                    @apply break-inside-avoid-column;
+                    @apply border-solid;
                     @apply border-neutral-900;
-                    @apply border-b-neutral-900;
-                    @apply text-center;
-                    @apply font-bold;
-                    @apply py-1;
+                    @apply mb-2;
+                    //@apply rounded-sm; 🤔
+
+                    > h3 {
+                        @apply border-neutral-900;
+                        @apply border-b-neutral-900;
+                        @apply text-center;
+                        @apply font-bold;
+                        @apply py-1;
+                    }
                 }
             }
-        }
 
-        ul.checklist {
-            @apply list-none;
-            @apply overflow-x-hidden;
-            @apply mr-1;
-
-            li {
-                @apply flex;
-                @apply justify-between;
-
-                &:before {
-                    @apply whitespace-nowrap;
-                    @apply w-0;
+            &.is-edit [cdkDrag] {
+                h3 {
+                    @apply cursor-grab;
                 }
 
-                span {
-                    &:first-child span {
-                        @apply pr-1;
-                    }
+                .textbox {
+                    span[cdkDragHandle] {
+                        @apply cursor-grab;
+                        @apply block;
+                        @apply min-h-5;
 
-                    &:last-child {
-                        @apply pl-1;
+                        background: #d4d4d4;
+                        //background-size: 10px 10px;
+                        //background-image: repeating-linear-gradient(135deg, #c4c4c4 0, #c4c4c4 1px, #d4d4d4 0, #d4d4d4 50%);
+
+                        margin: -0.25rem -0.25rem 0.25rem -0.25rem;
+                    }
+                }
+
+                //.column-break {
+                //    @apply cursor-move;
+                //    @apply border;
+                //    @apply border-dashed #{!important};
+                //    @apply border-neutral-700 #{!important};
+                //    @apply p-1;
+                //}
+            }
+
+            .cdk-drag-custom-placeholder {
+                @apply bg-neutral-200;
+                @apply min-h-20;
+
+                transition: transform 500ms cubic-bezier(0, 0, 0.2, 1);
+            }
+
+            .cdk-drag-preview {
+                @apply box-border;
+                @apply rounded-md;
+
+                box-shadow:
+                    0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+            }
+
+            .cdk-drag-animating {
+                transition: transform 500ms cubic-bezier(0, 0, 0.2, 1);
+            }
+
+            [cdkDropList].cdk-drop-list-dragging [cdkDrag]:not(.cdk-drag-placeholder) {
+                transition: transform 500ms cubic-bezier(0, 0, 0.2, 1);
+            }
+
+            .subchecklist {
+                position: relative;
+
+                div.actions {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+
+                ul.checklist {
+                    @apply list-none;
+                    @apply overflow-x-hidden;
+                    @apply mr-1;
+
+                    li {
+                        @apply flex;
+                        @apply justify-between;
+
+                        &:before {
+                            @apply whitespace-nowrap;
+                            @apply w-0;
+                        }
 
                         span {
-                            @apply pl-1;
+                            &:first-child span {
+                                @apply pr-1;
+                            }
+
+                            &:last-child {
+                                @apply pl-1;
+
+                                span {
+                                    @apply pl-1;
+                                }
+                            }
+
+                            //> span {
+                            //    background: var(--cx-preview-background);
+                            //}
+                        }
+
+                        span:first-child {
+                            @apply min-w-fit;
+                        }
+
+                        &.precondition,
+                        &.postcondition,
+                        &.subtitle {
+                            @apply font-semibold;
+                            @apply pl-2;
+                        }
+
+                        &.precondition,
+                        &.postcondition {
+                            @apply italic;
+                        }
+
+                        &.postcondition {
+                            @apply flex-row-reverse;
+                            //@apply pr-2;
                         }
                     }
 
-                    > span {
-                        background: var(--cx-preview-background);
+                    &.dots li.checkitem:before {
+                        font-family: sans-serif !important;
+                        content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
                     }
-                }
 
-                span:first-child {
-                    @apply min-w-fit;
-                }
+                    &.line li.checkitem:before {
+                        font-family: sans-serif !important;
+                        content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
+                    }
 
-                span + span {
-                    @apply grow;
-                    @apply text-right;
-                }
+                    &.middots li.checkitem:before {
+                        font-family: monospace !important;
+                        content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
+                        font-size: 85%;
+                        letter-spacing: -2px;
+                    }
 
-                &.precondition,
-                &.postcondition,
-                &.subtitle {
-                    @apply font-semibold;
-                    @apply pl-2;
-                }
+                    &.middashed li.checkitem:before {
+                        font-family: monospace !important;
+                        content: '-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------';
+                        letter-spacing: 3px;
+                    }
 
-                &.precondition,
-                &.postcondition {
-                    @apply italic;
-                }
+                    &.dashed li.checkitem:before {
+                        font-family: monospace !important;
+                        content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
+                        font-size: 85%;
+                        letter-spacing: 3px;
+                    }
 
-                &.postcondition {
-                    @apply flex-row-reverse;
-                    @apply pr-2;
-                }
-            }
+                    &.cx-table {
+                        margin-left: 0;
+                        margin-right: 0;
 
-            &.dots li:not(.precondition):not(.postcondition):not(.subtitle):before {
-                font-family: sans-serif !important;
-                content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-            }
+                        li {
+                            @apply pr-1;
 
-            &.line li:not(.precondition):not(.postcondition):not(.subtitle):before {
-                font-family: sans-serif !important;
-                content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
-            }
+                            &:nth-child(even) {
+                                @apply bg-neutral-300;
 
-            &.middots li:not(.precondition):not(.postcondition):not(.subtitle):before {
-                font-family: monospace !important;
-                content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-                font-size: 85%;
-                letter-spacing: -2px;
-            }
-
-            &.middashed li:not(.precondition):not(.postcondition):not(.subtitle):before {
-                font-family: monospace !important;
-                content: '-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------';
-                letter-spacing: 3px;
-            }
-
-            &.dashed li:not(.precondition):not(.postcondition):not(.subtitle):before {
-                font-family: monospace !important;
-                content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
-                font-size: 85%;
-                letter-spacing: 3px;
-            }
-
-            &.cx-table {
-                margin-left: 0;
-                margin-right: 0;
-
-                li {
-                    @apply pr-1;
-
-                    &:nth-child(even) {
-                        @apply bg-neutral-300;
-
-                        span {
-                            @apply bg-neutral-300;
+                                span {
+                                    @apply bg-neutral-300;
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-
-        //ul.checklist {
-        //    @apply list-none;
-        //    @apply overflow-x-hidden;
-        //
-        //    li {
-        //        span {
-        //            @apply max-w-[50%];
-        //        }
-        //
-        //        span:first-child {
-        //            @apply pr-1;
-        //
-        //            background: var(--cx-preview-background) !important;
-        //        }
-        //
-        //        span + span {
-        //            @apply float-right;
-        //            @apply pl-1;
-        //            @apply text-right;
-        //
-        //            background: var(--cx-preview-background) !important;
-        //        }
-        //    }
-        //
-        //    //&:not(.no-leading-dots) li {
-        //    li:before {
-        //        @apply whitespace-nowrap;
-        //        @apply float-left;
-        //        @apply w-0;
-        //    }
-        //
-        //    &.dots li:before {
-        //        font-family: sans-serif !important;
-        //        content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-        //    }
-        //
-        //    &.mid-dots li:before {
-        //        font-family: monospace !important;
-        //        content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-        //    }
-        //
-        //    &.line li:before {
-        //        font-family: sans-serif !important;
-        //        content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
-        //    }
-        //
-        //    &.dashed li:before {
-        //        //font-family: sans-serif !important;
-        //        content: '-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------';
-        //    }
-        //
-        //    //li span {
-        //    //    text-transform: uppercase;
-        //    //}
-        //}
-
-        //dl.checklist {
-        //    display: flex;
-        //    flex-wrap: wrap;
-        //    justify-content: space-between;
-        //    align-items: self-start;
-        //
-        //    > dt,
-        //    dd {
-        //        //flex: 50%;
-        //        > span {
-        //            background: var(--cx-preview-background) !important;
-        //        }
-        //    }
-        //
-        //    dd {
-        //        text-align: right;
-        //        flex: 25%;
-        //    }
-        //
-        //    dt:before {
-        //        @apply whitespace-nowrap;
-        //        @apply float-left;
-        //        @apply w-0;
-        //    }
-        //
-        //    &.dots dt:before {
-        //        font-family: sans-serif !important;
-        //        content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-        //    }
-        //
-        //    &.mid-dots dt:before {
-        //        font-family: monospace !important;
-        //        content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-        //    }
-        //
-        //    &.line dt:before {
-        //        font-family: sans-serif !important;
-        //        content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
-        //    }
-        //}
-
-        //dl.checklist {
-        //    @apply flex;
-        //    @apply flex-wrap;
-        //
-        //    dt,
-        //    dd {
-        //        @apply basis-1/2;
-        //    }
-        //
-        //    dd {
-        //        text-align: right;
-        //    }
-        //}
     }
 
     @media print {

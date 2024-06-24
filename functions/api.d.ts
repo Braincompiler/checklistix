@@ -175,6 +175,279 @@ export interface paths {
         };
         trace?: never;
     };
+    "/checklists/{id}/checklist-items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Creates a new checklist item */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Checklist item information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SubChecklistForm"] | components["schemas"]["SectionTitleForm"] | components["schemas"]["TextBoxForm"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/checklist-items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Updates a checklist item */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Checklist item information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SubChecklistForm"] | components["schemas"]["SectionTitleForm"] | components["schemas"]["TextBoxForm"];
+                };
+            };
+            responses: {
+                /** @description Ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/checklist-items/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Bulk update of checklist items */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Checklist items */
+            requestBody: {
+                content: {
+                    "application/json": (components["schemas"]["SubChecklistForm"] | components["schemas"]["SectionTitleForm"] | components["schemas"]["TextBoxForm"])[];
+                };
+            };
+            responses: {
+                /** @description Ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/checklist-items/{id}/sub-checklist-items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Creates a new sub checklist item */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description SubChecklist item information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SubChecklistItemCheckItemForm"] | components["schemas"]["SubChecklistItemSubtitleForm"] | components["schemas"]["SubChecklistItemPreconditionForm"] | components["schemas"]["SubChecklistItemPostconditionForm"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sub-checklist-items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Updates a sub checklist item */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Checklist item information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SubChecklistItemCheckItemForm"] | components["schemas"]["SubChecklistItemSubtitleForm"] | components["schemas"]["SubChecklistItemPreconditionForm"] | components["schemas"]["SubChecklistItemPostconditionForm"];
+                };
+            };
+            responses: {
+                /** @description Ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        trace?: never;
+    };
     "/checklists": {
         parameters: {
             query?: never;
@@ -253,7 +526,7 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         ChecklistForm: {
-            name?: string;
+            title?: string;
             /** Format: date-time */
             created?: string;
             /** Format: date-time */
@@ -265,11 +538,12 @@ export interface components {
             fontSize?: number;
             borderThickness?: components["schemas"]["BorderThickness"];
             fontFamily?: string;
+            defaultColor?: string;
             checklistItems?: (components["schemas"]["SubChecklist"] | components["schemas"]["SectionTitle"] | components["schemas"]["TextBox"])[];
         };
         Checklist: components["schemas"]["ChecklistForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         /** @enum {string} */
         PageSize: "A4" | "A5" | "Letter" | "HalfLetter";
@@ -277,62 +551,53 @@ export interface components {
         PageOrientation: "Portrait" | "Landscape";
         /** @enum {string} */
         ChecklistStyle: "Dots" | "Line" | "MidDots" | "Dashed" | "Table";
-        /** @enum {number} */
+        /** @enum {integer} */
         BorderThickness: 0 | 1 | 2 | 4;
         SubChecklistForm: {
             /** Format: uuid */
             checklistId?: string;
+            column?: number;
+            page?: number;
+            position?: number;
             title?: string;
             color?: string;
-            items?: (components["schemas"]["SubChecklistItemCheckItem"] | components["schemas"]["SubChecklistItemPrecondition"] | components["schemas"]["SubChecklistItemPostcondition"] | components["schemas"]["SubChecklistItemSubtitle"])[];
+            subChecklistItems?: (components["schemas"]["SubChecklistItemCheckItem"] | components["schemas"]["SubChecklistItemSubtitle"] | components["schemas"]["SubChecklistItemPrecondition"] | components["schemas"]["SubChecklistItemPostcondition"])[];
             type?: components["schemas"]["ChecklistItemType"];
         };
         SubChecklist: components["schemas"]["SubChecklistForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         SectionTitleForm: {
             /** Format: uuid */
             checklistId?: string;
+            column?: number;
+            page?: number;
+            position?: number;
             text?: string;
             color?: string;
             type?: components["schemas"]["ChecklistItemType"];
         };
         SectionTitle: components["schemas"]["SectionTitleForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         TextBoxForm: {
             /** Format: uuid */
             checklistId?: string;
+            column?: number;
+            page?: number;
+            position?: number;
             text?: string;
             color?: string;
             type?: components["schemas"]["ChecklistItemType"];
         };
         TextBox: components["schemas"]["TextBoxForm"] & {
             /** Format: uuid */
-            id?: string;
-        };
-        ColumnBreakForm: {
-            /** Format: uuid */
-            checklistId?: string;
-            type?: components["schemas"]["ChecklistItemType"];
-        };
-        ColumnBreak: components["schemas"]["ColumnBreakForm"] & {
-            /** Format: uuid */
-            id?: string;
-        };
-        PageBreakForm: {
-            /** Format: uuid */
-            checklistId?: string;
-            type?: components["schemas"]["ChecklistItemType"];
-        };
-        PageBreak: components["schemas"]["PageBreakForm"] & {
-            /** Format: uuid */
-            id?: string;
+            id: string;
         };
         /** @enum {string} */
-        ChecklistItemType: "SubChecklist" | "SectionTitle" | "TextBox" | "ColumnBreak" | "PageBreak";
+        ChecklistItemType: "SubChecklist" | "SectionTitle" | "TextBox";
         SubChecklistItemCheckItemForm: {
             /** Format: uuid */
             subChecklistId?: string;
@@ -342,7 +607,7 @@ export interface components {
         };
         SubChecklistItemCheckItem: components["schemas"]["SubChecklistItemCheckItemForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         SubChecklistItemPreconditionForm: {
             /** Format: uuid */
@@ -352,7 +617,7 @@ export interface components {
         };
         SubChecklistItemPrecondition: components["schemas"]["SubChecklistItemPreconditionForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         SubChecklistItemPostconditionForm: {
             /** Format: uuid */
@@ -362,7 +627,7 @@ export interface components {
         };
         SubChecklistItemPostcondition: components["schemas"]["SubChecklistItemPostconditionForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         SubChecklistItemSubtitleForm: {
             /** Format: uuid */
@@ -372,7 +637,7 @@ export interface components {
         };
         SubChecklistItemSubtitle: components["schemas"]["SubChecklistItemSubtitleForm"] & {
             /** Format: uuid */
-            id?: string;
+            id: string;
         };
         /** @enum {string} */
         SubChecklistItemType: "CheckItem" | "Precondition" | "Postcondition" | "Subtitle";

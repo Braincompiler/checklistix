@@ -15,6 +15,7 @@ import { FooterComponent, TopbarComponent } from '@components';
 declare global {
     interface Window {
         HSStaticMethods: IStaticMethods;
+        HSTooltip: any;
     }
 }
 
@@ -46,10 +47,17 @@ export class AppComponent implements OnInit {
                 takeUntilDestroyed(this.#destroyRef),
                 filter((e) => e instanceof NavigationEnd),
             )
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.#doc.defaultView?.HSStaticMethods?.autoInit();
-                }, 100);
-            });
+            .subscribe(() => this.runPrelineAutoInit());
+
+        // this.runPrelineAutoInit();
+    }
+
+    private runPrelineAutoInit() {
+        setTimeout(() => {
+            // console.log('autoInit', this.#doc.defaultView?.HSTooltip?.autoInit);
+            this.#doc.defaultView?.HSStaticMethods?.autoInit();
+            this.#doc.defaultView?.HSTooltip?.autoInit();
+            this.#doc.defaultView?.HSAccordion?.autoInit();
+        }, 300);
     }
 }

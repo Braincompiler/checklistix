@@ -10,7 +10,7 @@
                     <div class="sm:col-span-1">
                         <a
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none"
-                            routerLink="./new/editor"
+                            (click)="onNewChecklist()"
                         >
                             <svg
                                 class="flex-shrink-0 size-4"
@@ -40,25 +40,25 @@
                         <tr>
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                                class="px-6 py-3 text-start text-xs font-medium text-neutral-500 uppercase"
                             >
                                 Name
                             </th>
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                                class="px-6 py-3 text-start text-xs font-medium text-neutral-500 uppercase"
                             >
                                 Created
                             </th>
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                                class="px-6 py-3 text-start text-xs font-medium text-neutral-500 uppercase"
                             >
                                 Updated
                             </th>
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                                class="px-6 py-3 text-end text-xs font-medium text-neutral-500 uppercase"
                             >
                                 Actions
                             </th>
@@ -67,14 +67,24 @@
                     <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                         @for (checklist of checklists$ | async; track checklist.id) {
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                    <a (click)="onOpenChecklist(checklist.id, 'viewer')"> {{ checklist.name }} </a>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                                    <a (click)="onOpenChecklist(checklist.id, 'viewer')">
+                                        @if (checklist.title) {
+                                            {{ checklist.title }}
+                                        } @else {
+                                            <em class="text-neutral-500">n/a</em>
+                                        }
+                                    </a>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-800 dark:text-neutral-200">
                                     {{ checklist.created | date: 'fullDate' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                    {{ checklist.updated | date: 'fullDate' }}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-800 dark:text-neutral-200">
+                                    @if (checklist.updated && checklist.updated > checklist.created) {
+                                        {{ checklist.updated | date: 'fullDate' }}
+                                    } @else {
+                                        <span class="text-neutral-500">not yet updated</span>
+                                    }
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                     <a

@@ -1,7 +1,6 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { PageOrientation, PageSize } from '@api';
 import { ChecklistPreviewComponent } from '@components';
 
 import { AppStore } from '../../../../app.store';
@@ -17,14 +16,15 @@ import { IChecklistVM } from '../../../../mapper';
     ],
 })
 export class ViewerComponent {
-    public readonly appStore = inject(AppStore);
-    public readonly checklistId = input<string>('', { alias: 'id' });
-    public readonly checklist = computed(() => {
-        const checklist = this.appStore.currentChecklist();
+    readonly #appStore = inject(AppStore);
 
-        return checklist ?? ({} as IChecklistVM);
-    });
+    public readonly checklistId = input.required<string>({ alias: 'id' });
+    public readonly checklist = computed(() => this.#appStore.currentChecklist() ?? ({} as IChecklistVM));
 
-    public pageSize: PageSize = PageSize.A4;
-    public pageOrientation: PageOrientation = PageOrientation.Portrait;
+    public constructor() {
+        effect(
+            () => this.#appStore.loadById(this.checklistId()), //
+            { allowSignalWrites: true },
+        );
+    }
 }

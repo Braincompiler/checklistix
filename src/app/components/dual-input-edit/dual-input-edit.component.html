@@ -1,0 +1,47 @@
+@if (isEditModeActive() && form) {
+    <ng-container [formGroup]="form">
+        <div
+            class="dual-input"
+            (cxClickOutside)="onExitEditMode()"
+        >
+            <input
+                #leftInput
+                type="text"
+                [placeholder]="leftPlaceholder()"
+                [formControlName]="leftPropName()"
+                (keyup.enter)="onExitEditMode()"
+                (focus)="$any($event.target).select()"
+            />
+            <input
+                #rightInput
+                type="text"
+                class="right"
+                [placeholder]="rightPlaceholder()"
+                [formControlName]="rightPropName()"
+                (keyup.enter)="onExitEditMode()"
+                (focus)="$any($event.target).select()"
+            />
+        </div>
+    </ng-container>
+} @else {
+    <div
+        class="dual-view"
+        [class.empty]="leftFormValueIsEmpty || rightFormValueIsEmpty"
+    >
+        <!--        <pre>{{ form?.value | json }}</pre>-->
+        <span
+            class="left"
+            [class.empty]="leftFormValueIsEmpty"
+            (dblclick)="enterDualEditMode('left')"
+        >
+            <span>{{ leftFormValue }}</span>
+        </span>
+        <span
+            class="right"
+            [class.empty]="rightFormValueIsEmpty"
+            (dblclick)="enterDualEditMode('right')"
+        >
+            <span>{{ rightFormValue }}</span>
+        </span>
+    </div>
+}

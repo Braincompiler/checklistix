@@ -1,6 +1,6 @@
 import { computed, inject } from '@angular/core';
 
-import { distinctUntilChanged, pipe, switchMap, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 
 import { withDevtools, withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { tapResponse } from '@ngrx/operators';
@@ -46,33 +46,43 @@ export const AppStore = signalStore(
         (
             store, //
             checklistService = inject(ChecklistsService),
-        ) => ({
-            login() {
-                patchState(store, { user: { userId: 'null' } });
-            },
+        ) => {
+            const setIsLoading = (isLoading: boolean) => patchState(store, { isLoading });
+            const startIsLoading = () => setIsLoading(true);
+            const stopIsLoading = () => setIsLoading(false);
 
-            logout() {
-                patchState(store, { user: { userId: null } });
-            },
+            return {
+                setIsLoading,
+                startIsLoading,
+                stopIsLoading,
 
-            loadById: rxMethod<string>(
-                pipe(
-                    distinctUntilChanged(), //
-                    tap(() => patchState(store, { isLoading: true })),
-                    switchMap((id) =>
-                        checklistService.checklistsIdGet(id).pipe(
-                            tapResponse({
-                                next: (checklist) => patchState(store, { currentChecklist: checklistMapToVM(checklist), currentChecklistError: null }),
-                                error: (err) => {
-                                    console.error(err);
-                                    patchState(store, { currentChecklist: null, currentChecklistError: err });
-                                },
-                                finalize: () => patchState(store, { isLoading: false }),
-                            }),
+                login() {
+                    patchState(store, { user: { userId: 'null' } });
+                },
+
+                logout() {
+                    patchState(store, { user: { userId: null } });
+                },
+
+                loadById: rxMethod<string>(
+                    pipe(
+                        // distinctUntilChanged(), //
+                        tap(() => patchState(store, { isLoading: true })),
+                        switchMap((id) =>
+                            checklistService.checklistsIdGet(id).pipe(
+                                tapResponse({
+                                    next: (checklist) => patchState(store, { currentChecklist: checklistMapToVM(checklist), currentChecklistError: null }),
+                                    error: (err) => {
+                                        console.error(err);
+                                        patchState(store, { currentChecklist: null, currentChecklistError: err });
+                                    },
+                                    finalize: () => patchState(store, { isLoading: false }),
+                                }),
+                            ),
                         ),
                     ),
                 ),
-            ),
-        }),
+            };
+        },
     ),
 );

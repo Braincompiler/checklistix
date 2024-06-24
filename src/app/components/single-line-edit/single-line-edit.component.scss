@@ -1,0 +1,43 @@
+:host {
+    @apply w-full;
+
+    &.edit-enabled {
+        span {
+            @apply cursor-text;
+            @apply h-5;
+            //@apply block;
+
+            &.empty {
+                //@apply outline;
+                //@apply outline-1;
+                //@apply outline-neutral-200;
+                @apply w-full;
+                @apply text-neutral-400;
+                @apply font-normal;
+
+                &:not(.block) {
+                    @apply bg-neutral-200;
+                    @apply p-1;
+                }
+            }
+
+            &.text-right {
+                @apply pr-2;
+            }
+        }
+
+        input {
+            @apply h-5;
+            @apply p-0.5;
+            @apply text-xs;
+            @apply w-3/4;
+            @apply text-center;
+            @apply font-normal;
+
+            &.full-width {
+                @apply w-full;
+                @apply text-left;
+            }
+        }
+    }
+}

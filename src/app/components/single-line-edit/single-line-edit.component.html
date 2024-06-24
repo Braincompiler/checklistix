@@ -1,0 +1,25 @@
+@if (isEditModeActive() && form) {
+    <ng-container [formGroup]="form">
+        <input
+            #singleLineInput
+            autofocus
+            type="text"
+            formControlName="singleLine"
+            [placeholder]="placeholder()"
+            [class.full-width]="fullWidth()"
+            [class.!text-right]="textRight()"
+            (blur)="onExitEditMode()"
+            (keyup.enter)="onExitEditMode()"
+            (focus)="$any($event.target).select()"
+        />
+    </ng-container>
+} @else {
+    <span
+        (dblclick)="onEnterEditMode()"
+        [class.text-right]="textRight()"
+        [class.block]="!noBlock()"
+        [class.empty]="formValueIsEmpty"
+    >
+        {{ formValue }}
+    </span>
+}
