@@ -3,17 +3,20 @@ import { isNil } from 'ramda';
 
 import { Checklist } from '@api';
 
-import { supabase } from '../db';
+import { createSupabaseClient } from '../db';
 import { Tables } from '../db.types';
 import { mapChecklistVMToDTO } from '../mapping';
+import { withAuth } from '../middlewares/auth';
 
-export default async (req: Request, ctx: Context) => {
+const patchChecklist = async (req: Request, ctx: Context, accessToken?: string) => {
     const { id } = ctx.params;
     if (isNil(id)) {
         return new Response('missing id', { status: 400 });
     }
 
-    const { data, error } = await supabase //
+    const supabaseClient = createSupabaseClient(accessToken);
+
+    const { data, error } = await supabaseClient //
         .from('checklists')
         .select('*')
         .eq('id', id)
@@ -36,7 +39,7 @@ export default async (req: Request, ctx: Context) => {
 
     console.log(updateData);
 
-    const updatedChecklist = await supabase
+    const updatedChecklist = await supabaseClient
         .from('checklists') //
         .update({
             ...mapChecklistVMToDTO(updateData),
@@ -50,6 +53,8 @@ export default async (req: Request, ctx: Context) => {
         status: 200,
     });
 };
+
+export default (req: Request, ctx: Context) => withAuth(patchChecklist)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id',

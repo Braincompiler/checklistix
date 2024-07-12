@@ -4,6 +4,79 @@
  */
 
 export interface paths {
+    "/checklists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns a list of checklists */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description An array of checklists */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Checklist"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Creates a new checklist */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Checklist information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ChecklistForm"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/checklists/{id}": {
         parameters: {
             query?: never;
@@ -448,15 +521,123 @@ export interface paths {
         };
         trace?: never;
     };
-    "/checklists": {
+    "/auth/sign-up": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Returns a list of checklists */
-        get: {
+        get?: never;
+        put?: never;
+        /** Sign up */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description User information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AuthForm"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/sign-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign in */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description User information */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AuthForm"];
+                };
+            };
+            responses: {
+                /** @description Ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/sign-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign out */
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -465,35 +646,8 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description An array of checklists */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Checklist"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /** Creates a new checklist */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description Checklist information */
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ChecklistForm"];
-                };
-            };
-            responses: {
-                /** @description Created */
-                201: {
+                /** @description No content */
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -641,6 +795,12 @@ export interface components {
         };
         /** @enum {string} */
         SubChecklistItemType: "CheckItem" | "Precondition" | "Postcondition" | "Subtitle";
+        AuthForm: {
+            /** Format: email */
+            email: string;
+            /** Format: password */
+            password: string;
+        };
     };
     responses: never;
     parameters: never;

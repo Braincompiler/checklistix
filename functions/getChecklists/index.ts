@@ -1,10 +1,13 @@
 import { Config, Context } from '@netlify/functions';
 
 import { ChecklistOverviewItem } from '../api';
-import { supabase } from '../db';
+import { createSupabaseClient } from '../db';
+import { withAuth } from '../middlewares/auth';
 
-export default async (req: Request, ctx: Context) => {
-    const { data: checklists, error } = await supabase
+const getChecklists = async (req: Request, ctx: Context, accessToken?: string) => {
+    const supabaseClient = createSupabaseClient(accessToken);
+
+    const { data: checklists, error } = await supabaseClient
         .from('checklists') //
         .select('id, title, created, updated')
         .returns<ChecklistOverviewItem[]>();
@@ -17,6 +20,8 @@ export default async (req: Request, ctx: Context) => {
 
     return ctx.json(checklists);
 };
+
+export default (req: Request, ctx: Context) => withAuth(getChecklists)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists',

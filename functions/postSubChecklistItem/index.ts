@@ -1,10 +1,11 @@
 import { Config, Context } from '@netlify/functions';
 import { isNil } from 'ramda';
 
-import { supabase } from '../db';
+import { createSupabaseClient } from '../db';
 import { Tables } from '../db.types';
+import { withAuth } from '../middlewares/auth';
 
-export default async (req: Request, ctx: Context) => {
+const postSubChecklistItem = async (req: Request, ctx: Context, accessToken?: string) => {
     const { id } = ctx.params;
     if (isNil(id)) {
         return new Response('missing id', { status: 400 });
@@ -17,7 +18,7 @@ export default async (req: Request, ctx: Context) => {
 
     console.log(data);
 
-    const { data: createdChecklistItem, error } = await supabase
+    const { data: createdChecklistItem, error } = await createSupabaseClient(accessToken)
         .from('sub_checklist_items') //
         .insert<Tables<'sub_checklist_items'>>({
             id: data.id,
@@ -40,6 +41,8 @@ export default async (req: Request, ctx: Context) => {
         status: 201,
     });
 };
+
+export default (req: Request, ctx: Context) => withAuth(postSubChecklistItem)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklist-items/:id/sub-checklist-items',

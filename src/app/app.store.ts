@@ -1,4 +1,5 @@
 import { computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { pipe, switchMap, tap } from 'rxjs';
 
@@ -8,7 +9,7 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { isNil } from 'ramda';
 
-import { ChecklistsService } from '@api';
+import { AuthForm, AuthService, ChecklistsService } from '@api';
 
 import { checklistMapToVM, IChecklistVM } from './mapper';
 
@@ -17,14 +18,14 @@ export interface IUserState {
 }
 
 export interface IAppState {
-    user: IUserState;
+    user: IUserState | null;
     isLoading: boolean;
     currentChecklist: IChecklistVM | null;
     currentChecklistError: any | null;
 }
 
 const initialState: IAppState = {
-    user: { userId: null },
+    user: null,
     isLoading: false,
     currentChecklist: null,
     currentChecklistError: null,
@@ -39,13 +40,15 @@ export const AppStore = signalStore(
     withDevtools('checklistix'),
 
     withComputed(({ user }) => ({
-        isLoggedIn: computed(() => !isNil(user.userId())),
+        isLoggedIn: computed(() => !isNil(user())),
     })),
 
     withMethods(
         (
             store, //
             checklistService = inject(ChecklistsService),
+            authService = inject(AuthService),
+            router = inject(Router),
         ) => {
             const setIsLoading = (isLoading: boolean) => patchState(store, { isLoading });
             const startIsLoading = () => setIsLoading(true);
@@ -56,13 +59,52 @@ export const AppStore = signalStore(
                 startIsLoading,
                 stopIsLoading,
 
-                login() {
-                    patchState(store, { user: { userId: 'null' } });
-                },
+                // login() {
+                //     patchState(store, { user: { userId: 'null' } });
+                // },
+                login: rxMethod<AuthForm>(
+                    pipe(
+                        tap(() => patchState(store, { isLoading: true })),
+                        switchMap((authData: AuthForm) =>
+                            authService.authSignInPost(authData).pipe(
+                                tapResponse({
+                                    next: async (user) => {
+                                        patchState(store, { user });
 
-                logout() {
-                    patchState(store, { user: { userId: null } });
-                },
+                                        await router.navigateByUrl('/my/checklists');
+                                    },
+                                    error: (err) => {
+                                        console.error(err);
+                                        patchState(store, { user: null });
+                                    },
+                                    finalize: () => patchState(store, { isLoading: false }),
+                                }),
+                            ),
+                        ),
+                    ),
+                ),
+
+                logout: rxMethod<void>(
+                    pipe(
+                        tap(() => patchState(store, { isLoading: true })),
+                        switchMap(() =>
+                            authService.authSignOutPost().pipe(
+                                tapResponse({
+                                    next: async () => patchState(store, { user: null }),
+                                    error: (err) => {
+                                        console.error(err);
+                                        patchState(store, { user: null });
+                                    },
+                                    finalize: () => patchState(store, { isLoading: false }),
+                                }),
+                            ),
+                        ),
+                    ),
+                ),
+
+                // logout() {
+                //     patchState(store, { user: { userId: null } });
+                // },
 
                 loadById: rxMethod<string>(
                     pipe(

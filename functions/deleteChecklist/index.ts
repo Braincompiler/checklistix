@@ -1,15 +1,16 @@
 import { Config, Context } from '@netlify/functions';
 import { isNil } from 'ramda';
 
-import { supabase } from '../db';
+import { createSupabaseClient } from '../db';
+import { withAuth } from '../middlewares/auth';
 
-export default async (req: Request, ctx: Context) => {
+const deleteChecklist = async (req: Request, ctx: Context, accessToken?: string) => {
     const { id } = ctx.params;
     if (isNil(id)) {
         return new Response('missing id', { status: 400 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await createSupabaseClient(accessToken)
         .from('checklists') //
         .delete()
         .eq('id', id);
@@ -24,6 +25,8 @@ export default async (req: Request, ctx: Context) => {
         status: 204,
     });
 };
+
+export default (req: Request, ctx: Context) => withAuth(deleteChecklist)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id',

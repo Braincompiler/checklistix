@@ -36,6 +36,7 @@ export const appConfig: ApplicationConfig = {
         provideApi(
             withApiConfiguration({
                 basePath: environment.endpoint,
+                withCredentials: true,
             }),
         ),
         provideZoneChangeDetection({ eventCoalescing: true }), //

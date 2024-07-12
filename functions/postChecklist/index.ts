@@ -1,24 +1,42 @@
 import { Config, Context } from '@netlify/functions';
 
-import { supabase } from '../db';
-import { Tables } from '../db.types';
+import { ChecklistForm } from '@api';
 
-export default async (req: Request, ctx: Context) => {
-    const data = await req.json();
+import { createSupabaseClient } from '../db';
+import { withAuth } from '../middlewares/auth';
 
-    const createdChecklist = await supabase
+const postChecklist = async (req: Request, ctx: Context, accessToken?: string) => {
+    const newChecklist = (await req.json()) as ChecklistForm;
+
+    const { data: createdChecklist, error } = await createSupabaseClient(accessToken)
         .from('checklists') //
-        .insert<Tables<'checklists'>>({
-            ...data,
+        .insert({
+            border_thickness: newChecklist.borderThickness,
+            columns: newChecklist.columns,
+            created: new Date().toISOString(),
+            default_color: newChecklist.defaultColor,
+            font_family: newChecklist.fontFamily,
+            font_size: newChecklist.fontSize,
+            page_orientation: newChecklist.pageOrientation,
+            page_size: newChecklist.pageSize,
+            style: newChecklist.style,
+            title: newChecklist.title,
         })
         .select()
-        // .returns<Tables<'checklists'>>()
         .single();
 
-    return Response.json(createdChecklist.data, {
+    if (error) {
+        console.error(error);
+
+        return new Response(JSON.stringify(error), { status: 500 });
+    }
+
+    return Response.json(createdChecklist, {
         status: 201,
     });
 };
+
+export default (req: Request, ctx: Context) => withAuth(postChecklist)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists',

@@ -249,7 +249,7 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
 export class ChecklistPreviewComponent implements AfterViewInit {
     readonly #document = inject(DOCUMENT);
     readonly #fb = inject(FormBuilder);
-    readonly #doc = inject(DOCUMENT);
+    // readonly #doc = inject(DOCUMENT);
 
     @ViewChild('accordionNode', { static: false })
     public readonly accordionNode!: ElementRef;

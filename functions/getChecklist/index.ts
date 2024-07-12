@@ -3,15 +3,16 @@ import { isNil } from 'ramda';
 
 import { Checklist } from '@api';
 
-import { supabase } from '../db';
+import { createSupabaseClient } from '../db';
+import { withAuth } from '../middlewares/auth';
 
-export default async (req: Request, ctx: Context) => {
+const getChecklist = async (req: Request, ctx: Context, accessToken?: string) => {
     const { id } = ctx.params;
     if (isNil(id)) {
         return new Response('missing id', { status: 400 });
     }
 
-    const { data: checklist, error } = await supabase //
+    const { data: checklist, error } = await createSupabaseClient(accessToken) //
         .from('checklists')
         .select(
             'pageSize:page_size, pageOrientation:page_orientation, fontSize:font_size, borderThickness:border_thickness, fontFamily:font_family, defaultColor:default_color, *, checklistItems:checklist_items (checklistId:checklist_id, *, subChecklistItems:sub_checklist_items (subChecklistId:sub_checklist_id, *))',
@@ -38,6 +39,8 @@ export default async (req: Request, ctx: Context) => {
 
     return ctx.json(checklist);
 };
+
+export default (req: Request, ctx: Context) => withAuth(getChecklist)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id',

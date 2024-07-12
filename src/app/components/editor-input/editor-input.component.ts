@@ -1,4 +1,4 @@
-import { Component, forwardRef, input } from '@angular/core';
+import { AfterViewInit, booleanAttribute, Component, ElementRef, forwardRef, input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -14,17 +14,27 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/f
     ],
     imports: [FormsModule],
 })
-export class EditorInputComponent implements ControlValueAccessor {
+export class EditorInputComponent implements ControlValueAccessor, AfterViewInit {
     #onChange = (_value: string) => {};
     #onTouched = () => {};
 
     public readonly label = input.required<string>();
+    public readonly autofocus = input(false, { transform: (v) => booleanAttribute(v) });
 
     public readonly type = input<string>('text');
     public readonly placeholder = input<string>('');
     public readonly inputId = input<string>(`input-${Math.random() * 100}`);
 
+    @ViewChild('inputElement')
+    private readonly inputElement?: ElementRef<HTMLInputElement>;
+
     public _value?: string;
+
+    public ngAfterViewInit(): void {
+        if (this.autofocus()) {
+            this.inputElement?.nativeElement?.focus();
+        }
+    }
 
     public writeValue(value: string): void {
         this._value = value;

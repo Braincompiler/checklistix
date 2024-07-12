@@ -9,6 +9,38 @@ servers:
 tags:
   - name: Checklists
 paths:
+  /checklists:
+    get:
+      tags:
+        - Checklists
+      summary: Returns a list of checklists
+      responses:
+        '200':
+          description: An array of checklists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Checklist'
+    post:
+      tags:
+        - Checklists
+      summary: Creates a new checklist
+      requestBody:
+        description: Checklist information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistForm'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
   /checklists/{id}:
     get:
       tags:
@@ -248,34 +280,52 @@ paths:
         '500':
           description: Internal server error
 
-  /checklists:
-    get:
-      tags:
-        - Checklists
-      summary: Returns a list of checklists
-      responses:
-        '200':
-          description: An array of checklists
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Checklist'
+  /auth/sign-up:
     post:
       tags:
-        - Checklists
-      summary: Creates a new checklist
+        - Auth
+      summary: Sign up
       requestBody:
-        description: Checklist information
+        description: User information
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChecklistForm'
+              $ref: '#/components/schemas/AuthForm'
       responses:
         '201':
           description: Created
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /auth/sign-in:
+    post:
+      tags:
+        - Auth
+      summary: Sign in
+      requestBody:
+        description: User information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthForm'
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /auth/sign-out:
+    post:
+      tags:
+        - Auth
+      summary: Sign out
+      responses:
+        '204':
+          description: No content
         '400':
           description: Bad request
         '500':
@@ -659,3 +709,16 @@ components:
         - Precondition
         - Postcondition
         - Subtitle
+
+    AuthForm:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password

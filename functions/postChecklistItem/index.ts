@@ -1,16 +1,19 @@
 import { Config, Context } from '@netlify/functions';
 import { isNil } from 'ramda';
 
-import { supabase } from '../db';
+import { createSupabaseClient } from '../db';
 import { Tables } from '../db.types';
+import { withAuth } from '../middlewares/auth';
 
-export default async (req: Request, ctx: Context) => {
+const postChecklistItem = async (req: Request, ctx: Context, accessToken?: string) => {
     const { id } = ctx.params;
     if (isNil(id)) {
         return new Response('missing id', { status: 400 });
     }
 
-    const { count, error: matchedChecklistError } = await supabase //
+    const supabaseClient = createSupabaseClient(accessToken);
+
+    const { count, error: matchedChecklistError } = await supabaseClient //
         .from('checklists')
         .select('*', {
             head: true,
@@ -36,7 +39,7 @@ export default async (req: Request, ctx: Context) => {
 
     console.log(data);
 
-    const { data: createdChecklistItem, error } = await supabase
+    const { data: createdChecklistItem, error } = await supabaseClient
         .from('checklist_items') //
         .insert<Tables<'checklist_items'>>({
             ...data,
@@ -55,6 +58,8 @@ export default async (req: Request, ctx: Context) => {
         status: 201,
     });
 };
+
+export default (req: Request, ctx: Context) => withAuth(postChecklistItem)(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id/checklist-items',
