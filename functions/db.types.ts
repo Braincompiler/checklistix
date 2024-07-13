@@ -20,6 +20,7 @@ export type Database = {
           text: string | null
           title: string | null
           type: string
+          user_id: string | null
         }
         Insert: {
           checklist_id: string
@@ -31,6 +32,7 @@ export type Database = {
           text?: string | null
           title?: string | null
           type: string
+          user_id?: string | null
         }
         Update: {
           checklist_id?: string
@@ -42,8 +44,16 @@ export type Database = {
           text?: string | null
           title?: string | null
           type?: string
+          user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "checklist_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "ChecklistItems_checklistId_fkey"
             columns: ["checklist_id"]
@@ -67,6 +77,7 @@ export type Database = {
           style: string
           title: string
           updated: string | null
+          user_id: string | null
         }
         Insert: {
           border_thickness?: number
@@ -81,6 +92,7 @@ export type Database = {
           style?: string
           title?: string
           updated?: string | null
+          user_id?: string | null
         }
         Update: {
           border_thickness?: number
@@ -95,8 +107,17 @@ export type Database = {
           style?: string
           title?: string
           updated?: string | null
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "checklists_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sub_checklist_items: {
         Row: {
@@ -106,6 +127,7 @@ export type Database = {
           sub_checklist_id: string
           text: string | null
           type: string
+          user_id: string | null
         }
         Insert: {
           action?: string | null
@@ -114,6 +136,7 @@ export type Database = {
           sub_checklist_id: string
           text?: string | null
           type: string
+          user_id?: string | null
         }
         Update: {
           action?: string | null
@@ -122,8 +145,16 @@ export type Database = {
           sub_checklist_id?: string
           text?: string | null
           type?: string
+          user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "sub_checklist_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "SubChecklistItems_subChecklistId_fkey"
             columns: ["sub_checklist_id"]

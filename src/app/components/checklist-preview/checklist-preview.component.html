@@ -3,9 +3,10 @@
         <page
             [attr.size]="checklistPage.checklist.pageSize"
             [attr.orientation]="checklistPage.checklist.pageOrientation"
-            [style.font-size.pt]="checklistPage.checklist.fontSize"
             [style.font-family]="checklistPage.checklist.fontFamily"
+            [ngClass]="fontSizeCssClass()"
         >
+            <!--            [style.font-size.pt]="checklistPage.checklist.fontSize"-->
             @if (isEdit()) {
                 <div class="hs-accordion-group min-h-10">
                     <div
@@ -162,10 +163,12 @@
                                                 @if (checklistItem['subChecklistItems']?.length === 0) {
                                                     @if (isEdit()) {
                                                         <p class="text-center my-2">
-                                                            Use the <i class="pi pi-plus-circle"></i> button to add the ckecklist items
+                                                            Use the <i class="pi pi-plus-circle"></i> button to add items to the ckecklist
                                                         </p>
                                                     } @else {
-                                                        <p>No items yet</p>
+                                                        <p class="min-h-1">
+                                                            <!-- No items yet -->
+                                                        </p>
                                                     }
                                                 } @else {
                                                     @for (subChecklistItem of checklistItem['subChecklistItems']; track subChecklistItem.id; let i = $index) {
@@ -224,7 +227,7 @@
                                             </ul>
 
                                             @if (isEdit()) {
-                                                <div class="actions mt-0.5 ml-2">
+                                                <div class="actions ml-2">
                                                     <cx-subchecklist-menu-button
                                                         [menuItems]="
                                                             subChecklistMenuItems

@@ -4,9 +4,6 @@
         [ngModel]="_value"
         (ngModelChange)="onValueChange($event)"
     >
-        <!--        <option>Dots</option>-->
-        <!--        <option>2</option>-->
-        <!--        <option>3</option>-->
         @for (item of options(); track item.key) {
             <option [value]="item.key">{{ item.value }}</option>
         }

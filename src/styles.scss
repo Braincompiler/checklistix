@@ -39,16 +39,57 @@ a:not([href]) {
 
 // global checklist preview styles
 .checklist-preview {
-    @apply text-neutral-900;
-    @apply p-3;
-    @apply bg-neutral-100;
+    @media screen {
+        @apply p-3;
+        @apply bg-neutral-100;
+    }
+
     @apply select-none;
+    @apply text-neutral-900;
 
     page {
-        @apply mx-auto;
-        @apply p-2;
+        @media screen {
+            @apply mx-auto;
+            @apply p-2;
+        }
 
-        //padding: 2mm;
+        &.fs8 {
+            font-size: 8pt;
+
+            li {
+                height: 12px;
+            }
+        }
+        &.fs9 {
+            font-size: 9pt;
+
+            li {
+                height: 14px;
+            }
+        }
+        &.fs10 {
+            font-size: 10pt;
+
+            li {
+                height: 16px;
+            }
+        }
+        &.fs11 {
+            font-size: 11pt;
+
+            li {
+                height: 18px;
+            }
+        }
+        &.fs12 {
+            font-size: 12pt;
+
+            li {
+                height: 20px;
+            }
+        }
+
+        padding: 5mm;
 
         margin-top: 5mm;
         margin-bottom: 5mm;
@@ -58,21 +99,21 @@ a:not([href]) {
 
         &[size='A4'] {
             width: 210mm;
-            height: 297mm;
+            height: 296mm;
 
             &[orientation='Landscape'] {
-                width: 297mm;
+                width: 296mm;
                 height: 210mm;
             }
         }
 
         &[size='A5'] {
-            width: 148mm;
+            width: 147mm;
             height: 210mm;
 
             &[orientation='Landscape'] {
                 width: 210mm;
-                height: 148mm;
+                height: 147mm;
             }
         }
 
@@ -122,13 +163,12 @@ a:not([href]) {
             column-fill: auto;
 
             div:not(.actions) {
-                &.textbox {
-                    @apply p-1;
-                }
-
                 .textbox-with-title {
                     .text {
                         @apply p-1;
+
+                        line-height: 1.1;
+                        margin-bottom: 0;
                     }
                 }
 
@@ -148,7 +188,9 @@ a:not([href]) {
                         @apply border-b-neutral-900;
                         @apply text-center;
                         @apply font-bold;
-                        @apply py-1;
+
+                        padding-top: 1px;
+                        padding-bottom: 1px;
                     }
                 }
             }
@@ -219,6 +261,9 @@ a:not([href]) {
                     @apply list-none;
                     @apply overflow-x-hidden;
                     @apply mr-1;
+                    @apply pb-1;
+
+                    //line-height: 1.5;
 
                     li {
                         @apply flex;
@@ -272,6 +317,7 @@ a:not([href]) {
                     &.dots li.checkitem:before {
                         font-family: sans-serif !important;
                         content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
+                        letter-spacing: -0.5px;
                     }
 
                     &.line li.checkitem:before {
@@ -282,8 +328,8 @@ a:not([href]) {
                     &.middots li.checkitem:before {
                         font-family: monospace !important;
                         content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
-                        font-size: 85%;
-                        letter-spacing: -2px;
+                        font-size: 80%;
+                        letter-spacing: -3px;
                     }
 
                     &.middashed li.checkitem:before {
@@ -295,8 +341,8 @@ a:not([href]) {
                     &.dashed li.checkitem:before {
                         font-family: monospace !important;
                         content: '________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________';
-                        font-size: 85%;
-                        letter-spacing: 3px;
+                        font-size: 80%;
+                        letter-spacing: 4px;
                     }
 
                     &.cx-table {

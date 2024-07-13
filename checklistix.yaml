@@ -410,7 +410,7 @@ components:
         - Line
         - MidDots
         - Dashed
-        - Table
+    #        - Table
 
     BorderThickness:
       type: integer

@@ -704,7 +704,7 @@ export interface components {
         /** @enum {string} */
         PageOrientation: "Portrait" | "Landscape";
         /** @enum {string} */
-        ChecklistStyle: "Dots" | "Line" | "MidDots" | "Dashed" | "Table";
+        ChecklistStyle: "Dots" | "Line" | "MidDots" | "Dashed";
         /** @enum {integer} */
         BorderThickness: 0 | 1 | 2 | 4;
         SubChecklistForm: {

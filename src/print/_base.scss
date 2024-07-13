@@ -1,0 +1,30 @@
+@media print {
+    body {
+        background: white;
+    }
+
+    body > * {
+        visibility: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    body .checklist-preview > page {
+        visibility: visible;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 5mm;
+
+        overflow: hidden;
+        box-sizing: border-box;
+        page-break-after: always;
+
+        -webkit-print-color-adjust: exact; /* Chrome/Safari/Edge/Opera */
+        color-adjust: exact; /* Firefox */
+    }
+
+    @page {
+        margin: 0;
+    }
+}

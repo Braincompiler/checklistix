@@ -197,6 +197,14 @@ const COLUMNS_CSS_CLASSES: Record<number, string> = {
     7: 'columns-7',
 };
 
+const FONT_SIZE_CSS_CLASSES: Record<number, string> = {
+    8: 'fs8',
+    9: 'fs9',
+    10: 'fs10',
+    11: 'fs11',
+    12: 'fs12',
+};
+
 const BORDER_CSS_CLASSES: Record<number, string> = {
     0: 'border-0',
     1: 'border-1',
@@ -249,7 +257,6 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
 export class ChecklistPreviewComponent implements AfterViewInit {
     readonly #document = inject(DOCUMENT);
     readonly #fb = inject(FormBuilder);
-    // readonly #doc = inject(DOCUMENT);
 
     @ViewChild('accordionNode', { static: false })
     public readonly accordionNode!: ElementRef;
@@ -264,6 +271,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     public readonly updateSubChecklistItem = output<IPropUpdate | IDualPropUpdate>();
     public readonly updateChecklistItemPosition = output<ChecklistFormChecklistItemsInner[]>();
 
+    public readonly fontSizeCssClass = computed(() => FONT_SIZE_CSS_CLASSES[this.checklist().fontSize ?? 10]);
     public readonly columnCssClass = computed(() => COLUMNS_CSS_CLASSES[this.checklist().columns ?? 2]);
     public readonly outlineCssClass = computed(() => BORDER_CSS_CLASSES[this.checklist().borderThickness ?? 2]);
     public readonly borderBCssClass = computed(() => BORDER_B_CSS_CLASSES[this.checklist().borderThickness ?? 2]);
@@ -360,9 +368,9 @@ export class ChecklistPreviewComponent implements AfterViewInit {
                     style: d.style ?? ChecklistStyle.Dots,
                     pageSize: d.pageSize ?? PageSize.A4,
                     pageOrientation: d.pageOrientation ?? PageOrientation.Portrait,
-                    columns: d.columns ?? 2,
+                    columns: parseInt((d.columns as any) ?? 2, 10),
                     borderThickness: d.borderThickness ?? BorderThickness.Medium,
-                    fontSize: d.fontSize ?? 10,
+                    fontSize: parseInt((d.fontSize as any) ?? 10, 10),
                     fontFamily: d.fontFamily ?? 'sans-serif',
                     defaultColor: d.defaultColor ?? '#d4d4d4',
                 }));

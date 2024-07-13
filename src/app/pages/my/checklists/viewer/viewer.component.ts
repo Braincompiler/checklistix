@@ -5,6 +5,7 @@ import { ChecklistPreviewComponent } from '@components';
 
 import { AppStore } from '../../../../app.store';
 import { IChecklistVM } from '../../../../mapper';
+import { PrintService } from '../../../../services/print.service';
 
 @Component({
     selector: 'cx-checklists-viewer',
@@ -14,9 +15,11 @@ import { IChecklistVM } from '../../../../mapper';
         ChecklistPreviewComponent, //
         RouterLink,
     ],
+    providers: [PrintService],
 })
 export class ViewerComponent {
     readonly #appStore = inject(AppStore);
+    readonly #printService = inject(PrintService);
 
     public readonly checklistId = input.required<string>({ alias: 'id' });
     public readonly checklist = computed(() => this.#appStore.currentChecklist() ?? ({} as IChecklistVM));
@@ -26,5 +29,9 @@ export class ViewerComponent {
             () => this.#appStore.loadById(this.checklistId()), //
             { allowSignalWrites: true },
         );
+    }
+
+    public async print() {
+        await this.#printService.print(this.checklist());
     }
 }

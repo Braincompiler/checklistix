@@ -1,0 +1,17 @@
+@import 'base';
+
+@media print {
+    @page {
+        size: letter portrait;
+    }
+
+    body {
+        width: 8.5in;
+        height: 11in;
+
+        .checklist-preview > page {
+            width: 8.5in;
+            height: 11in;
+        }
+    }
+}

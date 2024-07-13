@@ -1,0 +1,17 @@
+@import 'base';
+
+@media print {
+    @page {
+        size: A5 landscape;
+    }
+
+    body {
+        width: 210mm;
+        height: 147mm;
+
+        .checklist-preview > page {
+            width: 210mm;
+            height: 147mm;
+        }
+    }
+}
