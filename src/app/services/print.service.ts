@@ -8,6 +8,8 @@ export class PrintService {
     readonly #document = inject(DOCUMENT);
 
     public async print(checklist: IChecklistVM) {
+        // @TODO: show hint on safari that columns not working. User should use Chrome, Firefox, Brave, Edge or other Chromium-based browsers instead.
+
         await this.#loadPrintCss(String(checklist.pageSize).toLowerCase(), String(checklist.pageOrientation).toLowerCase());
 
         window.print();

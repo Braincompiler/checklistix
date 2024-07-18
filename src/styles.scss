@@ -160,7 +160,7 @@ a:not([href]) {
             @apply h-full;
             @apply gap-2;
 
-            column-fill: auto;
+            //column-fill: auto;
 
             div:not(.actions) {
                 .textbox-with-title {
