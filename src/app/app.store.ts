@@ -7,18 +7,14 @@ import { withDevtools, withStorageSync } from '@angular-architects/ngrx-toolkit'
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { isNil } from 'ramda';
+import { isNil, pick } from 'ramda';
 
 import { AuthForm, AuthService, ChecklistsService } from '@api';
 
 import { checklistMapToVM, IChecklistVM } from './mapper';
 
-export interface IUserState {
-    userId: string | null;
-}
-
 export interface IAppState {
-    user: IUserState | null;
+    user: any | null;
     isLoading: boolean;
     currentChecklist: IChecklistVM | null;
     currentChecklistError: any | null;
@@ -33,9 +29,10 @@ const initialState: IAppState = {
 
 export const AppStore = signalStore(
     { providedIn: 'root' },
-    withState(initialState), //
+    withState(initialState),
     withStorageSync({
-        key: 'appState',
+        key: 'ChecklistiX.AppState',
+        select: (s) => pick(['user'], s),
     }),
     withDevtools('checklistix'),
 
@@ -59,9 +56,6 @@ export const AppStore = signalStore(
                 startIsLoading,
                 stopIsLoading,
 
-                // login() {
-                //     patchState(store, { user: { userId: 'null' } });
-                // },
                 login: rxMethod<AuthForm>(
                     pipe(
                         tap(() => patchState(store, { isLoading: true })),
