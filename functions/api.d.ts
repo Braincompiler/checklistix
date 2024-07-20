@@ -387,7 +387,7 @@ export interface paths {
             };
             responses: {
                 /** @description Ok */
-                200: {
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -498,6 +498,59 @@ export interface paths {
             responses: {
                 /** @description Ok */
                 200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/sub-checklist-items/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Bulk update of sub checklist items */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Sub checklist items */
+            requestBody: {
+                content: {
+                    "application/json": (components["schemas"]["SubChecklistItemCheckItemForm"] | components["schemas"]["SubChecklistItemSubtitleForm"] | components["schemas"]["SubChecklistItemPreconditionForm"] | components["schemas"]["SubChecklistItemPostconditionForm"])[];
+                };
+            };
+            responses: {
+                /** @description Ok */
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -757,6 +810,7 @@ export interface components {
             subChecklistId?: string;
             item?: string;
             action?: string;
+            position?: number;
             type?: components["schemas"]["SubChecklistItemType"];
         };
         SubChecklistItemCheckItem: components["schemas"]["SubChecklistItemCheckItemForm"] & {
@@ -767,6 +821,7 @@ export interface components {
             /** Format: uuid */
             subChecklistId?: string;
             text?: string;
+            position?: number;
             type?: components["schemas"]["SubChecklistItemType"];
         };
         SubChecklistItemPrecondition: components["schemas"]["SubChecklistItemPreconditionForm"] & {
@@ -777,6 +832,7 @@ export interface components {
             /** Format: uuid */
             subChecklistId?: string;
             text?: string;
+            position?: number;
             type?: components["schemas"]["SubChecklistItemType"];
         };
         SubChecklistItemPostcondition: components["schemas"]["SubChecklistItemPostconditionForm"] & {
@@ -787,6 +843,7 @@ export interface components {
             /** Format: uuid */
             subChecklistId?: string;
             text?: string;
+            position?: number;
             type?: components["schemas"]["SubChecklistItemType"];
         };
         SubChecklistItemSubtitle: components["schemas"]["SubChecklistItemSubtitleForm"] & {

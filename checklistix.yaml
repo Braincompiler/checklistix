@@ -212,7 +212,7 @@ paths:
                   - $ref: '#/components/schemas/SectionTitleForm'
                   - $ref: '#/components/schemas/TextBoxForm'
       responses:
-        '200':
+        '204':
           description: Ok
         '400':
           description: Bad request
@@ -274,6 +274,31 @@ paths:
                 - $ref: '#/components/schemas/SubChecklistItemPostconditionForm'
       responses:
         '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /sub-checklist-items/bulk:
+    patch:
+      tags:
+        - Checklists
+      summary: Bulk update of sub checklist items
+      requestBody:
+        description: Sub checklist items
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/SubChecklistItemCheckItemForm'
+                  - $ref: '#/components/schemas/SubChecklistItemSubtitleForm'
+                  - $ref: '#/components/schemas/SubChecklistItemPreconditionForm'
+                  - $ref: '#/components/schemas/SubChecklistItemPostconditionForm'
+      responses:
+        '204':
           description: Ok
         '400':
           description: Bad request
@@ -606,6 +631,8 @@ components:
           type: string
         action:
           type: string
+        position:
+          type: integer
         type:
           $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::CheckItem
         # @TODO: Other props like text decoration (bold, italic, underscore), ... (JSON?)
@@ -618,6 +645,7 @@ components:
             - id
             - subChecklistId
             - type
+            - position
           properties:
             id:
               type: string
@@ -633,6 +661,8 @@ components:
           nullable: false
         text:
           type: string
+        position:
+          type: integer
         type:
           $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Precondition
 
@@ -644,6 +674,7 @@ components:
             - id
             - subChecklistId
             - type
+            - position
           properties:
             id:
               type: string
@@ -659,6 +690,8 @@ components:
           nullable: false
         text:
           type: string
+        position:
+          type: integer
         type:
           $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Postcondition
 
@@ -670,6 +703,7 @@ components:
             - id
             - subChecklistId
             - type
+            - position
           properties:
             id:
               type: string
@@ -685,6 +719,8 @@ components:
           nullable: false
         text:
           type: string
+        position:
+          type: integer
         type:
           $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Subtitle
 
@@ -696,6 +732,7 @@ components:
             - id
             - subChecklistId
             - type
+            - position
           properties:
             id:
               type: string

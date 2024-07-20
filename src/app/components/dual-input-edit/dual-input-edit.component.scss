@@ -8,7 +8,7 @@
 
     &.edit-enabled {
         span {
-            @apply cursor-text;
+            //@apply cursor-text;
             @apply h-5;
 
             &.empty {
@@ -27,15 +27,16 @@
             @apply w-3/4;
             @apply font-normal;
             @apply text-left;
-
-            &.right {
-                @apply text-right;
-            }
+            @apply cursor-text;
         }
 
-        .left span,
-        .right span {
-            @apply cursor-text;
+        .left,
+        .right:not(input) {
+            @apply cursor-row-resize;
+
+            span {
+                @apply cursor-text;
+            }
         }
     }
 

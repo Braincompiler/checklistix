@@ -21,6 +21,7 @@ import {
     model,
     NO_ERRORS_SCHEMA,
     output,
+    signal,
     ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -270,7 +271,9 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     public readonly addSubChecklistItem = output<Partial<SubChecklistFormSubChecklistItemsInner>>();
     public readonly updateSubChecklistItem = output<IPropUpdate | IDualPropUpdate>();
     public readonly updateChecklistItemPosition = output<ChecklistFormChecklistItemsInner[]>();
+    public readonly updateSubChecklistItemsPosition = output<SubChecklistFormSubChecklistItemsInner[]>();
 
+    public readonly subChecklistItemInEditMode = signal<boolean>(false);
     public readonly fontSizeCssClass = computed(() => FONT_SIZE_CSS_CLASSES[this.checklist().fontSize ?? 10]);
     public readonly columnCssClass = computed(() => COLUMNS_CSS_CLASSES[this.checklist().columns ?? 2]);
     public readonly outlineCssClass = computed(() => BORDER_CSS_CLASSES[this.checklist().borderThickness ?? 2]);
@@ -479,6 +482,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         leftProp: keyof SubChecklistFormSubChecklistItemsInner,
         rightProp: keyof SubChecklistFormSubChecklistItemsInner,
     ): void {
+        this.subChecklistItemInEditMode.set(false);
         // console.log({ checklistItem: subChecklistItem, leftProp, rightProp }, subChecklistItem[leftProp], subChecklistItem[rightProp]);
 
         const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === subChecklistItem.subChecklistId);
@@ -580,6 +584,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             type: SubChecklistItemType.Postcondition,
             id: uuidv4(),
             text: '',
+            position: 9999,
         });
     }
 
@@ -591,6 +596,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             type: SubChecklistItemType.Precondition,
             id: uuidv4(),
             text: '',
+            position: 9999,
         });
     }
 
@@ -602,6 +608,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             type: SubChecklistItemType.Subtitle,
             id: uuidv4(),
             text: '',
+            position: 9999,
         });
     }
 
@@ -614,7 +621,37 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             id: uuidv4(),
             item: '',
             action: '',
+            position: 9999,
         });
+    }
+
+    public dropSubChecklist(
+        $event: CdkDragDrop<Array<SubChecklistFormSubChecklistItemsInner> | undefined, any>,
+        checklistItem: ChecklistFormChecklistItemsInner,
+    ): void {
+        this.#document?.body?.classList.remove('!cursor-grabbing');
+
+        console.log($event, checklistItem);
+
+        moveItemInArray(
+            checklistItem.subChecklistItems ?? [], //
+            $event.previousIndex,
+            $event.currentIndex,
+        );
+
+        checklistItem.subChecklistItems = (checklistItem.subChecklistItems ?? []).map((c, i) => ({ ...c, position: i }));
+        // checklistItems = checklistItems.map((c) => checklistColumn.checklistItems.find((i) => i.id === c.id) || c);
+
+        // let checklistItems = this.checklist().checklistItems!;
+        this.updateSubChecklistItemsPosition.emit(checklistItem.subChecklistItems);
+        this.checklist.update((checklist) => ({
+            ...checklist,
+            checklistItems: checklist.checklistItems?.map((ci) => (ci.id === checklistItem.id ? checklistItem : ci)),
+        }));
+    }
+
+    public onEnterEditMode(): void {
+        this.subChecklistItemInEditMode.set(true);
     }
 
     private addToChecklistItems(subChecklistId: string, item: SubChecklistFormSubChecklistItemsInner): void {

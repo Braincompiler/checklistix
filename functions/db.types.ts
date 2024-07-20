@@ -124,6 +124,7 @@ export type Database = {
           action: string | null
           id: string
           item: string | null
+          position: number
           sub_checklist_id: string
           text: string | null
           type: string
@@ -133,6 +134,7 @@ export type Database = {
           action?: string | null
           id?: string
           item?: string | null
+          position?: number
           sub_checklist_id: string
           text?: string | null
           type: string
@@ -142,6 +144,7 @@ export type Database = {
           action?: string | null
           id?: string
           item?: string | null
+          position?: number
           sub_checklist_id?: string
           text?: string | null
           type?: string

@@ -6,19 +6,18 @@ import { createSupabaseClient } from '../db';
 import { Tables } from '../db.types';
 import { withAuth } from '../middlewares/auth';
 
-const bulkChecklistItems = async (req: Request, ctx: Context, accessToken?: string) => {
-    const checklistItems = (await req.json()) as ChecklistFormChecklistItemsInner[];
+const bulkSubChecklistItems = async (req: Request, ctx: Context, accessToken?: string) => {
+    const subChecklistItems = (await req.json()) as ChecklistFormChecklistItemsInner[];
 
-    const values: Partial<Tables<'checklist_items'>>[] = checklistItems.map((item) => ({
+    const values: Partial<Tables<'sub_checklist_items'>>[] = subChecklistItems.map((item) => ({
         id: item.id,
-        page: item.page,
-        column: item.column,
         position: item.position,
     }));
+    const supabaseClient = createSupabaseClient(accessToken);
     for (const value of values) {
-        const { error } = await createSupabaseClient(accessToken) //
-            .from('checklist_items')
-            .update<Partial<Tables<'checklist_items'>>>(value)
+        const { error } = await supabaseClient //
+            .from('sub_checklist_items')
+            .update<Partial<Tables<'sub_checklist_items'>>>(value)
             .eq('id', value.id);
         if (error) {
             console.error(error);
@@ -32,9 +31,9 @@ const bulkChecklistItems = async (req: Request, ctx: Context, accessToken?: stri
     });
 };
 
-export default async (req: Request, ctx: Context) => (await withAuth(bulkChecklistItems))(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(bulkSubChecklistItems))(req, ctx);
 
 export const config: Config = {
-    path: '/api/checklist-items/bulk',
+    path: '/api/sub-checklist-items/bulk',
     method: 'PATCH',
 };

@@ -3,21 +3,20 @@
 
     &.edit-enabled {
         span {
-            @apply cursor-text;
             @apply h-5;
-            //@apply block;
+            @apply cursor-row-resize;
+
+            > span {
+                @apply cursor-text;
+            }
 
             &.empty {
-                //@apply outline;
-                //@apply outline-1;
-                //@apply outline-neutral-200;
                 @apply w-full;
                 @apply text-neutral-400;
                 @apply font-normal;
 
                 &:not(.block) {
                     @apply bg-neutral-200;
-                    //@apply p-1;
                 }
             }
 

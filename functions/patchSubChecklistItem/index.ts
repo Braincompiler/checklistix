@@ -53,5 +53,6 @@ export default async (req: Request, ctx: Context) => (await withAuth(patchSubChe
 
 export const config: Config = {
     path: '/api/sub-checklist-items/:id',
+    excludedPath: ['/api/sub-checklist-items/bulk'],
     method: 'PATCH',
 };

@@ -99,10 +99,15 @@ export class EditorComponent {
     }
 
     public onUpdateChecklistItemPosition(checklistItems: ChecklistFormChecklistItemsInner[]): void {
-        console.log(checklistItems);
-
         this.#checklistsService
             .checklistItemsBulkPatch(checklistItems) //
+            .pipe(takeUntilDestroyed(this.#destroyRef))
+            .subscribe();
+    }
+
+    public onUpdateSubChecklistItemsPosition(subChecklistItems: SubChecklistFormSubChecklistItemsInner[]): void {
+        this.#checklistsService
+            .subChecklistItemsBulkPatch(subChecklistItems) //
             .pipe(takeUntilDestroyed(this.#destroyRef))
             .subscribe();
     }

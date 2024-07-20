@@ -159,6 +159,11 @@
                                             <ul
                                                 class="checklist"
                                                 [ngClass]="checklistStyleCssClass()"
+                                                cdkDropList
+                                                cdkDragBoundary=".page"
+                                                [cdkDropListDisabled]="!isEdit()"
+                                                [cdkDropListData]="checklistItem['subChecklistItems']"
+                                                (cdkDropListDropped)="dropSubChecklist($event, checklistItem)"
                                             >
                                                 @if (checklistItem['subChecklistItems']?.length === 0) {
                                                     @if (isEdit()) {
@@ -175,7 +180,13 @@
                                                         @switch (subChecklistItem.type) {
                                                             @case (SubChecklistItemType.CheckItem) {
                                                                 <!-- @TODO: Implement drag & drop; li can be the drag handler, ul is the drop list? -->
-                                                                <li class="checkitem">
+                                                                <li
+                                                                    cdkDrag
+                                                                    class="checkitem"
+                                                                    [cdkDragDisabled]="subChecklistItemInEditMode()"
+                                                                    [cdkDragData]="checklistItem"
+                                                                    (cdkDragStarted)="onDragStarted()"
+                                                                >
                                                                     <cx-dual-input-edit
                                                                         leftPropName="item"
                                                                         rightPropName="action"
@@ -183,41 +194,63 @@
                                                                         rightPlaceholder="Enter your action here ..."
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="checklistItem['subChecklistItems']![i]"
+                                                                        (enterEditMode)="onEnterEditMode()"
                                                                         (exitEditMode)="onExitDualEditMode(subChecklistItem, 'item', 'action')"
                                                                     />
                                                                 </li>
                                                             }
                                                             @case (SubChecklistItemType.Precondition) {
-                                                                <li class="precondition">
+                                                                <li
+                                                                    cdkDrag
+                                                                    class="precondition"
+                                                                    [cdkDragDisabled]="subChecklistItemInEditMode()"
+                                                                    [cdkDragData]="checklistItem"
+                                                                    (cdkDragStarted)="onDragStarted()"
+                                                                >
                                                                     <cx-single-line-edit
+                                                                        fullWidth
                                                                         placeholder="Enter your precondition here ..."
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
-                                                                        fullWidth
+                                                                        (enterEditMode)="onEnterEditMode()"
                                                                     />
                                                                 </li>
                                                             }
                                                             @case (SubChecklistItemType.Postcondition) {
-                                                                <li class="postcondition">
+                                                                <li
+                                                                    cdkDrag
+                                                                    class="postcondition"
+                                                                    [cdkDragDisabled]="subChecklistItemInEditMode()"
+                                                                    [cdkDragData]="checklistItem"
+                                                                    (cdkDragStarted)="onDragStarted()"
+                                                                >
                                                                     <cx-single-line-edit
+                                                                        fullWidth
+                                                                        textRight
                                                                         placeholder="Enter your postcondition here ..."
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
-                                                                        fullWidth
-                                                                        textRight
+                                                                        (enterEditMode)="onEnterEditMode()"
                                                                     />
                                                                 </li>
                                                             }
                                                             @case (SubChecklistItemType.Subtitle) {
-                                                                <li class="subtitle">
+                                                                <li
+                                                                    cdkDrag
+                                                                    class="subtitle"
+                                                                    [cdkDragDisabled]="subChecklistItemInEditMode()"
+                                                                    [cdkDragData]="checklistItem"
+                                                                    (cdkDragStarted)="onDragStarted()"
+                                                                >
                                                                     <cx-single-line-edit
+                                                                        fullWidth
                                                                         placeholder="Enter your subtitle here ..."
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
-                                                                        fullWidth
+                                                                        (enterEditMode)="onEnterEditMode()"
                                                                     />
                                                                 </li>
                                                             }

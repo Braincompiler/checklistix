@@ -86,6 +86,7 @@ export class BaseEditComponent<TFormValue = string> implements ControlValueAcces
 
     public onEnterEditMode(): void {
         if (!this.disableEditMode()) {
+            this.enterEditMode.emit();
             this.isEditModeActive.set(true);
         }
     }
