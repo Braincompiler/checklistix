@@ -37,8 +37,6 @@ const patchChecklist = async (req: Request, ctx: Context, accessToken?: string) 
 
     delete updateData.checklistItems;
 
-    console.log(updateData);
-
     const updatedChecklist = await supabaseClient
         .from('checklists') //
         .update({
@@ -54,7 +52,7 @@ const patchChecklist = async (req: Request, ctx: Context, accessToken?: string) 
     });
 };
 
-export default (req: Request, ctx: Context) => withAuth(patchChecklist)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(patchChecklist))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id',

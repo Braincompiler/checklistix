@@ -36,7 +36,7 @@ const postChecklist = async (req: Request, ctx: Context, accessToken?: string) =
     });
 };
 
-export default (req: Request, ctx: Context) => withAuth(postChecklist)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(postChecklist))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists',

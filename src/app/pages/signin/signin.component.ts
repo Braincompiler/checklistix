@@ -16,9 +16,7 @@ import { AppStore } from '../../app.store';
 })
 export class SigninComponent {
     readonly #appStore = inject(AppStore);
-    // readonly #router = inject(Router);
     readonly #fb = inject(FormBuilder);
-    // readonly #destroyRef = inject(DestroyRef);
 
     public readonly form = this.#fb.group({
         email: this.#fb.nonNullable.control('', [Validators.required, Validators.minLength(3), Validators.email]),
@@ -35,13 +33,12 @@ export class SigninComponent {
     }
 
     public async onLogin() {
-        const { email, password } = this.form.value;
+        const { email, password, rememberMe } = this.form.value;
 
         this.#appStore.login({
             email: email!,
             password: password!,
+            rememberMe: rememberMe!,
         });
-
-        // await this.#router.navigateByUrl('/my/checklists');
     }
 }

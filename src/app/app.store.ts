@@ -102,9 +102,7 @@ export const AppStore = signalStore(
                     ),
                 ),
 
-                // logout() {
-                //     patchState(store, { user: { userId: null } });
-                // },
+                logoutWithoutSignOutRequest: rxMethod<void>(pipe(tap(() => patchState(store, { user: null })))),
 
                 loadById: rxMethod<string>(
                     pipe(

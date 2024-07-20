@@ -40,7 +40,7 @@ const getChecklist = async (req: Request, ctx: Context, accessToken?: string) =>
     return ctx.json(checklist);
 };
 
-export default (req: Request, ctx: Context) => withAuth(getChecklist)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(getChecklist))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id',

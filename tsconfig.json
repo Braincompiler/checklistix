@@ -31,6 +31,7 @@
       "@pages": ["src/app/pages/index.ts"],
       "@pipes": ["src/app/pipes/index.ts"],
       "@services": ["src/app/services/index.ts"],
+      "@interceptors": ["src/app/interceptors/index.ts"],
       "@utils": ["src/utils/index.ts"],
       "@utils/rxjs": ["src/utils/rxjs/index.ts"]
     }

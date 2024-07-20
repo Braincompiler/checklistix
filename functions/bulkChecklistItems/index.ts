@@ -32,7 +32,7 @@ const bulkChecklistItems = async (req: Request, ctx: Context, accessToken?: stri
     });
 };
 
-export default async (req: Request, ctx: Context) => withAuth(bulkChecklistItems)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(bulkChecklistItems))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklist-items/bulk',

@@ -6,6 +6,8 @@ import { provideRouter, withComponentInputBinding, withRouterConfig } from '@ang
 
 import { MessageService } from 'primeng/api';
 
+import { authInterceptor } from '@interceptors';
+
 import { Configuration, ConfigurationParameters } from '@api';
 
 import { environment } from '../environments/environment';
@@ -30,7 +32,9 @@ export function provideApi(configuration: Configuration) {
 export const appConfig: ApplicationConfig = {
     providers: [
         provideHttpClient(
-            withInterceptors([]), //
+            withInterceptors([
+                authInterceptor, //
+            ]),
             withFetch(),
         ),
         provideApi(

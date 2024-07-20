@@ -3,31 +3,34 @@ import { Config, Context } from '@netlify/functions';
 import { AuthForm } from '@api';
 
 import { createSupabaseClient } from '../db';
-import { AUTH_COOKIE_NAME } from '../middlewares/auth';
+import { storeCookie } from '../middlewares/auth';
 
 export default async (req: Request, ctx: Context) => {
-    const authData = (await req.json()) as AuthForm;
+    const { email, password, rememberMe } = (await req.json()) as AuthForm;
 
-    const { data, error } = await createSupabaseClient().auth.signInWithPassword({
-        email: authData.email,
-        password: authData.password,
+    const supabaseClient = createSupabaseClient();
+    const { data: signInData, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password,
     });
-
     if (error) {
         console.error(error);
 
         return new Response(JSON.stringify(error), { status: 500 });
     }
 
-    ctx.cookies.set({
-        name: AUTH_COOKIE_NAME,
-        value: data.session.access_token,
-        path: '/',
-        httpOnly: true,
-        expires: new Date((data.session.expires_at ?? Date.now() + (data.session?.expires_in ?? 3600)) * 1000),
+    const { data, error: updateUserError } = await supabaseClient.auth.updateUser({
+        data: { rememberMe },
     });
+    if (updateUserError) {
+        console.error(updateUserError);
 
-    return Response.json(data.session);
+        return new Response(JSON.stringify(updateUserError), { status: 500 });
+    }
+
+    storeCookie(ctx, signInData.session);
+
+    return Response.json(data.user);
 };
 
 export const config: Config = {

@@ -2,7 +2,6 @@ import { Config, Context } from '@netlify/functions';
 import { isNil } from 'ramda';
 
 import { createSupabaseClient } from '../db';
-import { Tables } from '../db.types';
 import { withAuth } from '../middlewares/auth';
 
 const postSubChecklistItem = async (req: Request, ctx: Context, accessToken?: string) => {
@@ -16,11 +15,9 @@ const postSubChecklistItem = async (req: Request, ctx: Context, accessToken?: st
     // data.sub_checklist_id = data.subChecklistId;
     // delete data.subChecklistId;
 
-    console.log(data);
-
     const { data: createdChecklistItem, error } = await createSupabaseClient(accessToken)
         .from('sub_checklist_items') //
-        .insert<Tables<'sub_checklist_items'>>({
+        .insert({
             id: data.id,
             sub_checklist_id: data.subChecklistId,
             type: data.type,
@@ -42,7 +39,7 @@ const postSubChecklistItem = async (req: Request, ctx: Context, accessToken?: st
     });
 };
 
-export default (req: Request, ctx: Context) => withAuth(postSubChecklistItem)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(postSubChecklistItem))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklist-items/:id/sub-checklist-items',

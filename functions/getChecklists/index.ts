@@ -21,7 +21,7 @@ const getChecklists = async (req: Request, ctx: Context, accessToken?: string) =
     return ctx.json(checklists);
 };
 
-export default (req: Request, ctx: Context) => withAuth(getChecklists)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(getChecklists))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists',

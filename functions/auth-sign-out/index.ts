@@ -4,7 +4,7 @@ import { createSupabaseClient } from '../db';
 import { AUTH_COOKIE_NAME, withAuth } from '../middlewares/auth';
 
 // @TODO: In case the sign-out is called when the token/session is already expired thw withAuth middleware returns with 401 🤔
-export default withAuth(async (req: Request, ctx: Context, accessToken?: string) => {
+const signOut = async (req: Request, ctx: Context, accessToken?: string) => {
     const { error } = await createSupabaseClient(accessToken).auth.signOut();
 
     if (error) {
@@ -16,7 +16,9 @@ export default withAuth(async (req: Request, ctx: Context, accessToken?: string)
     ctx.cookies.delete(AUTH_COOKIE_NAME);
 
     return new Response(null, { status: 204 });
-});
+};
+
+export default async (req: Request, ctx: Context) => (await withAuth(signOut))(req, ctx);
 
 export const config: Config = {
     path: '/api/auth/sign-out',

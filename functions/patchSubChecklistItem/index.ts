@@ -49,7 +49,7 @@ const patchSubChecklistItem = async (req: Request, ctx: Context, accessToken?: s
     });
 };
 
-export default (req: Request, ctx: Context) => withAuth(patchSubChecklistItem)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(patchSubChecklistItem))(req, ctx);
 
 export const config: Config = {
     path: '/api/sub-checklist-items/:id',

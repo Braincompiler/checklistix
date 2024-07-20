@@ -722,3 +722,6 @@ components:
         password:
           type: string
           format: password
+        rememberMe:
+          type: boolean
+          default: false

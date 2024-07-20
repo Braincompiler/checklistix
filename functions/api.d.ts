@@ -800,6 +800,8 @@ export interface components {
             email: string;
             /** Format: password */
             password: string;
+            /** @default false */
+            rememberMe: boolean;
         };
     };
     responses: never;

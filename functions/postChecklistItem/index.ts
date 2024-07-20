@@ -37,8 +37,6 @@ const postChecklistItem = async (req: Request, ctx: Context, accessToken?: strin
     delete data.subChecklistItems;
     delete data.checklistId;
 
-    console.log(data);
-
     const { data: createdChecklistItem, error } = await supabaseClient
         .from('checklist_items') //
         .insert<Tables<'checklist_items'>>({
@@ -59,7 +57,7 @@ const postChecklistItem = async (req: Request, ctx: Context, accessToken?: strin
     });
 };
 
-export default (req: Request, ctx: Context) => withAuth(postChecklistItem)(req, ctx);
+export default async (req: Request, ctx: Context) => (await withAuth(postChecklistItem))(req, ctx);
 
 export const config: Config = {
     path: '/api/checklists/:id/checklist-items',
