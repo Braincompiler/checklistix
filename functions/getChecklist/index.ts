@@ -20,7 +20,7 @@ const getChecklist = async (req: Request, ctx: Context, accessToken?: string) =>
         .eq('id', id)
         .maybeSingle<Checklist>();
     if (error) {
-        console.error(error);
+        console.error('getChecklist', error, __filename);
 
         return new Response(JSON.stringify(error), { status: 500 });
     }

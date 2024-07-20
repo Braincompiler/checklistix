@@ -15,11 +15,11 @@ export const withAuth = async (handler: (req: Request, ctx: Context, accessToken
                 return new Response('Unauthorized', { status: 401 });
             }
 
-            const now: any = Date.now() / 1000;
+            const now: any = Date.now();
             const session = JSON.parse(atob(data)) as Session;
-            const { access_token, refresh_token, user, expires_at = now + 3600 } = session;
+            const { access_token, refresh_token, user, expires_at = now / 1000 + 3600 } = session;
 
-            const expires5minBefore: number = sub(expires_at * 1000, { minutes: 5 }).getTime() / 1000;
+            const expires5minBefore: number = sub(expires_at * 1000, { minutes: 5 }).getTime();
             // console.log({
             //     expires_at,
             //     expires_atD: new Date(expires_at! * 1000),
@@ -33,10 +33,10 @@ export const withAuth = async (handler: (req: Request, ctx: Context, accessToken
             if (expires5minBefore < now) {
                 console.log('Refresh session of', user.email);
 
-                const supabaseClient = createSupabaseClient(access_token);
+                const supabaseClient = createSupabaseClient();
                 const { data, error } = await supabaseClient.auth.refreshSession({ refresh_token });
                 if (!data.session || error) {
-                    console.error(error);
+                    console.error('refreshSession', error, __filename);
 
                     return new Response(JSON.stringify(error), { status: 500 });
                 }
@@ -54,11 +54,6 @@ const DAY = HOUR * 24;
 const WEEK = DAY * 7;
 
 export function storeCookie(ctx: Context, session: Session, extendExpires = false) {
-    // ctx.cookies.
-    // console.log(process.env['NETLIFY']);
-
-    // console.log(session.user.user_metadata);
-
     const expiresAt = session.expires_at ?? Date.now() / 1000;
     const rememberMe = session.user.user_metadata['rememberMe'];
 
