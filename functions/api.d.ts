@@ -768,7 +768,7 @@ export interface components {
             position?: number;
             title?: string;
             color?: string;
-            subChecklistItems?: (components["schemas"]["SubChecklistItemCheckItem"] | components["schemas"]["SubChecklistItemSubtitle"] | components["schemas"]["SubChecklistItemPrecondition"] | components["schemas"]["SubChecklistItemPostcondition"])[];
+            subChecklistItems?: (components["schemas"]["SubChecklistItemCheckItem"] | components["schemas"]["SubChecklistItemSubtitle"] | components["schemas"]["SubChecklistItemPrecondition"] | components["schemas"]["SubChecklistItemPostcondition"] | components["schemas"]["SubChecklistItemLeftText"] | components["schemas"]["SubChecklistItemRightText"])[];
             type?: components["schemas"]["ChecklistItemType"];
         };
         SubChecklist: components["schemas"]["SubChecklistForm"] & {
@@ -850,8 +850,30 @@ export interface components {
             /** Format: uuid */
             id: string;
         };
+        SubChecklistItemLeftTextForm: {
+            /** Format: uuid */
+            subChecklistId?: string;
+            text?: string;
+            position?: number;
+            type?: components["schemas"]["SubChecklistItemType"];
+        };
+        SubChecklistItemLeftText: components["schemas"]["SubChecklistItemSubtitleForm"] & {
+            /** Format: uuid */
+            id: string;
+        };
+        SubChecklistItemRightTextForm: {
+            /** Format: uuid */
+            subChecklistId?: string;
+            text?: string;
+            position?: number;
+            type?: components["schemas"]["SubChecklistItemType"];
+        };
+        SubChecklistItemRightText: components["schemas"]["SubChecklistItemSubtitleForm"] & {
+            /** Format: uuid */
+            id: string;
+        };
         /** @enum {string} */
-        SubChecklistItemType: "CheckItem" | "Precondition" | "Postcondition" | "Subtitle";
+        SubChecklistItemType: "CheckItem" | "Precondition" | "Postcondition" | "Subtitle" | "LeftText" | "RightText";
         AuthForm: {
             /** Format: email */
             email: string;

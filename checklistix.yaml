@@ -475,6 +475,8 @@ components:
               - $ref: '#/components/schemas/SubChecklistItemSubtitle'
               - $ref: '#/components/schemas/SubChecklistItemPrecondition'
               - $ref: '#/components/schemas/SubChecklistItemPostcondition'
+              - $ref: '#/components/schemas/SubChecklistItemLeftText'
+              - $ref: '#/components/schemas/SubChecklistItemRightText'
         type:
           $ref: '#/components/schemas/ChecklistItemType' # always ChecklistItemType::SubChecklist
         # @TODO: Other props like to overwrite something like checklistStyle, borderThickness, ...
@@ -739,6 +741,64 @@ components:
               format: uuid
               nullable: false
 
+    SubChecklistItemLeftTextForm:
+      type: object
+      properties:
+        subChecklistId:
+          type: string
+          format: uuid
+          nullable: false
+        text:
+          type: string
+        position:
+          type: integer
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Text
+
+    SubChecklistItemLeftText:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistItemSubtitleForm'
+        - type: object
+          required:
+            - id
+            - subChecklistId
+            - type
+            - position
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+
+    SubChecklistItemRightTextForm:
+      type: object
+      properties:
+        subChecklistId:
+          type: string
+          format: uuid
+          nullable: false
+        text:
+          type: string
+        position:
+          type: integer
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::Text
+
+    SubChecklistItemRightText:
+      allOf:
+        - $ref: '#/components/schemas/SubChecklistItemSubtitleForm'
+        - type: object
+          required:
+            - id
+            - subChecklistId
+            - type
+            - position
+          properties:
+            id:
+              type: string
+              format: uuid
+              nullable: false
+
     SubChecklistItemType:
       type: string
       enum:
@@ -746,6 +806,8 @@ components:
         - Precondition
         - Postcondition
         - Subtitle
+        - LeftText
+        - RightText
 
     AuthForm:
       type: object

@@ -254,6 +254,43 @@
                                                                     />
                                                                 </li>
                                                             }
+                                                            @case (SubChecklistItemType.LeftText) {
+                                                                <li
+                                                                    cdkDrag
+                                                                    class="text"
+                                                                    [cdkDragDisabled]="subChecklistItemInEditMode()"
+                                                                    [cdkDragData]="checklistItem"
+                                                                    (cdkDragStarted)="onDragStarted()"
+                                                                >
+                                                                    <cx-single-line-edit
+                                                                        fullWidth
+                                                                        placeholder="Enter your text here ..."
+                                                                        [disableEditMode]="!isEdit()"
+                                                                        [(ngModel)]="subChecklistItem.text"
+                                                                        (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
+                                                                        (enterEditMode)="onEnterEditMode()"
+                                                                    />
+                                                                </li>
+                                                            }
+                                                            @case (SubChecklistItemType.RightText) {
+                                                                <li
+                                                                    cdkDrag
+                                                                    class="text"
+                                                                    [cdkDragDisabled]="subChecklistItemInEditMode()"
+                                                                    [cdkDragData]="checklistItem"
+                                                                    (cdkDragStarted)="onDragStarted()"
+                                                                >
+                                                                    <cx-single-line-edit
+                                                                        fullWidth
+                                                                        textRight
+                                                                        placeholder="Enter your text here ..."
+                                                                        [disableEditMode]="!isEdit()"
+                                                                        [(ngModel)]="subChecklistItem.text"
+                                                                        (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
+                                                                        (enterEditMode)="onEnterEditMode()"
+                                                                    />
+                                                                </li>
+                                                            }
                                                         }
                                                     }
                                                 }

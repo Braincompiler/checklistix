@@ -294,9 +294,21 @@ a:not([href]) {
 
                         &.precondition,
                         &.postcondition,
+                        &.subtitle,
+                        &.text {
+                            //@apply pl-1;
+
+                            //&.text-right {
+                            //    span {
+                            //        @apply pr-0;
+                            //    }
+                            //}
+                        }
+
+                        &.precondition,
+                        &.postcondition,
                         &.subtitle {
                             @apply font-semibold;
-                            @apply pl-2;
                         }
 
                         &.precondition,

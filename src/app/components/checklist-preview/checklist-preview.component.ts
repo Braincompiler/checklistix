@@ -345,6 +345,14 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             label: 'Postcondition',
             command: (event: MenuItemCommandEvent) => this.addPostcondition(event),
         },
+        {
+            label: 'Left Hand Text',
+            command: (event: MenuItemCommandEvent) => this.addText(event, 'left'),
+        },
+        {
+            label: 'Right Hand Text',
+            command: (event: MenuItemCommandEvent) => this.addText(event, 'right'),
+        },
     ];
 
     public readonly metaDataForm = this.#fb.group({
@@ -582,6 +590,18 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         this.addToChecklistItems(subChecklistId, {
             subChecklistId,
             type: SubChecklistItemType.Postcondition,
+            id: uuidv4(),
+            text: '',
+            position: 9999,
+        });
+    }
+
+    public addText(event: MenuItemCommandEvent, side: 'left' | 'right'): void {
+        const { subChecklistId } = event.item!;
+
+        this.addToChecklistItems(subChecklistId, {
+            subChecklistId,
+            type: side === 'left' ? SubChecklistItemType.LeftText : SubChecklistItemType.RightText,
             id: uuidv4(),
             text: '',
             position: 9999,
