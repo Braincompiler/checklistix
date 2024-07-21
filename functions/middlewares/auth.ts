@@ -17,7 +17,8 @@ export const withAuth = async (handler: (req: Request, ctx: Context, accessToken
 
             const now: any = Date.now();
             const session = JSON.parse(atob(data)) as Session;
-            const { access_token, refresh_token, user, expires_at = now / 1000 + 3600 } = session;
+            const { refresh_token, user, expires_at = now / 1000 + 3600 } = session;
+            let access_token = session.access_token;
 
             const expires5minBefore: number = sub(expires_at * 1000, { minutes: 5 }).getTime();
             // console.log({
@@ -42,6 +43,7 @@ export const withAuth = async (handler: (req: Request, ctx: Context, accessToken
                 }
 
                 storeCookie(c, data.session);
+                access_token = data.session.access_token;
             }
 
             return target(r, c, access_token);
@@ -57,6 +59,7 @@ export function storeCookie(ctx: Context, session: Session, extendExpires = fals
     const expiresAt = session.expires_at ?? Date.now() / 1000;
     const rememberMe = session.user.user_metadata['rememberMe'];
 
+    ctx.cookies.delete(AUTH_COOKIE_NAME);
     ctx.cookies.set({
         name: AUTH_COOKIE_NAME,
         value: btoa(JSON.stringify(session)),
