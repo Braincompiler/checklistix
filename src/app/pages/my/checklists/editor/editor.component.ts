@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { isDualpropUpdate, isPropUpdate } from '@utils';
 import { isDate } from 'date-fns';
 
-import { ChecklistForm, ChecklistFormChecklistItemsInner, ChecklistsService, SubChecklistFormSubChecklistItemsInner } from '@api';
+import { ChecklistForm, ChecklistFormChecklistItemsInner, ChecklistsService, SubChecklistFormSubChecklistItemsInner } from '@api/data';
 import { ChecklistPreviewComponent, IDualPropUpdate, IPropUpdate } from '@components';
 
 import { AppStore } from '../../../../app.store';

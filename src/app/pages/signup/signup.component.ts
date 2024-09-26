@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { AuthService } from '@api';
+import { AuthService } from '@api/auth';
 
 export const confirmPasswordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const { password, confirmPassword } = control.value;
@@ -51,7 +51,7 @@ export class SignupComponent {
         const { email, password } = this.form.value;
 
         this.#authService
-            .authSignUpPost({
+            .signUp({
                 email: email!,
                 password: password!,
             })

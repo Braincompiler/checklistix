@@ -1,6 +1,6 @@
 import { isNil } from 'ramda';
 
-import { Checklist } from '@api';
+import { Checklist } from '@api/data';
 
 import { IMapper } from './mapper.interface';
 

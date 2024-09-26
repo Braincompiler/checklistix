@@ -8,22 +8,39 @@ import { MessageService } from 'primeng/api';
 
 import { authInterceptor } from '@interceptors';
 
-import { Configuration, ConfigurationParameters } from '@api';
+import { Configuration as DataAuthConfiguration, ConfigurationParameters as DataAuthConfigurationParameters } from '@api/auth';
+import { Configuration as DataApiConfiguration, ConfigurationParameters as DataApiConfigurationParameters } from '@api/data';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { dataInterceptor } from './interceptors/data.interceptor';
 import { ChecklistMapper, provideMapper, withMapper } from './mapper';
 
-export function withApiConfiguration(configParams: ConfigurationParameters) {
-    return new Configuration({
+export function withDataApiConfiguration(configParams: DataApiConfigurationParameters) {
+    return new DataApiConfiguration({
         ...configParams,
     });
 }
 
-export function provideApi(configuration: Configuration) {
+export function provideDataApi(configuration: DataApiConfiguration) {
     return makeEnvironmentProviders([
         {
-            provide: Configuration,
+            provide: DataApiConfiguration,
+            useValue: configuration,
+        },
+    ]);
+}
+
+export function withAuthApiConfiguration(configParams: DataAuthConfigurationParameters) {
+    return new DataAuthConfiguration({
+        ...configParams,
+    });
+}
+
+export function provideAuthApi(configuration: DataAuthConfiguration) {
+    return makeEnvironmentProviders([
+        {
+            provide: DataAuthConfiguration,
             useValue: configuration,
         },
     ]);
@@ -34,13 +51,20 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(
             withInterceptors([
                 authInterceptor, //
+                dataInterceptor,
             ]),
             withFetch(),
         ),
-        provideApi(
-            withApiConfiguration({
-                basePath: environment.endpoint,
-                withCredentials: true,
+        provideDataApi(
+            withDataApiConfiguration({
+                basePath: environment.dataEndpoint,
+                // withCredentials: true,
+            }),
+        ),
+        provideAuthApi(
+            withAuthApiConfiguration({
+                basePath: environment.authEndpoint,
+                // withCredentials: true,
             }),
         ),
         provideZoneChangeDetection({ eventCoalescing: true }), //

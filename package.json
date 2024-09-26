@@ -11,7 +11,7 @@
     "test": "ng test",
     "serve:ssr:checklistix": "node dist/checklistix/server/server.mjs",
     "openapi:generate:client": "openapi-generator-cli generate",
-    "openapi:generate:server": "openapi-typescript ./checklistix.yaml -o ./functions/api.d.ts",
+    "openapi:generate:server": "openapi-typescript openapi/checklistix-data.yaml -o ./functions/api.d.ts",
     "openapi:generate": "npm run openapi:generate:client && npm run openapi:generate:server && npm run supabase:types",
     "supabase:types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > functions/db.types.ts"
   },

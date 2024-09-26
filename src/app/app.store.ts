@@ -7,9 +7,10 @@ import { withDevtools, withStorageSync } from '@angular-architects/ngrx-toolkit'
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { isNil, pick } from 'ramda';
+import { isNil, omit, pick } from 'ramda';
 
-import { AuthForm, AuthService, ChecklistsService } from '@api';
+import { AuthForm, AuthService } from '@api/auth';
+import { ChecklistsService } from '@api/data';
 
 import { checklistMapToVM, IChecklistVM } from './mapper';
 
@@ -33,6 +34,7 @@ export const AppStore = signalStore(
     withStorageSync({
         key: 'ChecklistiX.AppState',
         select: (s) => pick(['user'], s),
+        storage: () => sessionStorage,
     }),
     withDevtools('checklistix'),
 
@@ -60,10 +62,10 @@ export const AppStore = signalStore(
                     pipe(
                         tap(() => patchState(store, { isLoading: true })),
                         switchMap((authData: AuthForm) =>
-                            authService.authSignInPost(authData).pipe(
+                            authService.signIn(authData).pipe(
                                 tapResponse({
                                     next: async (user) => {
-                                        patchState(store, { user });
+                                        patchState(store, { user: omit(['expires_at', 'expires_in', 'refresh_token'], user) });
 
                                         await router.navigateByUrl('/my/checklists');
                                     },
@@ -82,7 +84,7 @@ export const AppStore = signalStore(
                     pipe(
                         tap(() => patchState(store, { isLoading: true })),
                         switchMap(() =>
-                            authService.authSignOutPost().pipe(
+                            authService.signOut().pipe(
                                 tapResponse({
                                     next: async () => patchState(store, { user: null }),
                                     error: (err) => {
@@ -100,7 +102,6 @@ export const AppStore = signalStore(
 
                 loadById: rxMethod<string>(
                     pipe(
-                        // distinctUntilChanged(), //
                         tap(() => patchState(store, { isLoading: true })),
                         switchMap((id) =>
                             checklistService.checklistsIdGet(id).pipe(
@@ -116,6 +117,10 @@ export const AppStore = signalStore(
                         ),
                     ),
                 ),
+
+                updateAccessToken: (accessToken: string) => {
+                    patchState(store, { user: { ...store.user(), access_token: accessToken } });
+                },
             };
         },
     ),

@@ -1,5 +1,5 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -8,11 +8,13 @@ import { defer, exhaustMap, finalize, map, Subject } from 'rxjs';
 import { MessageService } from 'primeng/api';
 
 import { createReload } from '@utils/rxjs';
+import { isNil } from 'ramda';
 
-import { BorderThickness, ChecklistsService, ChecklistStyle, PageOrientation, PageSize } from '@api';
+import { BorderThickness, ChecklistsService, ChecklistStyle, PageOrientation, PageSize } from '@api/data';
 
 import { AppStore } from '../../../../app.store';
 import { checklistMapToVM } from '../../../../mapper';
+import { WSService } from '../../../../services/w-s.service';
 
 @Component({
     selector: 'cx-checklists-overview',
@@ -22,7 +24,9 @@ import { checklistMapToVM } from '../../../../mapper';
         RouterLink, //
         AsyncPipe,
         DatePipe,
+        JsonPipe,
     ],
+    providers: [WSService],
 })
 export class OverviewComponent {
     readonly #router = inject(Router);
@@ -31,12 +35,32 @@ export class OverviewComponent {
     readonly #appStore = inject(AppStore);
     readonly #destroyRef = inject(DestroyRef);
     readonly #messageService = inject(MessageService);
+    readonly #wsService = inject(WSService);
 
     readonly #reloadSubject = new Subject<void>();
 
     public readonly checklists$ = createReload(this.#reloadSubject).pipe(
-        exhaustMap(() => this.#checklistsService.checklistsGet().pipe(map((checklists) => checklists.map(checklistMapToVM)))),
+        exhaustMap(() =>
+            this.#checklistsService.checklistsGet().pipe(
+                // tap((d) => console.log(d)),
+                map((checklists) => (checklists ?? []).map(checklistMapToVM)),
+            ),
+        ),
     );
+
+    public readonly responses = signal<string[]>([]);
+
+    public constructor() {
+        effect(
+            () => {
+                const response = this.#wsService.response();
+                if (!isNil(response)) {
+                    this.responses.update((prev) => [...prev, response]);
+                }
+            },
+            { allowSignalWrites: true },
+        );
+    }
 
     public async onOpenChecklist(id?: string, component?: string) {
         await this.#router.navigate(['my', 'checklists', id, component]);
@@ -103,5 +127,9 @@ export class OverviewComponent {
 
                 await this.#router.navigate(['.', justCreatedChecklist.id, 'editor'], { relativeTo: this.#route });
             });
+    }
+
+    public sendWSMsg(): void {
+        this.#wsService.sendMsg('Hello World!');
     }
 }

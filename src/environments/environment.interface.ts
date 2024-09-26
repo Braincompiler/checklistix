@@ -1,4 +1,6 @@
 export interface IEnvironment {
-    endpoint: string;
+    dataEndpoint: string;
+    authEndpoint: string;
+    wsEndpoint: string;
     production: boolean;
 }

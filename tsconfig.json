@@ -24,7 +24,7 @@
     "lib": ["ES2022", "dom"],
     "baseUrl": ".",
     "paths": {
-      "@api": ["src/api/index.ts"],
+      "@api/*": ["src/api/*"],
       "@mapper": ["src/mapper/index.ts"],
       "@components": ["src/app/components/index.ts"],
       "@directives": ["src/app/directives/index.ts"],

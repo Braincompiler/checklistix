@@ -44,7 +44,7 @@ import {
     PageSize,
     SubChecklistFormSubChecklistItemsInner,
     SubChecklistItemType,
-} from '@api';
+} from '@api/data';
 import { Add2menuitemPipe } from '@pipes';
 
 import { IChecklistVM } from '../../mapper';

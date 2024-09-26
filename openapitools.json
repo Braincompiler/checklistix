@@ -4,10 +4,18 @@
   "generator-cli": {
     "version": "7.6.0",
     "generators": {
-      "checklistixApiClient": {
+      "checklistixDataApiClient": {
         "generatorName": "typescript-angular",
-        "inputSpec": "./checklistix.yaml",
-        "output": "./src/api",
+        "inputSpec": "./openapi/checklistix-data.yaml",
+        "output": "./src/api/data",
+        "additionalProperties": {
+          "fileNaming": "kebab-case"
+        }
+      },
+      "checklistixAuthApiClient": {
+        "generatorName": "typescript-angular",
+        "inputSpec": "./openapi/checklistix-auth.yaml",
+        "output": "./src/api/auth",
         "additionalProperties": {
           "fileNaming": "kebab-case"
         }

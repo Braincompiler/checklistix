@@ -1,6 +1,8 @@
 import { IEnvironment } from './environment.interface';
 
 export const environment: IEnvironment = {
-    endpoint: '### NOT SET ###',
+    dataEndpoint: '### NOT SET ###',
+    authEndpoint: '### NOT SET ###',
+    wsEndpoint: '### NOT SET ###',
     production: true,
 };

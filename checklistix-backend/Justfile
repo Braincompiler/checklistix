@@ -1,0 +1,13 @@
+set shell := ["zsh", "-ci"]
+
+default:
+    @just --list
+
+data-service:
+    cd cmd/data && go run main.go
+
+auth-service:
+    cd cmd/auth && go run main.go
+
+ws-service:
+    cd cmd/ws && go run main.go
