@@ -1,4 +1,12 @@
-<div class="checklist-preview">
+<div class="checklist-preview relative">
+    @if (isOnline()) {
+        <span
+            class="absolute top-2 end-2 inline-flex items-center size-3.5 rounded-full border-2 border-white text-xs font-medium transform -translate-y-1/2 translate-x-1/2 bg-teal-500 text-white dark:border-neutral-900"
+        >
+            <!--        <span class="sr-only">Badge value</span>-->
+        </span>
+    }
+
     @for (checklistPage of paginatedChecklist().pagesSortedByPage; track i; let i = $index; let isFirst = $first) {
         <page
             [attr.size]="checklistPage.checklist.pageSize"

@@ -59,20 +59,25 @@ const (
 	RightText     SubChecklistItemType = "RightText"
 )
 
+type ChecklistPost struct {
+	Title           string          `json:"title" db:"title"`
+	Created         time.Time       `json:"created" db:"created"`
+	Updated         time.Time       `json:"updated,omitempty" db:"updated"`
+	Style           ChecklistStyle  `json:"style,omitempty" db:"style"`
+	PageSize        PageSize        `json:"pageSize,omitempty" db:"page_size"`
+	PageOrientation PageOrientation `json:"pageOrientation,omitempty" db:"page_orientation"`
+	Columns         int             `json:"columns,omitempty" db:"columns"`
+	FontSize        int             `json:"fontSize,omitempty" db:"font_size"`
+	BorderThickness BorderThickness `json:"borderThickness,omitempty" db:"border_thickness"`
+	FontFamily      string          `json:"fontFamily,omitempty" db:"font_family"`
+	DefaultColor    string          `json:"defaultColor,omitempty" db:"default_color"`
+}
+
 type Checklist struct {
-	Id              uuid.UUID                          `json:"id" db:"id"`
-	Title           string                             `json:"title" db:"title"`
-	Created         time.Time                          `json:"created" db:"created"`
-	Updated         time.Time                          `json:"updated,omitempty" db:"updated"`
-	Style           ChecklistStyle                     `json:"style,omitempty" db:"style"`
-	PageSize        PageSize                           `json:"pageSize,omitempty" db:"page_size"`
-	PageOrientation PageOrientation                    `json:"pageOrientation,omitempty" db:"page_orientation"`
-	Columns         int                                `json:"columns,omitempty" db:"columns"`
-	FontSize        int                                `json:"fontSize,omitempty" db:"font_size"`
-	BorderThickness BorderThickness                    `json:"borderThickness,omitempty" db:"border_thickness"`
-	FontFamily      string                             `json:"fontFamily,omitempty" db:"font_family"`
-	DefaultColor    string                             `json:"defaultColor,omitempty" db:"default_color"`
-	ChecklistItems  []ChecklistFormChecklistItemsInner `json:"checklistItems,omitempty"`
+	ChecklistPost
+
+	Id             uuid.UUID                          `json:"id" db:"id"`
+	ChecklistItems []ChecklistFormChecklistItemsInner `json:"checklistItems,omitempty"`
 }
 
 type ChecklistFormChecklistItemsInner struct {

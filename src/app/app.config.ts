@@ -6,14 +6,13 @@ import { provideRouter, withComponentInputBinding, withRouterConfig } from '@ang
 
 import { MessageService } from 'primeng/api';
 
-import { authInterceptor } from '@interceptors';
+import { authInterceptor, dataInterceptor } from '@interceptors';
 
 import { Configuration as DataAuthConfiguration, ConfigurationParameters as DataAuthConfigurationParameters } from '@api/auth';
 import { Configuration as DataApiConfiguration, ConfigurationParameters as DataApiConfigurationParameters } from '@api/data';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { dataInterceptor } from './interceptors/data.interceptor';
 import { ChecklistMapper, provideMapper, withMapper } from './mapper';
 
 export function withDataApiConfiguration(configParams: DataApiConfigurationParameters) {

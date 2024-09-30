@@ -1,20 +1,19 @@
 import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { defer, exhaustMap, finalize, map, Subject } from 'rxjs';
+import { catchError, defer, exhaustMap, finalize, map, of, Subject, tap } from 'rxjs';
 
 import { MessageService } from 'primeng/api';
 
 import { createReload } from '@utils/rxjs';
 import { isNil } from 'ramda';
 
-import { BorderThickness, ChecklistsService, ChecklistStyle, PageOrientation, PageSize } from '@api/data';
+import { BorderThickness, Checklist, ChecklistsService, ChecklistStyle, PageOrientation, PageSize } from '@api/data';
 
 import { AppStore } from '../../../../app.store';
 import { checklistMapToVM } from '../../../../mapper';
-import { WSService } from '../../../../services/w-s.service';
 
 @Component({
     selector: 'cx-checklists-overview',
@@ -26,7 +25,6 @@ import { WSService } from '../../../../services/w-s.service';
         DatePipe,
         JsonPipe,
     ],
-    providers: [WSService],
 })
 export class OverviewComponent {
     readonly #router = inject(Router);
@@ -35,9 +33,9 @@ export class OverviewComponent {
     readonly #appStore = inject(AppStore);
     readonly #destroyRef = inject(DestroyRef);
     readonly #messageService = inject(MessageService);
-    readonly #wsService = inject(WSService);
 
     readonly #reloadSubject = new Subject<void>();
+    // readonly #responsesSubject$ = new BehaviorSubject<string[]>([]);
 
     public readonly checklists$ = createReload(this.#reloadSubject).pipe(
         exhaustMap(() =>
@@ -48,18 +46,12 @@ export class OverviewComponent {
         ),
     );
 
-    public readonly responses = signal<string[]>([]);
+    // public readonly responses = toSignal(this.#responsesSubject$.asObservable());
 
     public constructor() {
-        effect(
-            () => {
-                const response = this.#wsService.response();
-                if (!isNil(response)) {
-                    this.responses.update((prev) => [...prev, response]);
-                }
-            },
-            { allowSignalWrites: true },
-        );
+        // this.#wsService.response$
+        //     .pipe(takeUntilDestroyed(this.#destroyRef))
+        //     .subscribe((response) => this.#responsesSubject$.next([...this.#responsesSubject$.value, response]));
     }
 
     public async onOpenChecklist(id?: string, component?: string) {
@@ -102,7 +94,8 @@ export class OverviewComponent {
             this.#appStore.startIsLoading();
 
             return this.#checklistsService.checklistsPost({
-                checklistItems: [],
+                // checklistItems: [],
+                title: 'My Checklist',
                 borderThickness: BorderThickness.Medium,
                 columns: 2,
                 created: new Date().toISOString(),
@@ -117,19 +110,30 @@ export class OverviewComponent {
             .pipe(
                 takeUntilDestroyed(this.#destroyRef),
                 finalize(() => this.#appStore.stopIsLoading()),
+                catchError((e) => {
+                    console.error(e);
+
+                    this.#messageService.add({
+                        severity: 'error',
+                        summary: 'Error while creating new checklist',
+                        detail: e.error,
+                        life: 3000,
+                    });
+
+                    return of(null);
+                }),
+                tap((d) => console.log(d)),
             )
-            .subscribe(async (justCreatedChecklist) => {
-                this.#messageService.add({
-                    severity: 'success',
-                    detail: 'Checklist created successfully. Have fun with the editing :)',
-                    life: 3000,
-                });
+            .subscribe(async (justCreatedChecklist: Checklist | null) => {
+                if (!isNil(justCreatedChecklist)) {
+                    this.#messageService.add({
+                        severity: 'success',
+                        detail: 'Checklist created successfully. Have fun with editing :)',
+                        life: 3000,
+                    });
 
-                await this.#router.navigate(['.', justCreatedChecklist.id, 'editor'], { relativeTo: this.#route });
+                    await this.#router.navigate(['.', justCreatedChecklist.id, 'editor'], { relativeTo: this.#route });
+                }
             });
-    }
-
-    public sendWSMsg(): void {
-        this.#wsService.sendMsg('Hello World!');
     }
 }

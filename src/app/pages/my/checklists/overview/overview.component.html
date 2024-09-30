@@ -1,5 +1,4 @@
 <div class="flex flex-col">
-    <pre>{{ responses() | json }}</pre>
     <div class="-m-1.5 overflow-x-auto">
         <div class="p-1.5 min-w-full inline-block align-middle">
             <div class="border border-neutral-700 rounded-xl shadow-sm overflow-hidden">
@@ -7,14 +6,6 @@
                     <div>
                         <h2 class="text-xl font-semibold">Checklists</h2>
                         <p class="text-sm text-gray-600 dark:text-neutral-400">Create checklists, edit, download and more.</p>
-                    </div>
-                    <div class="sm:col-span-1">
-                        <a
-                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none"
-                            (click)="sendWSMsg()"
-                        >
-                            Send WS msg
-                        </a>
                     </div>
                     <div class="sm:col-span-1">
                         <a

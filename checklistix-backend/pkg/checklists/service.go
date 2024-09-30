@@ -10,6 +10,8 @@ import (
 type Service interface {
 	GetAll(*gofr.Context) ([]models.Checklist, error)
 	GetById(*gofr.Context, uuid.UUID) (*models.Checklist, error)
+	Create(*gofr.Context, *models.ChecklistPost) (*models.Checklist, error)
+	Delete(*gofr.Context, uuid.UUID) error
 }
 
 type checklistService struct{}
@@ -28,7 +30,7 @@ func (c *checklistService) GetAll(ctx *gofr.Context) ([]models.Checklist, error)
 
 	_, err = client.
 		From("checklists").
-		Select("*", "exact", false).
+		Select("id, title, updated, created", "exact", false).
 		ExecuteTo(&checklists)
 
 	if err != nil {
@@ -54,10 +56,10 @@ func (c *checklistService) GetById(ctx *gofr.Context, id uuid.UUID) (*models.Che
 		From("checklists").
 		Select(
 			"id, title, created, updated, style, "+
-				"pageSize:page_size, pageOrientation:page_orientation, columns, fontSize:font_size, "+
-				"borderThickness:border_thickness, fontFamily:font_family, defaultColor:default_color, "+
-				"checklistItems:checklist_items (checklistId:checklist_id, *, "+
-				"subChecklistItems:sub_checklist_items (subChecklistId:sub_checklist_id, *))",
+				"pageSize, pageOrientation, columns, fontSize, "+
+				"borderThickness, fontFamily, defaultColor, "+
+				"checklistItems:checklist_items (checklistId, *, "+
+				"subChecklistItems:sub_checklist_items (subChecklistId, *))",
 			"exact",
 			false,
 		).
@@ -69,4 +71,46 @@ func (c *checklistService) GetById(ctx *gofr.Context, id uuid.UUID) (*models.Che
 	}
 
 	return &checklist, nil
+}
+
+func (c *checklistService) Create(ctx *gofr.Context, checklistPost *models.ChecklistPost) (*models.Checklist, error) {
+	client, err := supabase.NewClientWithContext(ctx.Request.Context())
+	if err != nil {
+		return nil, err
+	}
+
+	var checklists []models.Checklist
+	count, err := client.
+		From("checklists").
+		Insert(checklistPost, false, "", "", "exact").
+		ExecuteTo(&checklists)
+
+	if err != nil {
+		return nil, err
+	}
+
+	ctx.Logger.Debugf("Insert checklist: count = %d", count)
+
+	return &checklists[0], nil
+}
+
+func (c *checklistService) Delete(ctx *gofr.Context, id uuid.UUID) error {
+	client, err := supabase.NewClientWithContext(ctx.Request.Context())
+	if err != nil {
+		return err
+	}
+
+	_, count, err := client.
+		From("checklists").
+		Delete("", "exact").
+		Eq("id", id.String()).
+		Execute()
+
+	if err != nil {
+		return err
+	}
+
+	ctx.Logger.Debugf("Delete checklist: count = %d", count)
+
+	return nil
 }

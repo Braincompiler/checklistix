@@ -8,7 +8,7 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { DOCUMENT, NgClass } from '@angular/common';
+import { DOCUMENT, JsonPipe, NgClass } from '@angular/common';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -253,6 +253,7 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
         EditorSelectComponent,
         EditorInputComponent,
         ReactiveFormsModule,
+        JsonPipe,
     ],
 })
 export class ChecklistPreviewComponent implements AfterViewInit {
@@ -264,6 +265,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
 
     public readonly checklist = model.required<IChecklistVM>();
     public readonly isEdit = input(false, { transform: (v) => booleanAttribute(v) });
+    public readonly isOnline = input(false, { transform: (v) => booleanAttribute(v) });
 
     public readonly updateChecklist = output<Partial<ChecklistForm>>();
     public readonly addChecklistItem = output<Partial<ChecklistFormChecklistItemsInner>>();

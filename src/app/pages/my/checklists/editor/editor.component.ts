@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, effect, inject, input } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
 import { isDualpropUpdate, isPropUpdate } from '@utils';
@@ -10,20 +10,24 @@ import { ChecklistPreviewComponent, IDualPropUpdate, IPropUpdate } from '@compon
 
 import { AppStore } from '../../../../app.store';
 import { IChecklistVM } from '../../../../mapper';
+import { WsService } from '../../../../services/ws.service';
 
 @Component({
     selector: 'cx-checklists-editor',
     templateUrl: 'editor.component.html',
     standalone: true,
     imports: [ChecklistPreviewComponent, RouterLink],
+    providers: [WsService],
 })
 export class EditorComponent {
     readonly #appStore = inject(AppStore);
     readonly #checklistsService = inject(ChecklistsService);
     readonly #destroyRef = inject(DestroyRef);
+    readonly #wsService = inject(WsService);
 
     public readonly checklistId = input<string>('', { alias: 'id' });
     public readonly checklist = computed(() => this.#appStore.currentChecklist() ?? ({} as IChecklistVM));
+    public readonly isWsOnline = toSignal(this.#wsService.isOnline$);
 
     public constructor() {
         effect(
