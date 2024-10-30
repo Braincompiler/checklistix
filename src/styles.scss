@@ -1,11 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+//@import 'primeng/resources/themes/tailwind-light/theme.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, primeng, tailwind-utilities;
 
-@import 'primeng/resources/themes/tailwind-light/theme.css';
-@import 'primeng/resources/primeng.min.css';
+@layer tailwind-base {
+    @tailwind base;
+}
+
+@layer primeng;
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+    @tailwind variants;
+}
+
+//@import 'primeng/resources/primeng.css';
+//@import 'primeng/resources/themes/aura-light-amber/theme.css'; // @TODO: Need dynamic import of this theme for dark/light scheme
+//@import 'primeng/resources/themes/aura-dark-amber/theme.css';
 @import 'primeicons/primeicons.css';
 
 :root {
@@ -140,7 +151,7 @@ a:not([href]) {
         .header {
             @apply flex;
             @apply flex-wrap;
-            @apply gap-2;
+            @apply gap-1;
             @apply mb-3;
 
             > * {
@@ -158,7 +169,7 @@ a:not([href]) {
         .columns-3,
         .columns-4 {
             @apply h-full;
-            @apply gap-2;
+            @apply gap-1; // @TODO: make option, like border width, ...
 
             //column-fill: auto;
 
@@ -288,9 +299,9 @@ a:not([href]) {
                             }
                         }
 
-                        span:first-child {
-                            @apply min-w-fit;
-                        }
+                        //span:first-child {
+                        //    @apply min-w-fit;
+                        //}
 
                         &.precondition,
                         &.postcondition,

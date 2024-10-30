@@ -1,3 +1,5 @@
+<p-confirmDialog />
+
 <div class="checklist-preview relative">
     @if (isOnline()) {
         <span
@@ -134,6 +136,7 @@
                         @for (checklistItem of checklistColumn.checklistItemsSortedByPosition; track checklistItem.id) {
                             <div
                                 cdkDrag
+                                class="relative"
                                 [cdkDragData]="checklistItem"
                                 (cdkDragStarted)="onDragStarted()"
                             >
@@ -142,6 +145,16 @@
                                     *cdkDragPlaceholder
                                     class="cdk-drag-custom-placeholder"
                                 ></div>
+
+                                @if (isEdit()) {
+                                    <button
+                                        type="button"
+                                        class="absolute z-10 left-1 top-1"
+                                        (click)="doDeleteChecklistItem($event, checklistItem)"
+                                    >
+                                        <span class="pi pi-times text-red-500 text-xs"></span>
+                                    </button>
+                                }
 
                                 @switch (checklistItem.type) {
                                     @case (ChecklistItemType.SubChecklist) {
@@ -176,7 +189,7 @@
                                                 @if (checklistItem['subChecklistItems']?.length === 0) {
                                                     @if (isEdit()) {
                                                         <p class="text-center my-2">
-                                                            Use the <i class="pi pi-plus-circle"></i> button to add items to the ckecklist
+                                                            Use the <i class="pi pi-plus-circle"></i> button to add items to the checklist
                                                         </p>
                                                     } @else {
                                                         <p class="min-h-1">
@@ -187,7 +200,6 @@
                                                     @for (subChecklistItem of checklistItem['subChecklistItems']; track subChecklistItem.id; let i = $index) {
                                                         @switch (subChecklistItem.type) {
                                                             @case (SubChecklistItemType.CheckItem) {
-                                                                <!-- @TODO: Implement drag & drop; li can be the drag handler, ul is the drop list? -->
                                                                 <li
                                                                     cdkDrag
                                                                     class="checkitem"
@@ -218,6 +230,7 @@
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         placeholder="Enter your precondition here ..."
+                                                                        dblClickPlaceholder="Double click to edit precondition"
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
@@ -237,6 +250,7 @@
                                                                         fullWidth
                                                                         textRight
                                                                         placeholder="Enter your postcondition here ..."
+                                                                        dblClickPlaceholder="Double click to edit postcondition"
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
@@ -255,6 +269,7 @@
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         placeholder="Enter your subtitle here ..."
+                                                                        dblClickPlaceholder="Double click to edit subtitle"
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
@@ -273,6 +288,7 @@
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         placeholder="Enter your text here ..."
+                                                                        dblClickPlaceholder="Double click to edit left text"
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"
@@ -292,6 +308,7 @@
                                                                         fullWidth
                                                                         textRight
                                                                         placeholder="Enter your text here ..."
+                                                                        dblClickPlaceholder="Double click to edit right text"
                                                                         [disableEditMode]="!isEdit()"
                                                                         [(ngModel)]="subChecklistItem.text"
                                                                         (exitEditMode)="onExitEditMode(subChecklistItem, 'text')"

@@ -34,6 +34,7 @@ export const AppStore = signalStore(
     withStorageSync({
         key: 'ChecklistiX.AppState',
         select: (s) => pick(['user'], s),
+        // select: (s) => s),
         storage: () => sessionStorage,
     }),
     withDevtools('checklistix'),

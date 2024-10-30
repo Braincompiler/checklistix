@@ -1,17 +1,34 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { AppStore } from '../app.store';
+import { IChecklistVM } from '../mapper';
+
+export enum WSMessageType {
+    UpdateChecklist = 'UpdateChecklist',
+}
 
 @Injectable()
 export class WsService implements OnDestroy {
-    readonly #ws = new WebSocket(environment.wsEndpoint);
+    readonly #appStore = inject(AppStore);
+
+    readonly #ws = new WebSocket(environment.wsEndpoint, ['Authorization', this.#userAccessToken]);
     readonly #responseSubject = new Subject<string>();
     readonly #connectionStatusSubject = new BehaviorSubject<boolean>(false);
 
     public readonly response$ = this.#responseSubject.asObservable();
     public readonly isOnline$ = this.#connectionStatusSubject.asObservable();
+
+    get #userAccessToken(): string {
+        const user = this.#appStore.user();
+        if (user) {
+            return user.access_token;
+        }
+
+        return '';
+    }
 
     public constructor() {
         this.#ws.onopen = () => {
@@ -26,9 +43,10 @@ export class WsService implements OnDestroy {
         };
 
         this.#ws.onmessage = (ev) => {
-            console.log(ev);
-
-            this.#responseSubject.next(ev.data);
+            if (ev.data !== 'null') {
+                console.log(ev);
+                this.#responseSubject.next(ev.data);
+            }
         };
     }
 
@@ -36,11 +54,11 @@ export class WsService implements OnDestroy {
         this.closeConnection();
     }
 
-    public sendMsg(msg: string) {
+    public updateChecklist(checklist: IChecklistVM) {
         this.#ws.send(
             JSON.stringify({
-                type: 'msg',
-                data: msg,
+                type: WSMessageType.UpdateChecklist,
+                data: checklist,
             }),
         );
     }

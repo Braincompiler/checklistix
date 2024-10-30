@@ -17,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 
     if (!isNil(appStore.user()?.access_token)) {
         req = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${appStore.user().access_token}`),
+            headers: req.headers.set('Authorization', `Bearer ${appStore.user()!.access_token}`),
         });
     }
 

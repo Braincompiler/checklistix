@@ -358,7 +358,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/checklist-items/bulk": {
+    "/checklist-items/positions": {
         parameters: {
             query?: never;
             header?: never;
@@ -382,7 +382,7 @@ export interface paths {
             /** @description Checklist items */
             requestBody: {
                 content: {
-                    "application/json": (components["schemas"]["SubChecklistForm"] | components["schemas"]["SectionTitleForm"] | components["schemas"]["TextBoxForm"])[];
+                    "application/json": components["schemas"]["PositionUpdate"][];
                 };
             };
             responses: {
@@ -521,7 +521,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/sub-checklist-items/bulk": {
+    "/sub-checklist-items/positions": {
         parameters: {
             query?: never;
             header?: never;
@@ -545,7 +545,7 @@ export interface paths {
             /** @description Sub checklist items */
             requestBody: {
                 content: {
-                    "application/json": (components["schemas"]["SubChecklistItemCheckItemForm"] | components["schemas"]["SubChecklistItemSubtitleForm"] | components["schemas"]["SubChecklistItemPreconditionForm"] | components["schemas"]["SubChecklistItemPostconditionForm"])[];
+                    "application/json": components["schemas"]["PositionUpdate"][];
                 };
             };
             responses: {
@@ -720,6 +720,11 @@ export interface components {
         };
         /** @enum {string} */
         SubChecklistItemType: "CheckItem" | "Precondition" | "Postcondition" | "Subtitle" | "LeftText" | "RightText";
+        PositionUpdate: {
+            /** Format: uuid */
+            id: string;
+            position: number;
+        };
     };
     responses: never;
     parameters: never;

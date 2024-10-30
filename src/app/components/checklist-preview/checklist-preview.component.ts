@@ -8,27 +8,14 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { DOCUMENT, JsonPipe, NgClass } from '@angular/common';
-import {
-    AfterViewInit,
-    booleanAttribute,
-    Component,
-    computed,
-    effect,
-    ElementRef,
-    inject,
-    input,
-    model,
-    NO_ERRORS_SCHEMA,
-    output,
-    signal,
-    ViewChild,
-} from '@angular/core';
+import { DOCUMENT, NgClass } from '@angular/common';
+import { AfterViewInit, booleanAttribute, Component, computed, effect, ElementRef, inject, input, model, output, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime } from 'rxjs';
 
-import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
+import { ConfirmationService, MenuItem, MenuItemCommandEvent } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { isChecklistItem, isSubChecklistItem } from '@utils';
 import { ascend, clone, compose, isNil, prop, range, sortBy, toLower } from 'ramda';
@@ -47,6 +34,9 @@ import {
 } from '@api/data';
 import { Add2menuitemPipe } from '@pipes';
 
+import { isChecklistItemSectionTitle } from '../../../utils/is-checklist-item-section-title.typeguard';
+import { isChecklistItemSubChecklist } from '../../../utils/is-checklist-item-sub-checklist.typeguard';
+import { isChecklistItemTextbox } from '../../../utils/is-checklist-item-textbox.typeguard';
 import { IChecklistVM } from '../../mapper';
 import { DualInputEditComponent } from '../dual-input-edit/dual-input-edit.component';
 import { EditorInputComponent } from '../editor-input/editor-input.component';
@@ -236,7 +226,8 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
     selector: 'cx-checklist-preview',
     templateUrl: 'checklist-preview.component.html',
     standalone: true,
-    schemas: [NO_ERRORS_SCHEMA],
+    // schemas: [NO_ERRORS_SCHEMA],
+    providers: [ConfirmationService],
     imports: [
         NgClass, //
         SubchecklistMenuButtonComponent,
@@ -253,12 +244,13 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
         EditorSelectComponent,
         EditorInputComponent,
         ReactiveFormsModule,
-        JsonPipe,
+        ConfirmDialogModule,
     ],
 })
 export class ChecklistPreviewComponent implements AfterViewInit {
     readonly #document = inject(DOCUMENT);
     readonly #fb = inject(FormBuilder);
+    readonly #confirmationService = inject(ConfirmationService);
 
     @ViewChild('accordionNode', { static: false })
     public readonly accordionNode!: ElementRef;
@@ -274,6 +266,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     public readonly updateSubChecklistItem = output<IPropUpdate | IDualPropUpdate>();
     public readonly updateChecklistItemPosition = output<ChecklistFormChecklistItemsInner[]>();
     public readonly updateSubChecklistItemsPosition = output<SubChecklistFormSubChecklistItemsInner[]>();
+    public readonly deleteChecklistItem = output<ChecklistFormChecklistItemsInner>();
 
     public readonly subChecklistItemInEditMode = signal<boolean>(false);
     public readonly fontSizeCssClass = computed(() => FONT_SIZE_CSS_CLASSES[this.checklist().fontSize ?? 10]);
@@ -373,7 +366,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         effect(() => this.metaDataForm.patchValue(this.checklist(), { emitEvent: false }));
 
         this.metaDataForm.valueChanges //
-            .pipe(debounceTime(250))
+            .pipe(debounceTime(400))
             .subscribe((d) => {
                 this.checklist.update((checklist) => ({
                     ...checklist,
@@ -704,5 +697,48 @@ export class ChecklistPreviewComponent implements AfterViewInit {
                       },
             ),
         );
+    }
+
+    public doDeleteChecklistItem(event: Event, checklistItem: ChecklistFormChecklistItemsInner): void {
+        const type = this.#getChecklistItemTypeDescription(checklistItem);
+
+        this.#confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: `Are you sure you want to delete the ${type}?`,
+            header: `Delete ${type}`,
+            icon: 'pi pi-exclamation-triangle',
+            closable: true,
+            closeOnEscape: true,
+            rejectButtonProps: {
+                label: 'No',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Yes',
+            },
+            accept: () => {
+                this.deleteChecklistItem.emit(checklistItem);
+                this.checklist.update((checklist) => ({
+                    ...checklist,
+                    checklistItems: checklist.checklistItems?.filter((ci) => ci.id !== checklistItem.id),
+                }));
+            },
+            reject: () => {
+                // console.log('rejected');
+            },
+        });
+    }
+
+    #getChecklistItemTypeDescription(checklistItem: ChecklistFormChecklistItemsInner): string {
+        if (isChecklistItemSectionTitle(checklistItem)) {
+            return 'Section Title';
+        } else if (isChecklistItemSubChecklist(checklistItem)) {
+            return 'Checklist';
+        } else if (isChecklistItemTextbox(checklistItem)) {
+            return 'Textbox';
+        }
+
+        return 'NEVER';
     }
 }

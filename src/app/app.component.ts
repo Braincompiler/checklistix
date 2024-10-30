@@ -6,6 +6,8 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 
 import { PrimeNGConfig } from 'primeng/api';
+import { definePreset } from 'primeng/themes';
+import { Aura } from 'primeng/themes/aura';
 import { ToastModule } from 'primeng/toast';
 
 import { IStaticMethods } from 'preline/preline';
@@ -37,7 +39,51 @@ export class AppComponent implements OnInit {
     readonly #doc = inject(DOCUMENT); // https://github.com/angular/universal/blob/main/docs/gotchas.md#strategy-1-injection
 
     public constructor() {
-        this.#primeNGConfig.ripple = true;
+        // this.#primeNGConfig.ripple = true;
+        this.#primeNGConfig.theme.set({
+            preset: definePreset(Aura, {
+                semantic: {
+                    primary: Aura.primitive['amber'],
+                    colorScheme: {
+                        light: {
+                            primary: {
+                                color: '{primary.500}',
+                                contrastColor: '#ffffff',
+                                hoverColor: '{primary.600}',
+                                activeColor: '{primary.700}',
+                            },
+                            highlight: {
+                                background: '{primary.50}',
+                                focusBackground: '{primary.100}',
+                                color: '{primary.700}',
+                                focusColor: '{primary.800}',
+                            },
+                        },
+                        dark: {
+                            primary: {
+                                color: '{primary.400}',
+                                contrastColor: '{surface.900}',
+                                hoverColor: '{primary.300}',
+                                activeColor: '{primary.200}',
+                            },
+                            highlight: {
+                                background: 'color-mix(in srgb, {primary.400}, transparent 84%)',
+                                focusBackground: 'color-mix(in srgb, {primary.400}, transparent 76%)',
+                                color: 'rgba(255,255,255,.87)',
+                                focusColor: 'rgba(255,255,255,.87)',
+                            },
+                        },
+                    },
+                },
+            }),
+            options: {
+                darkModeSelector: '.dark',
+                cssLayer: {
+                    name: 'primeng',
+                    order: 'tailwind-base, primeng, tailwind-utilities',
+                },
+            },
+        });
     }
 
     public ngOnInit(): void {

@@ -11,7 +11,7 @@ export type Database = {
     Tables: {
       checklist_items: {
         Row: {
-          checklist_id: string
+          checklistId: string
           color: string | null
           column: number
           id: string
@@ -20,10 +20,10 @@ export type Database = {
           text: string | null
           title: string | null
           type: string
-          user_id: string | null
+          userId: string | null
         }
         Insert: {
-          checklist_id: string
+          checklistId: string
           color?: string | null
           column: number
           id?: string
@@ -32,10 +32,10 @@ export type Database = {
           text?: string | null
           title?: string | null
           type: string
-          user_id?: string | null
+          userId?: string | null
         }
         Update: {
-          checklist_id?: string
+          checklistId?: string
           color?: string | null
           column?: number
           id?: string
@@ -44,19 +44,12 @@ export type Database = {
           text?: string | null
           title?: string | null
           type?: string
-          user_id?: string | null
+          userId?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "checklist_items_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "ChecklistItems_checklistId_fkey"
-            columns: ["checklist_id"]
+            columns: ["checklistId"]
             isOneToOne: false
             referencedRelation: "checklists"
             referencedColumns: ["id"]
@@ -65,59 +58,51 @@ export type Database = {
       }
       checklists: {
         Row: {
-          border_thickness: number
+          borderThickness: number
           columns: number
           created: string
-          default_color: string
-          font_family: string
-          font_size: number
+          defaultColor: string
+          fontFamily: string
+          fontSize: number
           id: string
-          page_orientation: string
-          page_size: string
+          pageOrientation: string
+          pageSize: string
           style: string
           title: string
           updated: string | null
-          user_id: string | null
+          userId: string | null
         }
         Insert: {
-          border_thickness?: number
+          borderThickness?: number
           columns?: number
           created?: string
-          default_color?: string
-          font_family?: string
-          font_size?: number
+          defaultColor?: string
+          fontFamily?: string
+          fontSize?: number
           id?: string
-          page_orientation?: string
-          page_size?: string
+          pageOrientation?: string
+          pageSize?: string
           style?: string
           title?: string
           updated?: string | null
-          user_id?: string | null
+          userId?: string | null
         }
         Update: {
-          border_thickness?: number
+          borderThickness?: number
           columns?: number
           created?: string
-          default_color?: string
-          font_family?: string
-          font_size?: number
+          defaultColor?: string
+          fontFamily?: string
+          fontSize?: number
           id?: string
-          page_orientation?: string
-          page_size?: string
+          pageOrientation?: string
+          pageSize?: string
           style?: string
           title?: string
           updated?: string | null
-          user_id?: string | null
+          userId?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "checklists_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       sub_checklist_items: {
         Row: {
@@ -125,42 +110,35 @@ export type Database = {
           id: string
           item: string | null
           position: number
-          sub_checklist_id: string
+          subChecklistId: string
           text: string | null
           type: string
-          user_id: string | null
+          userId: string | null
         }
         Insert: {
           action?: string | null
           id?: string
           item?: string | null
-          position?: number
-          sub_checklist_id: string
+          position: number
+          subChecklistId: string
           text?: string | null
           type: string
-          user_id?: string | null
+          userId?: string | null
         }
         Update: {
           action?: string | null
           id?: string
           item?: string | null
           position?: number
-          sub_checklist_id?: string
+          subChecklistId?: string
           text?: string | null
           type?: string
-          user_id?: string | null
+          userId?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "sub_checklist_items_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "SubChecklistItems_subChecklistId_fkey"
-            columns: ["sub_checklist_id"]
+            columns: ["subChecklistId"]
             isOneToOne: false
             referencedRelation: "checklist_items"
             referencedColumns: ["id"]
@@ -263,4 +241,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

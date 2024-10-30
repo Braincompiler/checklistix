@@ -18,6 +18,7 @@ export class BaseEditComponent<TFormValue = string> implements ControlValueAcces
     protected initialValue = '';
 
     public readonly disableEditMode = input(true, { transform: (v) => booleanAttribute(v) });
+    public readonly dblClickPlaceholder = input('Double click to edit');
     public readonly exitEditMode = output<void>();
     public readonly enterEditMode = output<void>();
 
@@ -29,13 +30,17 @@ export class BaseEditComponent<TFormValue = string> implements ControlValueAcces
         return (this.form?.get(this.prop)?.value ?? '').trim();
     }
 
+    public get isFormValueEmptyAndNotInEditMode(): boolean {
+        return this.formValueIsEmpty && !this.disableEditMode();
+    }
+
     public get formValue(): string {
         // form value is not a signal, so computed() will not work :(
         const value = this.#rawFormValue;
 
         // @TODO: check the too often re-rendering
 
-        return this.formValueIsEmpty && !this.disableEditMode() ? 'Double click to edit' : value;
+        return this.isFormValueEmptyAndNotInEditMode ? this.dblClickPlaceholder() : value;
     }
 
     public get formValueIsEmpty(): boolean {

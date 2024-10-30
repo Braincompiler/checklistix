@@ -47,3 +47,5 @@ Thumbs.db
 
 # backend files
 .env
+
+*.pb.go

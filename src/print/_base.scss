@@ -11,15 +11,16 @@
 
     body .checklist-preview > page {
         visibility: visible;
-        position: absolute;
+        //position: absolute;
+        position: fixed;
         left: 0;
         top: 0;
-        padding: 5mm;
-
+        //padding: 5mm;
+        //
         overflow: hidden;
         box-sizing: border-box;
         page-break-after: always;
-
+        //
         -webkit-print-color-adjust: exact; /* Chrome/Safari/Edge/Opera */
         color-adjust: exact; /* Firefox */
     }

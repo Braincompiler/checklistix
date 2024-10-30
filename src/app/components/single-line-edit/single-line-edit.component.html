@@ -15,11 +15,13 @@
     </ng-container>
 } @else {
     <span
-        (dblclick)="onEnterEditMode()"
+        class="px-1"
         [class.text-right]="textRight()"
         [class.block]="!noBlock()"
         [class.empty]="formValueIsEmpty"
+        [class.text-2xs]="isFormValueEmptyAndNotInEditMode"
+        (dblclick)="onEnterEditMode()"
     >
-        <span>{{ formValue }}</span>
+        <span class="inline-block">{{ formValue }}</span>
     </span>
 }
