@@ -630,6 +630,23 @@ components:
     #        - ColumnBreak
     #        - PageBreak
 
+    SubChecklistItemForm:
+      type: object
+      properties:
+        checklistItemId:
+          type: string
+          format: uuid
+        item:
+          type: string
+        action:
+          type: string
+        position:
+          type: integer
+        text:
+          type: string
+        type:
+          $ref: '#/components/schemas/SubChecklistItemType' # always SubChecklistItemType::CheckItem
+
     SubChecklistItemCheckItemForm:
       type: object
       properties:

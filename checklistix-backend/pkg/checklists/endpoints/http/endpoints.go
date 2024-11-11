@@ -178,7 +178,7 @@ func MakeUpdateSubChecklistItemPositions(svc checklists.Service) gofr.Handler {
 
 func MakeUpdateChecklistItemPositions(svc checklists.Service) gofr.Handler {
 	return func(ctx *gofr.Context) (interface{}, error) {
-		var checklistItemPatches []models.ChecklistFormChecklistItemsInner
+		var checklistItemPatches []models.ChecklistItemPositionPatch
 
 		err := ctx.Bind(&checklistItemPatches)
 		if err != nil {

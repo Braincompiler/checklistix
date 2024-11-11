@@ -61,23 +61,23 @@ const (
 )
 
 type ChecklistPost struct {
-	Title           string          `json:"title" db:"title" mapstructure:"title"`
-	Created         time.Time       `json:"created" db:"created" mapstructure:"created"`
-	Updated         time.Time       `json:"updated,omitempty" db:"updated" mapstructure:"updated"`
-	Style           ChecklistStyle  `json:"style,omitempty" db:"style" mapstructure:"style"`
-	PageSize        PageSize        `json:"pageSize,omitempty" db:"page_size" mapstructure:"pageSize"`
-	PageOrientation PageOrientation `json:"pageOrientation,omitempty" db:"page_orientation" mapstructure:"pageOrientation"`
-	Columns         json.Number     `json:"columns,omitempty" type:"integer" db:"columns" mapstructure:"columns"`
-	FontSize        json.Number     `json:"fontSize,omitempty" type:"integer" db:"font_size" mapstructure:"fontSize"`
-	BorderThickness json.Number     `json:"borderThickness,omitempty" type:"BorderThickness" db:"border_thickness" mapstructure:"borderThickness"`
-	FontFamily      string          `json:"fontFamily,omitempty" db:"font_family" mapstructure:"fontFamily"`
-	DefaultColor    string          `json:"defaultColor,omitempty" db:"default_color" mapstructure:"defaultColor"`
+	Title           string          `json:"title" mapstructure:"title"`
+	Created         time.Time       `json:"created" mapstructure:"created"`
+	Updated         time.Time       `json:"updated,omitempty" mapstructure:"updated"`
+	Style           ChecklistStyle  `json:"style,omitempty" mapstructure:"style"`
+	PageSize        PageSize        `json:"pageSize,omitempty" mapstructure:"pageSize"`
+	PageOrientation PageOrientation `json:"pageOrientation,omitempty" mapstructure:"pageOrientation"`
+	Columns         json.Number     `json:"columns,omitempty" type:"integer" mapstructure:"columns"`
+	FontSize        json.Number     `json:"fontSize,omitempty" type:"integer" mapstructure:"fontSize"`
+	BorderThickness json.Number     `json:"borderThickness,omitempty" type:"BorderThickness" mapstructure:"borderThickness"`
+	FontFamily      string          `json:"fontFamily,omitempty" mapstructure:"fontFamily"`
+	DefaultColor    string          `json:"defaultColor,omitempty" mapstructure:"defaultColor"`
 }
 
 type ChecklistWithoutItems struct {
 	*ChecklistPost
 
-	Id uuid.UUID `json:"id" db:"id"`
+	Id uuid.UUID `json:"id"`
 }
 
 type Checklist struct {
@@ -92,30 +92,40 @@ type ChecklistItemPatch struct {
 }
 
 type ChecklistItemPost struct {
-	Id          string            `json:"id" db:"id"`
-	ChecklistId string            `json:"checklistId" db:"checklist_id"`
-	Column      json.Number       `json:"column" type:"integer" db:"column"`
-	Page        json.Number       `json:"page" type:"integer" db:"page"`
-	Position    json.Number       `json:"position" type:"integer" db:"position"`
-	Type        ChecklistItemType `json:"type" db:"color"`
-	Title       string            `json:"title,omitempty" db:"title"`
-	Color       string            `json:"color,omitempty" db:"color"`
-	Text        string            `json:"text,omitempty" db:"text"`
+	ChecklistId string            `json:"checklistId"`
+	Column      json.Number       `json:"column" type:"integer"`
+	Page        json.Number       `json:"page" type:"integer"`
+	Position    json.Number       `json:"position" type:"integer"`
+	Type        ChecklistItemType `json:"type"`
+	Title       string            `json:"title,omitempty"`
+	Color       string            `json:"color,omitempty"`
+	Text        string            `json:"text,omitempty"`
 }
 
-type ChecklistFormChecklistItemsInner struct {
+type ChecklistFormChecklistItemsInnerWithoutSubChecklistItems struct {
 	*ChecklistItemPost
+
+	Id uuid.UUID `json:"id"`
+}
+type ChecklistFormChecklistItemsInner struct {
+	*ChecklistFormChecklistItemsInnerWithoutSubChecklistItems
+
 	SubChecklistItems []SubChecklistFormSubChecklistItemsInner `json:"subChecklistItems"`
 }
 
+type ChecklistItemPositionPatch struct {
+	Id       string      `json:"id"`
+	Position json.Number `json:"position" type:"integer"`
+}
+
 type SubChecklistFormSubChecklistItemsInner struct {
-	Id              string               `json:"id" db:"id"`
-	ChecklistItemId string               `json:"checklistItemId" db:"checklistItemId"`
-	Type            SubChecklistItemType `json:"type" db:"type"`
-	Position        json.Number          `json:"position" type:"integer" db:"position"`
-	Item            string               `json:"item,omitempty" db:"item"`
-	Action          string               `json:"action,omitempty" db:"action"`
-	Text            string               `json:"text,omitempty" db:"text"`
+	Id              string               `json:"id"`
+	ChecklistItemId string               `json:"checklistItemId"`
+	Type            SubChecklistItemType `json:"type"`
+	Position        json.Number          `json:"position" type:"integer"`
+	Item            string               `json:"item,omitempty"`
+	Action          string               `json:"action,omitempty"`
+	Text            string               `json:"text,omitempty"`
 }
 
 type SubChecklistItemPatch struct {

@@ -42,6 +42,7 @@ import {
     PageOrientation,
     PageSize,
     SubChecklistFormSubChecklistItemsInner,
+    SubChecklistItemForm,
     SubChecklistItemType,
 } from '@api/data';
 import { Add2menuitemPipe } from '@pipes';
@@ -496,7 +497,6 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         rightProp: keyof SubChecklistFormSubChecklistItemsInner,
     ): void {
         this.subChecklistItemInEditMode.set(false);
-        // console.log({ checklistItem: subChecklistItem, leftProp, rightProp }, subChecklistItem[leftProp], subChecklistItem[rightProp]);
 
         const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === subChecklistItem.checklistItemId);
         if (!isNil(subChecklist)) {
@@ -525,7 +525,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             checklistId: checklist.id,
             column,
             page,
-            position: (this.checklist().checklistItems ?? []).length,
+            position: Math.max(...(this.checklist().checklistItems?.map((ci) => ci.position) ?? [])),
             type: ChecklistItemType.SubChecklist,
             title: '',
             color: '#d4d4d4', // @TODO: use defaultColor from checklist
@@ -550,7 +550,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             checklistId: checklist.id,
             column,
             page,
-            position: (this.checklist().checklistItems ?? []).length,
+            position: Math.max(...(this.checklist().checklistItems?.map((ci) => ci.position) ?? [])),
             type: ChecklistItemType.SectionTitle,
             text: '',
             color: '#d4d4d4', // @TODO: use defaultColor from checklist
@@ -574,7 +574,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             checklistId: checklist.id,
             column,
             page,
-            position: (this.checklist().checklistItems ?? []).length,
+            position: Math.max(...(this.checklist().checklistItems?.map((ci) => ci.position) ?? [])),
             type: ChecklistItemType.TextBox,
             text: '',
             color: '#d4d4d4', // @TODO: use defaultColor from checklist
@@ -593,11 +593,8 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         const { checklistItemId } = event.item!;
 
         this.addToChecklistItems(checklistItemId, {
-            checklistItemId,
             type: SubChecklistItemType.Postcondition,
-            id: uuidv4(),
             text: '',
-            position: 9999,
         });
     }
 
@@ -605,11 +602,8 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         const { checklistItemId } = event.item!;
 
         this.addToChecklistItems(checklistItemId, {
-            checklistItemId,
             type: side === 'left' ? SubChecklistItemType.LeftText : SubChecklistItemType.RightText,
-            id: uuidv4(),
             text: '',
-            position: 9999,
         });
     }
 
@@ -617,11 +611,8 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         const { checklistItemId } = event.item!;
 
         this.addToChecklistItems(checklistItemId, {
-            checklistItemId,
             type: SubChecklistItemType.Precondition,
-            id: uuidv4(),
             text: '',
-            position: 9999,
         });
     }
 
@@ -629,11 +620,8 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         const { checklistItemId } = event.item!;
 
         this.addToChecklistItems(checklistItemId, {
-            checklistItemId,
             type: SubChecklistItemType.Subtitle,
-            id: uuidv4(),
             text: '',
-            position: 9999,
         });
     }
 
@@ -641,12 +629,9 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         const { checklistItemId } = event.item!;
 
         this.addToChecklistItems(checklistItemId, {
-            checklistItemId,
             type: SubChecklistItemType.CheckItem,
-            id: uuidv4(),
             item: '',
             action: '',
-            position: 9999,
         });
     }
 
@@ -679,12 +664,18 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         this.subChecklistItemInEditMode.set(true);
     }
 
-    private addToChecklistItems(checklistItemId: string, item: SubChecklistFormSubChecklistItemsInner): void {
+    private addToChecklistItems(checklistItemId: string, item: SubChecklistItemForm): void {
         const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === checklistItemId);
+        const newItem = {
+            ...item,
+            id: uuidv4(),
+            checklistItemId,
+            position: Math.max(...(subChecklist?.subChecklistItems?.map((sci) => sci.position) ?? [])) + 1,
+        } as SubChecklistFormSubChecklistItemsInner;
 
-        subChecklist?.subChecklistItems!.push(item);
+        subChecklist?.subChecklistItems!.push(newItem);
 
-        this.addSubChecklistItem.emit(item);
+        this.addSubChecklistItem.emit(newItem);
 
         this.checklist.update((c) => ({ ...c }));
     }
