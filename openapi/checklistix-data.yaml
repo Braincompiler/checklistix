@@ -135,6 +135,30 @@ paths:
         '500':
           description: Internal server error
 
+  /checklists/{id}/copy:
+    get:
+      tags:
+        - Checklists
+      summary: Copy a single checklist
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checklist'
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+
   /checklists/{id}/checklist-items:
     post:
       tags:
@@ -293,6 +317,27 @@ paths:
       responses:
         '200':
           description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+        - Checklists
+      summary: Deletes a sub checklist item
+      operationId: deleteSubChecklistItem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ok
+        '204':
+          description: No content
         '400':
           description: Bad request
         '500':
@@ -588,7 +633,7 @@ components:
     SubChecklistItemCheckItemForm:
       type: object
       properties:
-        subChecklistId:
+        checklistItemId:
           type: string
           format: uuid
           nullable: false
@@ -608,7 +653,7 @@ components:
         - type: object
           required:
             - id
-            - subChecklistId
+            - checklistItemId
             - type
             - position
           properties:
@@ -620,7 +665,7 @@ components:
     SubChecklistItemPreconditionForm:
       type: object
       properties:
-        subChecklistId:
+        checklistItemId:
           type: string
           format: uuid
           nullable: false
@@ -637,7 +682,7 @@ components:
         - type: object
           required:
             - id
-            - subChecklistId
+            - checklistItemId
             - type
             - position
           properties:
@@ -649,7 +694,7 @@ components:
     SubChecklistItemPostconditionForm:
       type: object
       properties:
-        subChecklistId:
+        checklistItemId:
           type: string
           format: uuid
           nullable: false
@@ -666,7 +711,7 @@ components:
         - type: object
           required:
             - id
-            - subChecklistId
+            - checklistItemId
             - type
             - position
           properties:
@@ -678,7 +723,7 @@ components:
     SubChecklistItemSubtitleForm:
       type: object
       properties:
-        subChecklistId:
+        checklistItemId:
           type: string
           format: uuid
           nullable: false
@@ -695,7 +740,7 @@ components:
         - type: object
           required:
             - id
-            - subChecklistId
+            - checklistItemId
             - type
             - position
           properties:
@@ -707,7 +752,7 @@ components:
     SubChecklistItemLeftTextForm:
       type: object
       properties:
-        subChecklistId:
+        checklistItemId:
           type: string
           format: uuid
           nullable: false
@@ -724,7 +769,7 @@ components:
         - type: object
           required:
             - id
-            - subChecklistId
+            - checklistItemId
             - type
             - position
           properties:
@@ -736,7 +781,7 @@ components:
     SubChecklistItemRightTextForm:
       type: object
       properties:
-        subChecklistId:
+        checklistItemId:
           type: string
           format: uuid
           nullable: false
@@ -753,7 +798,7 @@ components:
         - type: object
           required:
             - id
-            - subChecklistId
+            - checklistItemId
             - type
             - position
           properties:

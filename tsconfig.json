@@ -1,5 +1,3 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -25,13 +23,13 @@
     "baseUrl": ".",
     "paths": {
       "@api/*": ["src/api/*"],
-      "@mapper": ["src/mapper/index.ts"],
       "@components": ["src/app/components/index.ts"],
       "@directives": ["src/app/directives/index.ts"],
+      "@interceptors": ["src/app/interceptors/index.ts"],
+      "@mapper": ["src/mapper/index.ts"],
       "@pages": ["src/app/pages/index.ts"],
       "@pipes": ["src/app/pipes/index.ts"],
       "@services": ["src/app/services/index.ts"],
-      "@interceptors": ["src/app/interceptors/index.ts"],
       "@utils": ["src/utils/index.ts"],
       "@utils/rxjs": ["src/utils/rxjs/index.ts"]
     }

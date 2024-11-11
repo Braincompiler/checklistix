@@ -40,7 +40,7 @@ func StoreTokenResponseToRedis(redisContainer container.Redis, tokenResponse *ty
 }
 
 func DeleteTokenResponseFromRedis(redisContainer container.Redis, ctx context.Context) error {
-	accessToken := ctx.Value("accessToken").(string)
+	accessToken := ctx.Value(constants.AccessTokenKey).(string)
 
 	return DeleteTokenResponseFromRedisWithAccessToken(redisContainer, ctx, accessToken)
 }

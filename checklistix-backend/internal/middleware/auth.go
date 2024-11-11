@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"github.com/braincompiler/checklistix/internal/constants"
 	"github.com/braincompiler/checklistix/internal/supabase"
 	"net/http"
 	"strings"
@@ -74,7 +75,7 @@ func Auth(redis container.Redis) func(http.Handler) http.Handler {
 				}
 
 				//w.Header().Set("X-New-Token", token)
-				ctx := context.WithValue(r.Context(), "accessToken", token)
+				ctx := context.WithValue(r.Context(), constants.AccessTokenKey, token)
 				*r = *r.Clone(ctx)
 			}
 

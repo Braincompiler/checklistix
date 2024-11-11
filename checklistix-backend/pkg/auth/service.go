@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/braincompiler/checklistix/internal/models"
 	"github.com/braincompiler/checklistix/internal/supabase"
 	"github.com/braincompiler/checklistix/internal/utils"
@@ -76,7 +75,6 @@ func (s *authService) SignIn(ctx *gofr.Context) (*types.TokenResponse, error) {
 
 func (s *authService) SignOut(ctx *gofr.Context) error {
 	client, err := supabase.NewAuthClientWithContext(ctx.Request.Context())
-	fmt.Printf("err: %v\n", err)
 	if err != nil {
 		return err
 	}

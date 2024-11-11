@@ -3,9 +3,10 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { catchError, defer, exhaustMap, finalize, map, of, Subject, tap } from 'rxjs';
+import { catchError, defer, exhaustMap, finalize, map, of, Subject } from 'rxjs';
 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { createReload } from '@utils/rxjs';
 import { isNil } from 'ramda';
@@ -13,17 +14,19 @@ import { isNil } from 'ramda';
 import { BorderThickness, Checklist, ChecklistsService, ChecklistStyle, PageOrientation, PageSize } from '@api/data';
 
 import { AppStore } from '../../../../app.store';
-import { checklistMapToVM } from '../../../../mapper';
+import { checklistMapToVM, IChecklistVM } from '../../../../mapper';
 
 @Component({
     selector: 'cx-checklists-overview',
     templateUrl: 'overview.component.html',
     standalone: true,
+    providers: [ConfirmationService],
     imports: [
         RouterLink, //
         AsyncPipe,
         DatePipe,
         JsonPipe,
+        ConfirmDialogModule,
     ],
 })
 export class OverviewComponent {
@@ -33,6 +36,7 @@ export class OverviewComponent {
     readonly #appStore = inject(AppStore);
     readonly #destroyRef = inject(DestroyRef);
     readonly #messageService = inject(MessageService);
+    readonly #confirmationService = inject(ConfirmationService);
 
     readonly #reloadSubject = new Subject<void>();
     // readonly #responsesSubject$ = new BehaviorSubject<string[]>([]);
@@ -58,35 +62,92 @@ export class OverviewComponent {
         await this.#router.navigate(['my', 'checklists', id, component]);
     }
 
-    public onCopyChecklist(id?: string) {
-        console.log('copy checklist', id);
+    public onCopyChecklist(event: MouseEvent, checklist: IChecklistVM) {
+        this.#confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: `Are you sure you want to copy the checklist ${checklist.title}?`,
+            header: `Copy ${checklist.title}`,
+            icon: 'pi pi-exclamation-triangle',
+            closable: true,
+            closeOnEscape: true,
+            rejectButtonProps: {
+                label: 'No',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Yes',
+            },
+            accept: () => {
+                defer(() => {
+                    this.#appStore.startIsLoading();
+
+                    return this.#checklistsService.checklistsIdCopyGet(checklist.id);
+                })
+                    .pipe(
+                        takeUntilDestroyed(this.#destroyRef),
+                        finalize(() => this.#appStore.stopIsLoading()),
+                    )
+                    .subscribe(async () => {
+                        this.#messageService.add({
+                            severity: 'success',
+                            detail: 'Checklist copied successfully',
+                            life: 3000,
+                        });
+
+                        this.#reloadSubject.next();
+                    });
+            },
+            reject: () => {
+                // console.log('rejected');
+            },
+        });
     }
 
-    public onPrintChecklist(id?: string) {
-        console.log('print checklist', id);
+    public async onPrintChecklist(checklist: IChecklistVM) {
+        await this.#router.navigate(['my', 'checklists', checklist.id, 'viewer'], { queryParams: { print: 1 } });
     }
 
-    public onDeleteChecklist(id: string) {
-        console.log('delete checklist', id);
+    public onDeleteChecklist(event: MouseEvent, checklist: IChecklistVM) {
+        this.#confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: `Are you sure you want to delete the checklist ${checklist.title}?`,
+            header: `Delete ${checklist.title}`,
+            icon: 'pi pi-exclamation-triangle',
+            closable: true,
+            closeOnEscape: true,
+            rejectButtonProps: {
+                label: 'No',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Yes',
+            },
+            accept: () => {
+                defer(() => {
+                    this.#appStore.startIsLoading();
 
-        defer(() => {
-            this.#appStore.startIsLoading();
+                    return this.#checklistsService.checklistsIdDelete(checklist.id);
+                })
+                    .pipe(
+                        takeUntilDestroyed(this.#destroyRef),
+                        finalize(() => this.#appStore.stopIsLoading()),
+                    )
+                    .subscribe(async () => {
+                        this.#messageService.add({
+                            severity: 'success',
+                            detail: 'Checklist deleted successfully',
+                            life: 3000,
+                        });
 
-            return this.#checklistsService.checklistsIdDelete(id);
-        })
-            .pipe(
-                takeUntilDestroyed(this.#destroyRef),
-                finalize(() => this.#appStore.stopIsLoading()),
-            )
-            .subscribe(async () => {
-                this.#messageService.add({
-                    severity: 'success',
-                    detail: 'Checklist deleted successfully',
-                    life: 3000,
-                });
-
-                this.#reloadSubject.next();
-            });
+                        this.#reloadSubject.next();
+                    });
+            },
+            reject: () => {
+                // console.log('rejected');
+            },
+        });
     }
 
     public onNewChecklist() {
@@ -122,7 +183,7 @@ export class OverviewComponent {
 
                     return of(null);
                 }),
-                tap((d) => console.log(d)),
+                // tap((d) => console.log(d)),
             )
             .subscribe(async (justCreatedChecklist: Checklist | null) => {
                 if (!isNil(justCreatedChecklist)) {

@@ -109,13 +109,13 @@ type ChecklistFormChecklistItemsInner struct {
 }
 
 type SubChecklistFormSubChecklistItemsInner struct {
-	Id             string               `json:"id" db:"id"`
-	SubChecklistId string               `json:"subChecklistId" db:"sub_checklist_id"`
-	Type           SubChecklistItemType `json:"type" db:"type"`
-	Position       json.Number          `json:"position" type:"integer" db:"position"`
-	Item           string               `json:"item,omitempty" db:"item"`
-	Action         string               `json:"action,omitempty" db:"action"`
-	Text           string               `json:"text,omitempty" db:"text"`
+	Id              string               `json:"id" db:"id"`
+	ChecklistItemId string               `json:"checklistItemId" db:"checklistItemId"`
+	Type            SubChecklistItemType `json:"type" db:"type"`
+	Position        json.Number          `json:"position" type:"integer" db:"position"`
+	Item            string               `json:"item,omitempty" db:"item"`
+	Action          string               `json:"action,omitempty" db:"action"`
+	Text            string               `json:"text,omitempty" db:"text"`
 }
 
 type SubChecklistItemPatch struct {

@@ -17,7 +17,19 @@ import { debounceTime } from 'rxjs';
 import { ConfirmationService, MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-import { isChecklistItem, isSubChecklistItem } from '@utils';
+import {
+    isChecklistItem,
+    isChecklistItemSectionTitle,
+    isChecklistItemSubChecklist,
+    isChecklistItemTextbox,
+    isSubChecklistItem,
+    isSubChecklistItemCheckItem,
+    isSubChecklistItemLeftHandText,
+    isSubChecklistItemPostcondition,
+    isSubChecklistItemPrecondition,
+    isSubChecklistItemRightHandText,
+    isSubChecklistItemSubtitle,
+} from '@utils';
 import { ascend, clone, compose, isNil, prop, range, sortBy, toLower } from 'ramda';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,9 +46,6 @@ import {
 } from '@api/data';
 import { Add2menuitemPipe } from '@pipes';
 
-import { isChecklistItemSectionTitle } from '../../../utils/is-checklist-item-section-title.typeguard';
-import { isChecklistItemSubChecklist } from '../../../utils/is-checklist-item-sub-checklist.typeguard';
-import { isChecklistItemTextbox } from '../../../utils/is-checklist-item-textbox.typeguard';
 import { IChecklistVM } from '../../mapper';
 import { DualInputEditComponent } from '../dual-input-edit/dual-input-edit.component';
 import { EditorInputComponent } from '../editor-input/editor-input.component';
@@ -267,6 +276,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     public readonly updateChecklistItemPosition = output<ChecklistFormChecklistItemsInner[]>();
     public readonly updateSubChecklistItemsPosition = output<SubChecklistFormSubChecklistItemsInner[]>();
     public readonly deleteChecklistItem = output<ChecklistFormChecklistItemsInner>();
+    public readonly deleteSubChecklistItem = output<SubChecklistFormSubChecklistItemsInner>();
 
     public readonly subChecklistItemInEditMode = signal<boolean>(false);
     public readonly fontSizeCssClass = computed(() => FONT_SIZE_CSS_CLASSES[this.checklist().fontSize ?? 10]);
@@ -468,7 +478,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         }
 
         if (isSubChecklistItem(checklistItem)) {
-            const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === checklistItem.subChecklistId);
+            const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === checklistItem.checklistItemId);
             if (!isNil(subChecklist)) {
                 // subChecklist should actually never be nil, but just in case and to make the compiler happy :)
                 subChecklist.subChecklistItems = (subChecklist.subChecklistItems ?? []).map((i) => (i.id === checklistItem.id ? { ...checklistItem } : i));
@@ -488,7 +498,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         this.subChecklistItemInEditMode.set(false);
         // console.log({ checklistItem: subChecklistItem, leftProp, rightProp }, subChecklistItem[leftProp], subChecklistItem[rightProp]);
 
-        const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === subChecklistItem.subChecklistId);
+        const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === subChecklistItem.checklistItemId);
         if (!isNil(subChecklist)) {
             subChecklist!.subChecklistItems = (subChecklist!.subChecklistItems ?? []).map((i) => (i.id === subChecklistItem.id ? { ...subChecklistItem } : i));
 
@@ -580,10 +590,10 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     }
 
     public addPostcondition(event: MenuItemCommandEvent): void {
-        const { subChecklistId } = event.item!;
+        const { checklistItemId } = event.item!;
 
-        this.addToChecklistItems(subChecklistId, {
-            subChecklistId,
+        this.addToChecklistItems(checklistItemId, {
+            checklistItemId,
             type: SubChecklistItemType.Postcondition,
             id: uuidv4(),
             text: '',
@@ -592,10 +602,10 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     }
 
     public addText(event: MenuItemCommandEvent, side: 'left' | 'right'): void {
-        const { subChecklistId } = event.item!;
+        const { checklistItemId } = event.item!;
 
-        this.addToChecklistItems(subChecklistId, {
-            subChecklistId,
+        this.addToChecklistItems(checklistItemId, {
+            checklistItemId,
             type: side === 'left' ? SubChecklistItemType.LeftText : SubChecklistItemType.RightText,
             id: uuidv4(),
             text: '',
@@ -604,10 +614,10 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     }
 
     public addPrecondition(event: MenuItemCommandEvent): void {
-        const { subChecklistId } = event.item!;
+        const { checklistItemId } = event.item!;
 
-        this.addToChecklistItems(subChecklistId, {
-            subChecklistId,
+        this.addToChecklistItems(checklistItemId, {
+            checklistItemId,
             type: SubChecklistItemType.Precondition,
             id: uuidv4(),
             text: '',
@@ -616,10 +626,10 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     }
 
     public addSubtitle(event: MenuItemCommandEvent): void {
-        const { subChecklistId } = event.item!;
+        const { checklistItemId } = event.item!;
 
-        this.addToChecklistItems(subChecklistId, {
-            subChecklistId,
+        this.addToChecklistItems(checklistItemId, {
+            checklistItemId,
             type: SubChecklistItemType.Subtitle,
             id: uuidv4(),
             text: '',
@@ -628,10 +638,10 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     }
 
     public addCheckItem(event: MenuItemCommandEvent): void {
-        const { subChecklistId } = event.item!;
+        const { checklistItemId } = event.item!;
 
-        this.addToChecklistItems(subChecklistId, {
-            subChecklistId,
+        this.addToChecklistItems(checklistItemId, {
+            checklistItemId,
             type: SubChecklistItemType.CheckItem,
             id: uuidv4(),
             item: '',
@@ -646,7 +656,7 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     ): void {
         this.#document?.body?.classList.remove('!cursor-grabbing');
 
-        console.log($event, checklistItem);
+        // console.log($event, checklistItem);
 
         moveItemInArray(
             checklistItem.subChecklistItems ?? [], //
@@ -669,8 +679,8 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         this.subChecklistItemInEditMode.set(true);
     }
 
-    private addToChecklistItems(subChecklistId: string, item: SubChecklistFormSubChecklistItemsInner): void {
-        const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === subChecklistId);
+    private addToChecklistItems(checklistItemId: string, item: SubChecklistFormSubChecklistItemsInner): void {
+        const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === checklistItemId);
 
         subChecklist?.subChecklistItems!.push(item);
 
@@ -699,11 +709,11 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         );
     }
 
-    public doDeleteChecklistItem(event: Event, checklistItem: ChecklistFormChecklistItemsInner): void {
+    public doDeleteChecklistItem(e: Event, checklistItem: ChecklistFormChecklistItemsInner): void {
         const type = this.#getChecklistItemTypeDescription(checklistItem);
 
         this.#confirmationService.confirm({
-            target: event.target as EventTarget,
+            target: e.target as EventTarget,
             message: `Are you sure you want to delete the ${type}?`,
             header: `Delete ${type}`,
             icon: 'pi pi-exclamation-triangle',
@@ -730,6 +740,43 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         });
     }
 
+    public doDeleteSubChecklistItem(e: MouseEvent, subChecklistItem: SubChecklistFormSubChecklistItemsInner): void {
+        const type = this.#getSubChecklistItemTypeDescription(subChecklistItem);
+
+        this.#confirmationService.confirm({
+            target: e.target as EventTarget,
+            message: `Are you sure you want to delete the ${type}?`,
+            header: `Delete ${type}`,
+            icon: 'pi pi-exclamation-triangle',
+            closable: true,
+            closeOnEscape: true,
+            rejectButtonProps: {
+                label: 'No',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Yes',
+            },
+            accept: () => {
+                this.deleteSubChecklistItem.emit(subChecklistItem);
+                this.checklist.update((checklist) => ({
+                    ...checklist,
+                    checklistItems: checklist.checklistItems?.map((ci) => {
+                        if (ci.id === subChecklistItem.checklistItemId) {
+                            ci.subChecklistItems = ci.subChecklistItems?.filter((sci) => sci.id !== subChecklistItem.id);
+                        }
+
+                        return ci;
+                    }),
+                }));
+            },
+            reject: () => {
+                // console.log('rejected');
+            },
+        });
+    }
+
     #getChecklistItemTypeDescription(checklistItem: ChecklistFormChecklistItemsInner): string {
         if (isChecklistItemSectionTitle(checklistItem)) {
             return 'Section Title';
@@ -737,6 +784,24 @@ export class ChecklistPreviewComponent implements AfterViewInit {
             return 'Checklist';
         } else if (isChecklistItemTextbox(checklistItem)) {
             return 'Textbox';
+        }
+
+        return 'NEVER';
+    }
+
+    #getSubChecklistItemTypeDescription(subChecklistItem: SubChecklistFormSubChecklistItemsInner): string {
+        if (isSubChecklistItemCheckItem(subChecklistItem)) {
+            return 'Check Item';
+        } else if (isSubChecklistItemLeftHandText(subChecklistItem)) {
+            return 'Left Text';
+        } else if (isSubChecklistItemPrecondition(subChecklistItem)) {
+            return 'Precondition';
+        } else if (isSubChecklistItemRightHandText(subChecklistItem)) {
+            return 'Right Text';
+        } else if (isSubChecklistItemSubtitle(subChecklistItem)) {
+            return 'Subtitle';
+        } else if (isSubChecklistItemPostcondition(subChecklistItem)) {
+            return 'Postcondition';
         }
 
         return 'NEVER';

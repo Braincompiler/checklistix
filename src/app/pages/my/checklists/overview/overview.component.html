@@ -1,3 +1,5 @@
+<p-confirmDialog />
+
 <div class="flex flex-col">
     <div class="-m-1.5 overflow-x-auto">
         <div class="p-1.5 min-w-full inline-block align-middle">
@@ -97,21 +99,21 @@
                                     <a
                                         class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent disabled:opacity-50 disabled:pointer-events-none me-4"
                                         title="Copy checklist"
-                                        (click)="onCopyChecklist(checklist.id)"
+                                        (click)="onCopyChecklist($event, checklist)"
                                     >
                                         <i class="pi pi-clone"></i>
                                     </a>
                                     <a
                                         class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent disabled:opacity-50 disabled:pointer-events-none me-4"
                                         title="Print checklist"
-                                        (click)="onPrintChecklist(checklist.id)"
+                                        (click)="onPrintChecklist(checklist)"
                                     >
                                         <i class="pi pi-print"></i>
                                     </a>
                                     <a
                                         class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400"
                                         title="Delete checklist"
-                                        (click)="onDeleteChecklist(checklist.id)"
+                                        (click)="onDeleteChecklist($event, checklist)"
                                     >
                                         <i class="pi pi-trash"></i>
                                     </a>

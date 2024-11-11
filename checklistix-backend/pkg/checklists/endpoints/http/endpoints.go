@@ -11,6 +11,7 @@ import (
 func NewEndpoints(app *gofr.App, svc checklists.Service) {
 	app.GET("/checklists", MakeGetAll(svc))
 	app.GET("/checklists/{id}", MakeGetById(svc))
+	app.GET("/checklists/{id}/copy", MakeCopyById(svc))
 	app.POST("/checklists", MakeCreateChecklist(svc))
 	app.DELETE("/checklists/{id}", MakeDeleteById(svc))
 	app.PATCH("/checklists/{id}", MakeUpdateById(svc))
@@ -21,6 +22,7 @@ func NewEndpoints(app *gofr.App, svc checklists.Service) {
 	app.POST("/checklist-items/{id}/sub-checklist-items", MakeAddSubChecklistItem(svc))
 	app.PATCH("/sub-checklist-items/positions", MakeUpdateSubChecklistItemPositions(svc))
 	app.PATCH("/sub-checklist-items/{id}", MakeUpdateSubChecklistItemById(svc))
+	app.DELETE("/sub-checklist-items/{id}", MakeDeleteSubChecklistItemById(svc))
 }
 
 func MakeGetAll(svc checklists.Service) gofr.Handler {
@@ -50,6 +52,17 @@ func MakeGetById(svc checklists.Service) gofr.Handler {
 		}
 
 		return svc.GetById(ctx, id)
+	}
+}
+
+func MakeCopyById(svc checklists.Service) gofr.Handler {
+	return func(ctx *gofr.Context) (interface{}, error) {
+		id, err := uuid.Parse(ctx.Request.PathParam("id"))
+		if err != nil {
+			return nil, err
+		}
+
+		return svc.CopyById(ctx, id)
 	}
 }
 
@@ -100,9 +113,9 @@ func MakeUpdateChecklistItemById(svc checklists.Service) gofr.Handler {
 		}
 
 		id, err := uuid.Parse(ctx.Request.PathParam("id"))
-        if err != nil {
-            return nil, err
-        }
+		if err != nil {
+			return nil, err
+		}
 
 		return svc.UpdateChecklistItem(ctx, &checklistItemPatch, id)
 	}
@@ -111,9 +124,9 @@ func MakeUpdateChecklistItemById(svc checklists.Service) gofr.Handler {
 func MakeDeleteChecklistItemById(svc checklists.Service) gofr.Handler {
 	return func(ctx *gofr.Context) (interface{}, error) {
 		id, err := uuid.Parse(ctx.Request.PathParam("id"))
-        if err != nil {
-            return nil, err
-        }
+		if err != nil {
+			return nil, err
+		}
 
 		return nil, svc.DeleteChecklistItem(ctx, id)
 	}
@@ -142,9 +155,9 @@ func MakeUpdateSubChecklistItemById(svc checklists.Service) gofr.Handler {
 		}
 
 		id, err := uuid.Parse(ctx.Request.PathParam("id"))
-        if err != nil {
-            return nil, err
-        }
+		if err != nil {
+			return nil, err
+		}
 
 		return svc.UpdateSubChecklistItem(ctx, &subChecklistItemPatch, id)
 	}
@@ -173,5 +186,16 @@ func MakeUpdateChecklistItemPositions(svc checklists.Service) gofr.Handler {
 		}
 
 		return nil, svc.UpdateChecklistItemPositions(ctx, checklistItemPatches)
+	}
+}
+
+func MakeDeleteSubChecklistItemById(svc checklists.Service) gofr.Handler {
+	return func(ctx *gofr.Context) (interface{}, error) {
+		id, err := uuid.Parse(ctx.Request.PathParam("id"))
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, svc.DeleteSubChecklistItem(ctx, id)
 	}
 }

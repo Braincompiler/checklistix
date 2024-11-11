@@ -2,8 +2,9 @@ package supabase
 
 import (
 	"context"
-	"errors"
 	"github.com/braincompiler/checklistix/internal"
+	"github.com/braincompiler/checklistix/internal/constants"
+	"github.com/braincompiler/checklistix/internal/errors"
 	"github.com/supabase-community/gotrue-go"
 
 	"github.com/supabase-community/supabase-go"
@@ -26,9 +27,9 @@ func NewClientWithAccessToken(accessToken string) (*supabase.Client, error) {
 }
 
 func NewClientWithContext(ctx context.Context) (*supabase.Client, error) {
-	value := ctx.Value("accessToken")
+	value := ctx.Value(constants.AccessTokenKey)
 	if value == nil {
-		return nil, errors.New("`accessToken` is missing in context")
+		return nil, errors.NewMissingAccessTokenError("context")
 	}
 
 	accessToken := value.(string)
@@ -67,9 +68,9 @@ func NewAuthClientWithAccessToken(accessToken string) (gotrue.Client, error) {
 }
 
 func NewAuthClientWithContext(ctx context.Context) (gotrue.Client, error) {
-	value := ctx.Value("accessToken")
+	value := ctx.Value(constants.AccessTokenKey)
 	if value == nil {
-		return nil, errors.New("`accessToken` is missing in context")
+		return nil, errors.NewMissingAccessTokenError("context")
 	}
 
 	accessToken := value.(string)

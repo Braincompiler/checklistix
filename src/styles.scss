@@ -290,7 +290,7 @@ a:not([href]) {
                                 @apply pr-1;
                             }
 
-                            &:last-child {
+                            &:last-child:not(.pi) {
                                 @apply pl-1;
 
                                 span {

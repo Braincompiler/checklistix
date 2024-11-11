@@ -76,7 +76,7 @@ export class EditorComponent {
 
     public onAddSubChecklistItem(newSubChecklistItem: Partial<SubChecklistFormSubChecklistItemsInner>): void {
         this.#checklistsService
-            .checklistItemsIdSubChecklistItemsPost(newSubChecklistItem.subChecklistId!, {
+            .checklistItemsIdSubChecklistItemsPost(newSubChecklistItem.checklistItemId!, {
                 ...(newSubChecklistItem as any), // 🤨
             })
             .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -121,6 +121,13 @@ export class EditorComponent {
     public onDeleteChecklistItem(checklistItem: ChecklistFormChecklistItemsInner): void {
         this.#checklistsService
             .checklistItemsIdDelete(checklistItem.id) //
+            .pipe(takeUntilDestroyed(this.#destroyRef))
+            .subscribe();
+    }
+
+    public onDeleteSubChecklistItem(subChecklistItem: SubChecklistFormSubChecklistItemsInner): void {
+        this.#checklistsService
+            .deleteSubChecklistItem(subChecklistItem.id) //
             .pipe(takeUntilDestroyed(this.#destroyRef))
             .subscribe();
     }

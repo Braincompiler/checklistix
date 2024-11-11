@@ -30,7 +30,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
             }
         }),
         catchError((err: HttpErrorResponse) => {
-            console.error(err);
+            // console.error(err);
 
             if (err.status === 401) {
                 messageService.add({

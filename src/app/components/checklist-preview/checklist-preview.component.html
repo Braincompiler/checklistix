@@ -16,7 +16,6 @@
             [style.font-family]="checklistPage.checklist.fontFamily"
             [ngClass]="fontSizeCssClass()"
         >
-            <!--            [style.font-size.pt]="checklistPage.checklist.fontSize"-->
             @if (isEdit()) {
                 <div class="hs-accordion-group min-h-10">
                     <div
@@ -136,7 +135,6 @@
                         @for (checklistItem of checklistColumn.checklistItemsSortedByPosition; track checklistItem.id) {
                             <div
                                 cdkDrag
-                                class="relative"
                                 [cdkDragData]="checklistItem"
                                 (cdkDragStarted)="onDragStarted()"
                             >
@@ -146,28 +144,29 @@
                                     class="cdk-drag-custom-placeholder"
                                 ></div>
 
-                                @if (isEdit()) {
-                                    <button
-                                        type="button"
-                                        class="absolute z-10 left-1 top-1"
-                                        (click)="doDeleteChecklistItem($event, checklistItem)"
-                                    >
-                                        <span class="pi pi-times text-red-500 text-xs"></span>
-                                    </button>
-                                }
-
                                 @switch (checklistItem.type) {
                                     @case (ChecklistItemType.SubChecklist) {
                                         <div
                                             [ngClass]="outlineCssClass()"
-                                            class="subchecklist"
+                                            class="subchecklist relative"
                                         >
                                             @if (isEdit() || (!isEdit() && checklistItem.title)) {
                                                 <h3
                                                     cdkDragHandle
+                                                    class="group"
                                                     [ngClass]="borderBCssClass()"
                                                     [style.background-color]="checklistItem.color"
                                                 >
+                                                    @if (isEdit()) {
+                                                        <button
+                                                            type="button"
+                                                            class="hidden group-hover:block absolute z-10 left-0.5 top-0.5 h-[1.125rem] bg-neutral-200 px-0.5 rounded"
+                                                            (click)="doDeleteChecklistItem($event, checklistItem)"
+                                                        >
+                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                        </button>
+                                                    }
+
                                                     <cx-single-line-edit
                                                         placeholder="Enter your title here ..."
                                                         [disableEditMode]="!isEdit()"
@@ -197,23 +196,33 @@
                                                         </p>
                                                     }
                                                 } @else {
-                                                    @for (subChecklistItem of checklistItem['subChecklistItems']; track subChecklistItem.id; let i = $index) {
+                                                    @for (subChecklistItem of checklistItem.subChecklistItems; track subChecklistItem.id; let i = $index) {
                                                         @switch (subChecklistItem.type) {
                                                             @case (SubChecklistItemType.CheckItem) {
                                                                 <li
                                                                     cdkDrag
-                                                                    class="checkitem"
+                                                                    class="checkitem group"
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
                                                                 >
+                                                                    @if (isEdit()) {
+                                                                        <button
+                                                                            type="button"
+                                                                            class="hidden group-hover:block bg-neutral-200 px-0.5 rounded"
+                                                                            (click)="doDeleteSubChecklistItem($event, subChecklistItem)"
+                                                                        >
+                                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                                        </button>
+                                                                    }
+
                                                                     <cx-dual-input-edit
                                                                         leftPropName="item"
                                                                         rightPropName="action"
-                                                                        leftPlaceholder="Enter your item here ..."
-                                                                        rightPlaceholder="Enter your action here ..."
+                                                                        leftPlaceholder="Enter the item here ..."
+                                                                        rightPlaceholder="Enter the action here ..."
                                                                         [disableEditMode]="!isEdit()"
-                                                                        [(ngModel)]="checklistItem['subChecklistItems']![i]"
+                                                                        [(ngModel)]="checklistItem.subChecklistItems![i]"
                                                                         (enterEditMode)="onEnterEditMode()"
                                                                         (exitEditMode)="onExitDualEditMode(subChecklistItem, 'item', 'action')"
                                                                     />
@@ -222,11 +231,21 @@
                                                             @case (SubChecklistItemType.Precondition) {
                                                                 <li
                                                                     cdkDrag
-                                                                    class="precondition"
+                                                                    class="precondition group"
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
                                                                 >
+                                                                    @if (isEdit()) {
+                                                                        <button
+                                                                            type="button"
+                                                                            class="hidden group-hover:block bg-neutral-200 px-0.5 rounded"
+                                                                            (click)="doDeleteSubChecklistItem($event, subChecklistItem)"
+                                                                        >
+                                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                                        </button>
+                                                                    }
+
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         placeholder="Enter your precondition here ..."
@@ -241,11 +260,21 @@
                                                             @case (SubChecklistItemType.Postcondition) {
                                                                 <li
                                                                     cdkDrag
-                                                                    class="postcondition"
+                                                                    class="postcondition group"
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
                                                                 >
+                                                                    @if (isEdit()) {
+                                                                        <button
+                                                                            type="button"
+                                                                            class="hidden group-hover:block bg-neutral-200 px-0.5 rounded"
+                                                                            (click)="doDeleteSubChecklistItem($event, subChecklistItem)"
+                                                                        >
+                                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                                        </button>
+                                                                    }
+
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         textRight
@@ -261,11 +290,21 @@
                                                             @case (SubChecklistItemType.Subtitle) {
                                                                 <li
                                                                     cdkDrag
-                                                                    class="subtitle"
+                                                                    class="subtitle group"
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
                                                                 >
+                                                                    @if (isEdit()) {
+                                                                        <button
+                                                                            type="button"
+                                                                            class="hidden group-hover:block bg-neutral-200 px-0.5 rounded"
+                                                                            (click)="doDeleteSubChecklistItem($event, subChecklistItem)"
+                                                                        >
+                                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                                        </button>
+                                                                    }
+
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         placeholder="Enter your subtitle here ..."
@@ -280,11 +319,21 @@
                                                             @case (SubChecklistItemType.LeftText) {
                                                                 <li
                                                                     cdkDrag
-                                                                    class="text"
+                                                                    class="text group"
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
                                                                 >
+                                                                    @if (isEdit()) {
+                                                                        <button
+                                                                            type="button"
+                                                                            class="hidden group-hover:block bg-neutral-200 px-0.5 rounded"
+                                                                            (click)="doDeleteSubChecklistItem($event, subChecklistItem)"
+                                                                        >
+                                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                                        </button>
+                                                                    }
+
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         placeholder="Enter your text here ..."
@@ -299,11 +348,21 @@
                                                             @case (SubChecklistItemType.RightText) {
                                                                 <li
                                                                     cdkDrag
-                                                                    class="text"
+                                                                    class="text group"
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
                                                                 >
+                                                                    @if (isEdit()) {
+                                                                        <button
+                                                                            type="button"
+                                                                            class="hidden group-hover:block bg-neutral-200 px-0.5 rounded"
+                                                                            (click)="doDeleteSubChecklistItem($event, subChecklistItem)"
+                                                                        >
+                                                                            <span class="pi pi-times text-red-500 text-xs"></span>
+                                                                        </button>
+                                                                    }
+
                                                                     <cx-single-line-edit
                                                                         fullWidth
                                                                         textRight
@@ -328,7 +387,7 @@
                                                             subChecklistMenuItems
                                                                 | cxAdd2MenuitemPipe
                                                                     : {
-                                                                          subChecklistId: checklistItem.id,
+                                                                          checklistItemId: checklistItem.id,
                                                                       }
                                                         "
                                                     />
@@ -340,22 +399,34 @@
                                         <!--                                        @if (checklistItem.title) {-->
                                         <div
                                             [ngClass]="outlineCssClass()"
-                                            class="textbox-with-title"
+                                            class="textbox-with-title relative"
                                         >
                                             @if (isEdit() || (!isEdit() && checklistItem.title)) {
-                                                <h3
-                                                    cdkDragHandle
-                                                    [ngClass]="borderBCssClass()"
-                                                    [style.background-color]="checklistItem.color"
-                                                >
-                                                    <cx-single-line-edit
-                                                        placeholder="Enter your text box title here ..."
-                                                        [disableEditMode]="!isEdit()"
-                                                        [(ngModel)]="checklistItem.title"
-                                                        (exitEditMode)="onExitEditMode(checklistItem, 'title')"
-                                                        noBlock
-                                                    />
-                                                </h3>
+                                                <div class="group">
+                                                    <h3
+                                                        cdkDragHandle
+                                                        [ngClass]="borderBCssClass()"
+                                                        [style.background-color]="checklistItem.color"
+                                                    >
+                                                        @if (isEdit()) {
+                                                            <button
+                                                                type="button"
+                                                                class="hidden group-hover:block absolute z-10 left-0.5 top-0.5 h-[1.125rem] bg-neutral-200 px-0.5 rounded"
+                                                                (click)="doDeleteChecklistItem($event, checklistItem)"
+                                                            >
+                                                                <span class="pi pi-times text-red-500 text-xs"></span>
+                                                            </button>
+                                                        }
+
+                                                        <cx-single-line-edit
+                                                            placeholder="Enter your text box title here ..."
+                                                            [disableEditMode]="!isEdit()"
+                                                            [(ngModel)]="checklistItem.title"
+                                                            (exitEditMode)="onExitEditMode(checklistItem, 'title')"
+                                                            noBlock
+                                                        />
+                                                    </h3>
+                                                </div>
                                             }
                                             <div class="text">
                                                 <cx-multi-line-edit
@@ -367,12 +438,25 @@
                                         </div>
                                     }
                                     @case (ChecklistItemType.SectionTitle) {
-                                        <div [ngClass]="outlineCssClass()">
+                                        <div
+                                            [ngClass]="outlineCssClass()"
+                                            class="relative group"
+                                        >
                                             <h3
                                                 cdkDragHandle
                                                 [style.background-color]="checklistItem.color"
                                                 class="min-h-1"
                                             >
+                                                @if (isEdit()) {
+                                                    <button
+                                                        type="button"
+                                                        class="hidden group-hover:block absolute z-10 left-0.5 top-0.5 h-[1.125rem] bg-neutral-200 px-0.5 rounded"
+                                                        (click)="doDeleteChecklistItem($event, checklistItem)"
+                                                    >
+                                                        <span class="pi pi-times text-red-500 text-xs"></span>
+                                                    </button>
+                                                }
+
                                                 <cx-single-line-edit
                                                     placeholder="Enter your section title here ..."
                                                     [disableEditMode]="!isEdit()"

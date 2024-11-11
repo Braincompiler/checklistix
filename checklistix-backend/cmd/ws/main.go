@@ -68,6 +68,9 @@ func wsHandler(ctx *gofr.Context) (interface{}, error) {
 	}
 
 	client := grpc.NewChecklistsGrpcServiceClient(conn)
+	columns, _ := checklist.Columns.Int64()
+	fontSize, _ := checklist.FontSize.Int64()
+	borderThickness, _ := checklist.BorderThickness.Int64()
 	updatedChecklist, err := client.UpdateChecklist(context.Background(), &grpc.Checklist{
 		Id:              checklist.Id.String(),
 		Title:           checklist.Title,
@@ -76,9 +79,9 @@ func wsHandler(ctx *gofr.Context) (interface{}, error) {
 		Style:           string(checklist.Style),
 		PageSize:        string(checklist.PageSize),
 		PageOrientation: string(checklist.PageOrientation),
-		Columns:         int64(checklist.Columns),
-		FontSize:        int64(checklist.FontSize),
-		BorderThickness: int64(checklist.BorderThickness),
+		Columns:         columns,
+		FontSize:        fontSize,
+		BorderThickness: borderThickness,
 		FontFamily:      checklist.FontFamily,
 		DefaultColor:    checklist.DefaultColor,
 	})
