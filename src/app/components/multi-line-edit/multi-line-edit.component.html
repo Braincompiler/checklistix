@@ -1,14 +1,24 @@
 @if (isEditModeActive() && form) {
     <ng-container [formGroup]="form">
         <textarea
+            autofocus
             #multiInput="cdkTextareaAutosize"
             cdkTextareaAutosize
             cdkAutosizeMinRows="2"
             cdkAutosizeMaxRows="7"
             formControlName="multiLine"
-            (blur)="onExitEditMode()"
-            autofocus
+            (keyup.escape)="onExitEditMode(false)"
         ></textarea>
+        <!--            (blur)="onExitEditMode(true)"-->
+        <div class="flex flex-row-reverse">
+            <p-button
+                size="small"
+                [class.block]="isEditModeActive()"
+                (click)="onExitEditMode(true)"
+            >
+                {{ lblSaveButton() }}
+            </p-button>
+        </div>
     </ng-container>
 } @else {
     <span

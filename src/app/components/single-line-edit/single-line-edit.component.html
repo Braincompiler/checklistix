@@ -8,10 +8,11 @@
             [placeholder]="placeholder()"
             [class.full-width]="fullWidth()"
             [class.!text-right]="textRight()"
-            (blur)="onExitEditMode()"
-            (keyup.enter)="onExitEditMode()"
+            (keyup.enter)="onExitEditMode(true)"
+            (keyup.escape)="onExitEditMode(false)"
             (focus)="$any($event.target).select()"
         />
+        <!--            (blur)="onExitEditMode(false)"-->
     </ng-container>
 } @else {
     <span

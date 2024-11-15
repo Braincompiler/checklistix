@@ -1,15 +1,14 @@
 @if (isEditModeActive() && form) {
     <ng-container [formGroup]="form">
-        <div
-            class="dual-input"
-            (cxClickOutside)="onExitEditMode()"
-        >
+        <div class="dual-input">
+            <!--            (cxClickOutside)="onExitEditMode(false)"-->
             <input
                 #leftInput
                 type="text"
                 [placeholder]="leftPlaceholder()"
                 [formControlName]="leftPropName()"
-                (keyup.enter)="onExitEditMode()"
+                (keyup.enter)="onExitEditMode(true)"
+                (keyup.escape)="onExitEditMode(false)"
                 (focus)="$any($event.target).select()"
             />
             <input
@@ -18,7 +17,8 @@
                 class="right"
                 [placeholder]="rightPlaceholder()"
                 [formControlName]="rightPropName()"
-                (keyup.enter)="onExitEditMode()"
+                (keyup.enter)="onExitEditMode(true)"
+                (keyup.escape)="onExitEditMode(false)"
                 (focus)="$any($event.target).select()"
             />
         </div>

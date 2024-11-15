@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, forwardRef, input, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, forwardRef, input, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
@@ -30,6 +30,9 @@ import { BaseEditComponent } from '../base-edit/base-edit.component';
     },
 })
 export class DualInputEditComponent extends BaseEditComponent<Record<string, string>> {
+    readonly #resetLeftFormValue = signal<string | null>(null);
+    readonly #resetRightFormValue = signal<string | null>(null);
+
     public readonly leftPropName = input.required<string>();
     public readonly rightPropName = input.required<string>();
     public readonly leftPlaceholder = input('');
@@ -128,5 +131,22 @@ export class DualInputEditComponent extends BaseEditComponent<Record<string, str
     public enterDualEditMode(side: 'left' | 'right'): void {
         this.onEnterEditMode();
         this.#focusSide = side;
+
+        this.#resetLeftFormValue.set(this.#leftRawFormValue);
+        this.#resetRightFormValue.set(this.#rightRawFormValue);
+    }
+
+    public override onExitEditMode(hasChanges: boolean): void {
+        super.onExitEditMode(hasChanges);
+
+        if (!hasChanges) {
+            this.form?.patchValue({
+                [this.leftPropName()]: this.#resetLeftFormValue(),
+                [this.rightPropName()]: this.#resetRightFormValue(),
+            });
+
+            this.#resetLeftFormValue.set(null);
+            this.#resetRightFormValue.set(null);
+        }
     }
 }

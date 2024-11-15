@@ -460,10 +460,14 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         this.checklist.update((checklist) => ({ ...checklist, checklistItems }));
     }
 
-    public onExitEditMode(checklistItem: ChecklistFormChecklistItemsInner, prop: keyof ChecklistFormChecklistItemsInner): void;
-    public onExitEditMode(checklistItem: SubChecklistFormSubChecklistItemsInner, prop: keyof SubChecklistFormSubChecklistItemsInner): void;
-    public onExitEditMode(checklistItem: any, prop: keyof any): void {
+    public onExitEditMode(hasChanges: boolean, checklistItem: ChecklistFormChecklistItemsInner, prop: keyof ChecklistFormChecklistItemsInner): void;
+    public onExitEditMode(hasChanges: boolean, checklistItem: SubChecklistFormSubChecklistItemsInner, prop: keyof SubChecklistFormSubChecklistItemsInner): void;
+    public onExitEditMode(hasChanges: boolean, checklistItem: any, prop: keyof any): void {
         // console.log({ checklistItem, prop }, checklistItem[prop]);
+
+        if (!hasChanges) {
+            return;
+        }
 
         const value = (checklistItem as any)[prop];
         if (isChecklistItem(checklistItem)) {
@@ -492,11 +496,16 @@ export class ChecklistPreviewComponent implements AfterViewInit {
     }
 
     public onExitDualEditMode(
+        hasChanges: boolean,
         subChecklistItem: SubChecklistFormSubChecklistItemsInner,
         leftProp: keyof SubChecklistFormSubChecklistItemsInner,
         rightProp: keyof SubChecklistFormSubChecklistItemsInner,
     ): void {
         this.subChecklistItemInEditMode.set(false);
+
+        if (!hasChanges) {
+            return;
+        }
 
         const subChecklist = (this.checklist().checklistItems ?? []).find((ci) => ci.id === subChecklistItem.checklistItemId);
         if (!isNil(subChecklist)) {

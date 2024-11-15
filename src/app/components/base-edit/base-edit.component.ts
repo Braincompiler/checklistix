@@ -17,9 +17,12 @@ export class BaseEditComponent<TFormValue = string> implements ControlValueAcces
     protected prop = '';
     protected initialValue = '';
 
+    readonly #resetFormValue = signal<any>(null);
+
     public readonly disableEditMode = input(true, { transform: (v) => booleanAttribute(v) });
     public readonly dblClickPlaceholder = input('Double click to edit');
-    public readonly exitEditMode = output<void>();
+
+    public readonly exitEditMode = output<boolean>();
     public readonly enterEditMode = output<void>();
 
     public readonly isEditModeActive = signal<boolean>(false);
@@ -84,15 +87,22 @@ export class BaseEditComponent<TFormValue = string> implements ControlValueAcces
         // @TODO: do we need this? 🤔
     }
 
-    public onExitEditMode(): void {
+    public onExitEditMode(hasChanges: boolean): void {
         this.isEditModeActive.set(false);
-        this.exitEditMode.emit();
+        this.exitEditMode.emit(hasChanges);
+
+        if (!hasChanges) {
+            this.form?.get(this.prop)?.reset(this.#resetFormValue());
+            this.#resetFormValue.set(null);
+        }
     }
 
     public onEnterEditMode(): void {
         if (!this.disableEditMode()) {
             this.enterEditMode.emit();
             this.isEditModeActive.set(true);
+
+            this.#resetFormValue.set(this.#rawFormValue);
         }
     }
 }

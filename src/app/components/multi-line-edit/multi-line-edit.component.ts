@@ -1,6 +1,8 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { afterNextRender, Component, DestroyRef, forwardRef, inject, Injector, ViewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, forwardRef, inject, Injector, input, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+
+import { ButtonModule } from 'primeng/button';
 
 import { Nl2brPipe } from '@pipes';
 
@@ -15,6 +17,7 @@ import { BaseEditComponent } from '../base-edit/base-edit.component';
         ReactiveFormsModule, //
         CdkTextareaAutosize,
         Nl2brPipe,
+        ButtonModule,
     ],
     providers: [
         {
@@ -34,6 +37,8 @@ export class MultiLineEditComponent extends BaseEditComponent {
 
     protected override prop = 'multiLine';
     protected override initialValue = '';
+
+    public readonly lblSaveButton = input('Save');
 
     public constructor() {
         super(inject(DestroyRef));
