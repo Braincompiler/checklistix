@@ -72,6 +72,11 @@ export class AppComponent implements OnInit {
                                 color: 'rgba(255,255,255,.87)',
                                 focusColor: 'rgba(255,255,255,.87)',
                             },
+                            // overlay: {
+                            //     tooltip: {
+                            //         background: 'white',
+                            //     },
+                            // },
                         },
                     },
                 },

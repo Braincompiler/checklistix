@@ -14,8 +14,9 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime } from 'rxjs';
 
-import { ConfirmationService, MenuItem, MenuItemCommandEvent } from 'primeng/api';
+import { ConfirmationService, MenuItem, MenuItemCommandEvent, TooltipOptions } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 
 import {
     isChecklistItem,
@@ -235,6 +236,7 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
 @Component({
     selector: 'cx-checklist-preview',
     templateUrl: 'checklist-preview.component.html',
+    styleUrl: 'checklist-preview.component.scss',
     standalone: true,
     // schemas: [NO_ERRORS_SCHEMA],
     providers: [ConfirmationService],
@@ -255,6 +257,7 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
         EditorInputComponent,
         ReactiveFormsModule,
         ConfirmDialogModule,
+        TooltipModule,
     ],
 })
 export class ChecklistPreviewComponent implements AfterViewInit {
@@ -309,24 +312,13 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         return paginatedChecklist;
     });
 
-    protected readonly ChecklistItemType = ChecklistItemType;
-    protected readonly SubChecklistItemType = SubChecklistItemType;
-
-    protected readonly checklistStyles = this.mapToSelectOptions(ChecklistStyle, sortByStringValueCaseInsensitive);
-    protected readonly pageSizes = this.mapToSelectOptions(PageSize, sortByStringValueCaseInsensitive);
-    protected readonly pageOrientations = this.mapToSelectOptions(PageOrientation, sortByStringValueCaseInsensitive);
-    protected readonly borderThicknesses = this.mapToSelectOptions(BorderThickness, sortByNumberKey, true);
-    protected readonly columns = this.mapToSelectOptions(this.makeObject([2, 3, 4]), sortByNumberValue);
-    protected readonly fontSizes = this.mapToSelectOptions(this.makeObject([8, 9, 10, 11, 12], ' pt'), sortByNumberKey);
-    protected readonly fontFamilies = this.mapToSelectOptions(this.makeObject(['sans-serif', 'serif']), sortByStringValueCaseInsensitive);
-
     public readonly checklistMenuItems: MenuItem[] = [
         {
             label: 'Checklist',
             command: (event: MenuItemCommandEvent) => this.addChecklist(event),
         },
         {
-            label: 'SectionTitle',
+            label: 'Section Title',
             command: (event: MenuItemCommandEvent) => this.addSectionTitle(event),
         },
         {
@@ -372,6 +364,23 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         fontFamily: this.#fb.nonNullable.control('sans-serif'),
         defaultColor: this.#fb.nonNullable.control('#d4d4d4'),
     });
+
+    public readonly tooltipOptions: TooltipOptions & { autoHide: boolean } = {
+        autoHide: false,
+        tooltipPosition: 'top',
+        showDelay: 400,
+    };
+
+    protected readonly ChecklistItemType = ChecklistItemType;
+    protected readonly SubChecklistItemType = SubChecklistItemType;
+
+    protected readonly checklistStyles = this.mapToSelectOptions(ChecklistStyle, sortByStringValueCaseInsensitive);
+    protected readonly pageSizes = this.mapToSelectOptions(PageSize, sortByStringValueCaseInsensitive);
+    protected readonly pageOrientations = this.mapToSelectOptions(PageOrientation, sortByStringValueCaseInsensitive);
+    protected readonly borderThicknesses = this.mapToSelectOptions(BorderThickness, sortByNumberKey, true);
+    protected readonly columns = this.mapToSelectOptions(this.makeObject([2, 3, 4]), sortByNumberValue);
+    protected readonly fontSizes = this.mapToSelectOptions(this.makeObject([8, 9, 10, 11, 12], ' pt'), sortByNumberKey);
+    protected readonly fontFamilies = this.mapToSelectOptions(this.makeObject(['sans-serif', 'serif']), sortByStringValueCaseInsensitive);
 
     public constructor() {
         effect(() => this.metaDataForm.patchValue(this.checklist(), { emitEvent: false }));
