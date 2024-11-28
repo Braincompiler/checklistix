@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors');
+// const colors = require('tailwindcss/colors');
 const { $dt } = require('primeng/themes');
 
 console.log($dt('amber.500').variable);

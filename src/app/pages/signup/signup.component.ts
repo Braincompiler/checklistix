@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
@@ -16,7 +15,10 @@ export const confirmPasswordValidator: ValidatorFn = (control: AbstractControl):
     selector: 'cx-signup',
     templateUrl: 'signup.component.html',
     standalone: true,
-    imports: [RouterLink, JsonPipe, ReactiveFormsModule],
+    imports: [
+        RouterLink, //
+        ReactiveFormsModule,
+    ],
 })
 export class SignupComponent {
     readonly #authService = inject(AuthService);

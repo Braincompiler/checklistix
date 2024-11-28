@@ -22,10 +22,8 @@ import { checklistMapToVM, IChecklistVM } from '../../../../mapper';
     standalone: true,
     providers: [ConfirmationService],
     imports: [
-        RouterLink, //
-        AsyncPipe,
+        AsyncPipe, //
         DatePipe,
-        JsonPipe,
         ConfirmDialogModule,
     ],
 })

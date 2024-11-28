@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
 
@@ -7,6 +7,9 @@ import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
     selector: 'cx-footer',
     templateUrl: 'footer.component.html',
     standalone: true,
-    imports: [RouterLink, RouterLinkActive, BrandLogoComponent],
+    imports: [
+        RouterLink, //
+        BrandLogoComponent,
+    ],
 })
 export class FooterComponent {}

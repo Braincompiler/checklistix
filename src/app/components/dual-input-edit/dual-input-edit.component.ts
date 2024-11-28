@@ -5,8 +5,6 @@ import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { isRecord, strIsEmpty } from '@utils';
 import { isNil } from 'ramda';
 
-import { ClickOutsideDirective } from '@directives';
-
 import { BaseEditComponent } from '../base-edit/base-edit.component';
 
 @Component({
@@ -16,7 +14,6 @@ import { BaseEditComponent } from '../base-edit/base-edit.component';
     standalone: true,
     imports: [
         ReactiveFormsModule, //
-        ClickOutsideDirective,
     ],
     providers: [
         {
