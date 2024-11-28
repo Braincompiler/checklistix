@@ -49,3 +49,5 @@ Thumbs.db
 .env
 
 *.pb.go
+
+checklistix-backend/cmd/*/__debug_bin*
