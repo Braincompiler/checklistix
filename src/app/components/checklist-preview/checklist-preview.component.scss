@@ -1,4 +1,4 @@
 ::ng-deep :root {
-    --p-tooltip-background: color-mix(in srgb, var(--p-neutral-300) 80%, transparent);
+    --p-tooltip-background: var(--p-neutral-300);
     --p-tooltip-color: var(--p-neutral-900);
 }

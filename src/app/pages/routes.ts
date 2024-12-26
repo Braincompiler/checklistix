@@ -38,10 +38,10 @@ export const routes: Routes = [
                         severity: 'error',
                         summary: 'Unauthorized',
                         detail: 'Please login first to access this page',
-                        life: 60000,
+                        life: 5000,
                     });
 
-                    return new RedirectCommand(inject(Router).parseUrl('/'));
+                    return new RedirectCommand(inject(Router).parseUrl('/signin'));
                 }
 
                 return isLoggedIn;
