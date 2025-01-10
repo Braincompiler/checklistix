@@ -205,9 +205,9 @@
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
-                                                                    [pTooltip]="isEdit() ? 'Check item' : undefined"
-                                                                    [tooltipOptions]="tooltipOptions"
                                                                 >
+<!--                                                                    [pTooltip]="isEdit() ? 'Check item' : undefined"-->
+<!--                                                                    [tooltipOptions]="tooltipOptions"-->
                                                                     @if (isEdit()) {
                                                                         <button
                                                                             type="button"
@@ -237,9 +237,9 @@
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
-                                                                    [pTooltip]="isEdit() ? 'Precondition' : undefined"
-                                                                    [tooltipOptions]="tooltipOptions"
                                                                 >
+<!--                                                                    [pTooltip]="isEdit() ? 'Precondition' : undefined"-->
+<!--                                                                    [tooltipOptions]="tooltipOptions"-->
                                                                     @if (isEdit()) {
                                                                         <button
                                                                             type="button"
@@ -268,9 +268,9 @@
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
-                                                                    [pTooltip]="isEdit() ? 'Postcondition' : undefined"
-                                                                    [tooltipOptions]="tooltipOptions"
                                                                 >
+<!--                                                                    [pTooltip]="isEdit() ? 'Postcondition' : undefined"-->
+<!--                                                                    [tooltipOptions]="tooltipOptions"-->
                                                                     @if (isEdit()) {
                                                                         <button
                                                                             type="button"
@@ -300,9 +300,9 @@
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
-                                                                    [pTooltip]="isEdit() ? 'Subtitle' : undefined"
-                                                                    [tooltipOptions]="tooltipOptions"
                                                                 >
+<!--                                                                    [pTooltip]="isEdit() ? 'Subtitle' : undefined"-->
+<!--                                                                    [tooltipOptions]="tooltipOptions"-->
                                                                     @if (isEdit()) {
                                                                         <button
                                                                             type="button"
@@ -331,9 +331,9 @@
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
-                                                                    [pTooltip]="isEdit() ? 'Left hand text' : undefined"
-                                                                    [tooltipOptions]="tooltipOptions"
                                                                 >
+<!--                                                                    [pTooltip]="isEdit() ? 'Left hand text' : undefined"-->
+<!--                                                                    [tooltipOptions]="tooltipOptions"-->
                                                                     @if (isEdit()) {
                                                                         <button
                                                                             type="button"
@@ -362,9 +362,9 @@
                                                                     [cdkDragDisabled]="subChecklistItemInEditMode()"
                                                                     [cdkDragData]="checklistItem"
                                                                     (cdkDragStarted)="onDragStarted()"
-                                                                    [pTooltip]="isEdit() ? 'Right hand text' : undefined"
-                                                                    [tooltipOptions]="tooltipOptions"
                                                                 >
+<!--                                                                    [pTooltip]="isEdit() ? 'Right hand text' : undefined"-->
+<!--                                                                    [tooltipOptions]="tooltipOptions"-->
                                                                     @if (isEdit()) {
                                                                         <button
                                                                             type="button"
@@ -412,9 +412,9 @@
                                         <div
                                             [ngClass]="outlineCssClass()"
                                             class="textbox-with-title relative"
-                                            [pTooltip]="isEdit() ? 'Textbox' : undefined"
-                                            [tooltipOptions]="tooltipOptions"
                                         >
+<!--                                            [pTooltip]="isEdit() ? 'Textbox' : undefined"-->
+<!--                                            [tooltipOptions]="tooltipOptions"-->
                                             @if (isEdit() || (!isEdit() && checklistItem.title)) {
                                                 <div class="group">
                                                     <h3
@@ -455,9 +455,9 @@
                                         <div
                                             [ngClass]="outlineCssClass()"
                                             class="relative group"
-                                            [pTooltip]="isEdit() ? 'Section title' : undefined"
-                                            [tooltipOptions]="tooltipOptions"
                                         >
+<!--                                            [pTooltip]="isEdit() ? 'Section title' : undefined"-->
+<!--                                            [tooltipOptions]="tooltipOptions"-->
                                             <h3
                                                 cdkDragHandle
                                                 class="min-h-1"

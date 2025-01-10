@@ -14,9 +14,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime } from 'rxjs';
 
-import { ConfirmationService, MenuItem, MenuItemCommandEvent, TooltipOptions } from 'primeng/api';
+import { ConfirmationService, MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { TooltipModule } from 'primeng/tooltip';
 
 import {
     isChecklistItem,
@@ -257,7 +256,6 @@ const sortByNumberKey = sortBy(compose((s: string) => parseInt(s, 10), prop('key
         EditorInputComponent,
         ReactiveFormsModule,
         ConfirmDialogModule,
-        TooltipModule,
     ],
 })
 export class ChecklistPreviewComponent implements AfterViewInit {
@@ -365,11 +363,11 @@ export class ChecklistPreviewComponent implements AfterViewInit {
         defaultColor: this.#fb.nonNullable.control('#d4d4d4'),
     });
 
-    public readonly tooltipOptions: TooltipOptions & { autoHide: boolean } = {
-        autoHide: false,
-        tooltipPosition: 'top',
-        showDelay: 400,
-    };
+    // public readonly tooltipOptions: TooltipOptions & { autoHide: boolean } = {
+    //     autoHide: false,
+    //     tooltipPosition: 'top',
+    //     showDelay: 400,
+    // };
 
     protected readonly ChecklistItemType = ChecklistItemType;
     protected readonly SubChecklistItemType = SubChecklistItemType;

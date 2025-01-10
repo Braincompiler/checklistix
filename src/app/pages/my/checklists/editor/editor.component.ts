@@ -30,10 +30,7 @@ export class EditorComponent {
     // public readonly isWsOnline = toSignal(this.#wsService.isOnline$);
 
     public constructor() {
-        effect(
-            () => this.#appStore.loadById(this.checklistId()), //
-            { allowSignalWrites: true },
-        );
+        effect(() => this.#appStore.loadById(this.checklistId()));
     }
 
     public onChecklistUpdate(updatedChecklist: Partial<ChecklistForm>): void {

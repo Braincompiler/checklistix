@@ -12,4 +12,6 @@ import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
         BrandLogoComponent,
     ],
 })
-export class FooterComponent {}
+export class FooterComponent {
+    public readonly currentYear = new Date().getFullYear();
+}

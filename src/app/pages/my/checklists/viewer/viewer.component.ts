@@ -31,10 +31,7 @@ export class ViewerComponent {
     public readonly checklistLoadedProperlyForPrint = computed(() => !isNil(this.checklist().pageSize) && !isNil(this.checklist().pageOrientation));
 
     public constructor() {
-        effect(
-            () => this.#appStore.loadById(this.checklistId()), //
-            { allowSignalWrites: true },
-        );
+        effect(() => this.#appStore.loadById(this.checklistId()));
 
         effect(async () => {
             const qp = this.#queryParams();
