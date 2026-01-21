@@ -13,6 +13,7 @@ export const serverRoutes: ServerRoute[] = [
     //
     // },
     // { path: '**', renderMode: RenderMode.Server },
+    { path: '', renderMode: RenderMode.Server },
     { path: 'help', renderMode: RenderMode.Server },
     { path: 'signup', renderMode: RenderMode.Server },
     { path: 'signin', renderMode: RenderMode.Server },

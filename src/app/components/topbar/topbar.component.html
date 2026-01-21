@@ -179,6 +179,15 @@
             class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
         >
             <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
+                @if (appStore.isLoggedIn()) {
+                    <a
+                        routerLink="/my/checklists"
+                        routerLinkActive="text-secondary"
+                        ariaCurrentWhenActive="page"
+                    >
+                        My Checklists
+                    </a>
+                }
                 <a
                     routerLink="/"
                     routerLinkActive="text-secondary"

@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"context"
-	"github.com/braincompiler/checklistix/internal/constants"
-	"github.com/braincompiler/checklistix/internal/supabase"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/braincompiler/checklistix/internal/constants"
+	"github.com/braincompiler/checklistix/internal/supabase"
 
 	"github.com/braincompiler/checklistix/internal/utils"
 	"gofr.dev/pkg/gofr/container"
@@ -46,10 +47,10 @@ func Auth(redis container.Redis) func(http.Handler) http.Handler {
 
 					expiresAt := time.Unix(tokenResponse.ExpiresAt, 0) //.Add(-(5 * time.Minute))
 					if time.Now().After(expiresAt) {
-						if err != nil {
-							http.Error(w, err.Error(), http.StatusUnauthorized)
-							return
-						}
+						// if err != nil {
+						// 	http.Error(w, err.Error(), http.StatusUnauthorized)
+						// 	return
+						// }
 
 						err := utils.DeleteTokenResponseFromRedisWithAccessToken(redis, r.Context(), token)
 						if err != nil {

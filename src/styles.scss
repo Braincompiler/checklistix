@@ -28,6 +28,9 @@
 
 body {
     @apply bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-300;
+
+    font-family: system-ui, ui-sans-serif, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
 }
 
 a {
